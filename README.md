@@ -1,13 +1,36 @@
 # GameBoy Studio — Beta 0.5
 
-Experimental Nintendo Game Boy (DMG) emulator written in C++20 for Windows. This is a **beta**, not a fully compatible emulator.
+Эмулятор **Nintendo Game Boy (DMG)** для Windows на **C++20**. Проект в стадии **бета-тестирования**: реализованное ядро не гарантирует работу всех коммерческих игр. Поддержка **Game Boy Color** ещё не добавлена.
 
-## Build
+## Возможности
 
-- Install Visual Studio with C++ Desktop Development and CMake.
-- Run `BUILD_WINDOWS.bat` after extracting the project files.
-- Open `demo.gb` with the compiled emulator for a basic visual/input test.
+- Эмуляция LR35902 CPU, CB-инструкций и прерываний.
+- Экран 160×144: фон, окно, спрайты и построчная отрисовка.
+- Поддержка MBC1, MBC2, MBC3 и MBC5 (точность совместимости ещё требует проверки).
+- Предварительная эмуляция звука.
+- SRAM (.sav) и быстрые состояния (F5 / F9).
+- Управление с клавиатуры, палитры, полноэкранный режим, скриншоты.
+- Встроенный тестовый ROM `demo.gb` (не коммерческая игра).
 
-Project source and Russian documentation will be added in the next commit.
+## Как собрать на Windows
 
-The emulator does not contain commercial game ROMs. Use homebrew ROMs or legally obtained dumps.
+1. Установите Visual Studio с компонентами **Desktop development with C++** и **CMake**.
+2. Скачайте репозиторий как ZIP и распакуйте.
+3. Запустите `BUILD_WINDOWS.bat`.
+4. После успешной сборки ищите `dist/GBStudio.exe` и откройте `demo.gb` для проверки.
+
+Возможна сборка через CMake. Конфигурация описана в `CMakeLists.txt`.
+
+## Структура
+
+- `src/gameboy.hpp` — ядро эмулятора.
+- `src/windows_main.cpp` — Windows UI.
+- `src/headless.cpp` — безоконный запуск.
+- `tests/core_tests.cpp` — тесты ядра.
+- `tests/make_demo.py` — генератор тестового ROM.
+- `README_RU.md` — подробная инструкция.
+- `releases/GB_Studio_Beta_0.5_GameBoy_CPP20.zip` — архив этой версии.
+
+> **Важно:** тесты ядра запускались в Linux. Windows-исполняемый файл пока не проверен на настоящем Windows ПК. Это исходники бета-версии, не готовый релиз с проверенным EXE.
+
+Используйте собственные homebrew ROM или законно полученные дампы игр.
