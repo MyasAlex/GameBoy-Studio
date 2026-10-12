@@ -11,6 +11,7 @@ Validation date: 2026-10-13 (Asia/Irkutsk). Native Windows x64 MSVC release, sta
 | cgb-acid2 v1.1 | PASS, 0 differing pixels | All 160×144 RGB pixels |
 | Original Color demo | PASS, 0 differing pixels | Independent project reference image |
 | Internal native tests | 10/10 suites PASS | Core, CGB memory/PPU/APU/integration, boot/state/bounds, rewind/movies, Studio, SPSC/WAV, IPS/BPS |
+| GitHub Actions | PASS on Windows and Linux | Native build/tests, pinned hardware suites, Linux ASan/UBSan; run 38283863888 |
 | Windows AddressSanitizer | 4/4 new suites PASS | Core extension, sessions, audio buffers, cartridge tools; extension repeated after final file-reader hardening |
 | GUI hidden self-test | PASS on DMG and CGB demos | 12 frames and 48 offscreen configurations each; raw PPU invariant; bad-ROM exit2 |
 | WASAPI silent lifecycle | PASS at 20/40/80 ms | Device creation, flush and close; waveOut fallback path also exercised in a scratch harness |

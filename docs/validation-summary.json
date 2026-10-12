@@ -98,5 +98,14 @@
                   "WAV and APU are 44.1 kHz; Windows device SRC is external.",
                   "No claim of complete requested roadmap or all hardware revisions.",
                   "Linux ASan/UBSan configured in CI; local result not claimed."
-              ]
+              ],
+    "github_ci":  {
+                      "verified_commit":  "121fa82f53da746513d6d4ec246e1dee301aeb2f",
+                      "run_id":  38283863888,
+                      "url":  "https://github.com/MyasAlex/GameBoy-Studio/actions/runs/38283863888",
+                      "linux_compatibility":  "success",
+                      "linux_asan_ubsan":  "success",
+                      "windows_build_and_tests":  "success",
+                      "release_job":  "skipped on branch/PR by design"
+                  }
 }
