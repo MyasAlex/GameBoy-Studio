@@ -1,9 +1,17 @@
 build/
+dist/
+tests/roms/
+__pycache__/
+.vs/
 *.sav
 *.rtc
 *.state
+*.tmp
+*.bak
 *_screen.bmp
 *.obj
 *.exe
 *.pdb
 *.ilk
+*.suo
+*.user

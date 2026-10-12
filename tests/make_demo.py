@@ -17,7 +17,7 @@ except OSError:
     small = ImageFont.load_default()
 
 d.rectangle((0, 0, 159, 25), fill=3)
-d.text((18, 5), 'GB STUDIO BETA', font=title, fill=0)
+d.text((18, 5), 'GAME BOY STUDIO', font=title, fill=0)
 d.rectangle((0, 26, 159, 28), fill=2)
 d.text((20, 35), 'GAME BOY DMG', font=small, fill=3)
 d.text((20, 48), 'HOMEBREW TEST ROM', font=small, fill=2)
@@ -74,6 +74,10 @@ class Asm:
 
 code = Asm(0x0150)
 code.emit(0xF3)  # DI
+code.label('startup_vblank')
+code.emit(0xF0,0x44,0xFE,0x90)
+code.jr(0x38,'startup_vblank')
+code.emit(0xAF,0xE0,0x40) # LCD off before writing VRAM/OAM, as on real hardware
 
 def copy(source_label, dst, size):
     code.ldsrc(source_label)
@@ -87,11 +91,12 @@ def copy(source_label, dst, size):
 copy('tiledata',0x8000,len(tiledata))
 copy('tilemap',0x9800,len(map32))
 # LCDC = BG + OBJ, BGP = 4 grayscale shades, sprite palette E4
-for reg,value in [(0x40,0x93),(0x47,0xE4),(0x48,0xE4)]:
+for reg,value in [(0x47,0xE4),(0x48,0xE4)]:
     code.emit(0x3E,value,0xE0,reg)
 # Sprite 0: OAM Y=98, X=80, Tile=1, Attribute=0
 for address,value in [(0xFE00,96),(0xFE01,80),(0xFE02,1),(0xFE03,0)]:
     code.ld16(0x21,address);code.emit(0x36,value)
+code.emit(0x3E,0x93,0xE0,0x40) # LCD on after uploading all graphics
 code.label('wait_start')
 code.emit(0xF0,0x44,0xFE,0x90) # LY<144 (wait for visible scanline)
 code.jr(0x30,'wait_start')

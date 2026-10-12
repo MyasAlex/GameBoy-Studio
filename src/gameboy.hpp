@@ -1,5 +1,5 @@
 #pragma once
-// GB Studio Beta - Game Boy DMG emulator core. Original project upgraded for Win32.
+// Game Boy Studio - original DMG core, clocked at individual CPU bus accesses.
 // No copyrighted ROM or Nintendo boot ROM is included.
 #include <algorithm>
 #include <array>
@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
+#include <functional>
 #include <iomanip>
 #include <iostream>
 #include <iterator>
@@ -17,6 +18,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <thread>
 #include <vector>
 
@@ -38,9 +40,11 @@ public:
     std::array<u32,4> soundTrigger{};
     u8 ie=0;
     u16 divCounter=0;
-    int timerReload=-1, serialTicks=0, dmaTicks=0, dmaPos=160;
-    u16 dmaSource=0;
-    int ppuMode=2;
+    int timerReload=-1, serialTicks=0, dmaTicks=0, dmaPos=160, dmaDelay=0;
+    bool timerJustReloaded=false, mbc1Multicart=false, rumble=false;
+    u16 dmaSource=0,pendingDmaSource=0;
+    int ppuMode=2,ppuStatMode=2,ppuDot=0;
+    u8 serialSent=0,ppuCompareLY=0;
     bool statLine=false;
     bool right=false,left=false,up=false,down=false,a=false,b=false,select=false,start=false;
     bool ramEnabled=false, hasBattery=false, hasRTC=false, cgbROM=false;
@@ -52,12 +56,22 @@ public:
     u64 rtcCycles=0;
     std::filesystem::path romPath;
     std::string gameTitle;
+    std::string serialOutput;
+    std::string loadError;
+    std::function<void(u16,u8)> soundWrite;
+    std::function<u8(u16)> soundRead;
+    std::function<void()> dividerReset;
+    std::function<void(bool)> lcdPower;
 
     Memory() { resetIO(); }
     void resetIO() {
         io.fill(0); hram.fill(0); vram.fill(0); wram.fill(0); oam.fill(0);
-        soundTrigger.fill(0); divCounter=0; ie=0; timerReload=-1; serialTicks=0; dmaTicks=0; dmaPos=160;
-        ppuMode=2; statLine=false;
+        soundTrigger.fill(0); divCounter=0; ie=0; timerReload=-1; timerJustReloaded=false;
+        serialTicks=0; dmaTicks=0; dmaPos=160; dmaDelay=0;
+        dmaSource=pendingDmaSource=0;
+        ppuMode=ppuStatMode=2;ppuDot=0; statLine=false;serialSent=ppuCompareLY=0;
+        serialOutput.clear();
+        right=left=up=down=a=b=select=start=false;
         io[0x00]=0xCF; io[0x0F]=0xE1;
         io[0x10]=0x80; io[0x11]=0xBF; io[0x12]=0xF3; io[0x14]=0xBF;
         io[0x16]=0x3F; io[0x19]=0xBF; io[0x1A]=0x7F; io[0x1B]=0xFF;
@@ -70,10 +84,32 @@ public:
         std::ifstream f(path,std::ios::binary);
         return f ? std::vector<u8>(std::istreambuf_iterator<char>(f),{}) : std::vector<u8>{};
     }
+    static bool writeAtomic(const std::filesystem::path& path,std::string_view bytes){
+        auto temporary=path;temporary+=".tmp";
+        {std::ofstream f(temporary,std::ios::binary|std::ios::trunc);
+            if(!f)return false;f.write(bytes.data(),(std::streamsize)bytes.size());f.flush();
+            if(!f){std::error_code ec;std::filesystem::remove(temporary,ec);return false;}}
+        std::error_code ec;
+        std::filesystem::rename(temporary,path,ec);
+        if(!ec)return true;
+        // Windows rename cannot replace an existing file. Keep the old file
+        // until the replacement is ready, and restore it if committing fails.
+        auto backup=path;backup+=".bak";
+        if(!std::filesystem::exists(path,ec)){std::filesystem::remove(temporary,ec);return false;}
+        std::filesystem::remove(backup,ec);ec.clear();
+        std::filesystem::rename(path,backup,ec);
+        if(ec){std::filesystem::remove(temporary,ec);return false;}
+        std::filesystem::rename(temporary,path,ec);
+        if(ec){std::filesystem::rename(backup,path,ec);return false;}
+        std::filesystem::remove(backup,ec);return true;
+    }
     bool loadROM(const std::filesystem::path& path) {
         auto data=loadBytes(path);
-        if(data.size()<0x150 || data.size()>8*1024*1024) return false;
-        if(data[0x143]==0xC0){std::cerr<<"CGB-only cartridge requires Color support (not implemented).\n";return false;}
+        loadError.clear();
+        if(data.size()<32768 || data.size()>8*1024*1024 || data.size()%16384) {
+            loadError="ROM must contain complete 16 KiB banks (32 KiB to 8 MiB).";return false;
+        }
+        if(data[0x143]==0xC0){loadError="This cartridge requires Game Boy Color. Color is planned for the next stage.";return false;}
         const u8 type=data[0x147];
         int controller=-1;
         switch(type) {
@@ -82,10 +118,13 @@ public:
             case 0x05: case 0x06: controller=2;break;
             case 0x0F: case 0x10: case 0x11: case 0x12: case 0x13: controller=3;break;
             case 0x19: case 0x1A: case 0x1B: case 0x1C: case 0x1D: case 0x1E: controller=5;break;
-            default: std::cerr << "Unsupported cartridge type: " << std::hex << (int)type << std::dec << '\n';return false;
+            default: loadError="Unsupported cartridge controller: "+std::to_string(type);return false;
         }
         rom=std::move(data); romPath=path; mbc=controller;
         romBank=1; bankHigh=0; ramBank=0; mbcMode=0; ramEnabled=(mbc==0);
+        latchWrite=0; rumble=type>=0x1C&&type<=0x1E;mbc1Multicart=false;
+        if(mbc==1 && rom.size()>=0x80000)
+            mbc1Multicart=std::equal(rom.begin()+0x104,rom.begin()+0x134,rom.begin()+0x40104);
         hasBattery=(type==0x03 || type==0x06 || type==0x09 || type==0x0F || type==0x10 || type==0x13 || type==0x1B || type==0x1E);
         hasRTC=(type==0x0F || type==0x10); cgbROM=(rom[0x143]&0x80)!=0;
         std::size_t size=0;
@@ -98,11 +137,11 @@ public:
         return true;
     }
     std::size_t banks() const {return std::max<std::size_t>(2,(rom.size()+0x3FFF)/0x4000);}
-    std::size_t bank0() const {return mbc==1&&mbcMode ? ((std::size_t)bankHigh<<5)%banks() : 0;}
+    std::size_t bank0() const {return mbc==1&&mbcMode ? ((std::size_t)bankHigh<<(mbc1Multicart?4:5))%banks() : 0;}
     std::size_t bankN() const {
         std::size_t n=1;
         if(mbc==0) n=1;
-        if(mbc==1) { n=(romBank&31)|((std::size_t)bankHigh<<5); if((n&31)==0)++n; }
+        if(mbc==1) {const int mask=mbc1Multicart?15:31;n=(romBank&mask)|((std::size_t)bankHigh<<(mbc1Multicart?4:5));}
         if(mbc==2) n=romBank&15;
         if(mbc==3) n=romBank&127;
         if(mbc==5) n=romBank&511;
@@ -115,10 +154,11 @@ public:
     }
     void refreshStat() {
         u8& stat=io[0x41];
-        stat=(u8)((stat&0xF8)|(ppuMode&3));
-        if(io[0x44]==io[0x45])stat|=4;else stat&=(u8)~4;
-        const bool line=((stat&4)&&(stat&0x40)) || (ppuMode==0&&(stat&8)) ||
-                        (ppuMode==1&&(stat&0x10)) || (ppuMode==2&&(stat&0x20));
+        stat=(u8)((stat&0xFC)|(ppuMode&3));
+        if(!(io[0x40]&0x80))return; // LY comparison clock stops with the LCD.
+        if(ppuCompareLY!=0xFF&&ppuCompareLY==io[0x45])stat|=4;else stat&=(u8)~4;
+        const bool line=((stat&4)&&(stat&0x40)) || (ppuStatMode==0&&(stat&8)) ||
+                        (ppuStatMode==1&&(stat&0x10)) || (ppuStatMode==2&&(stat&0x20));
         if(line&&!statLine)io[0x0F]|=2;
         statLine=line;
     }
@@ -146,8 +186,16 @@ public:
         if(addr<0xFF00)return 0xFF;
         if(addr==0xFFFF)return ie;
         if(addr>=0xFF80)return hram[addr-0xFF80];
+        if(addr>=0xFF10&&addr<=0xFF3F){
+            if(soundRead)return soundRead(addr);
+            static constexpr u8 masks[0x30]={0x80,0x3F,0,0xFF,0xBF,0xFF,0x3F,0,0xFF,0xBF,
+                0x7F,0xFF,0x9F,0xFF,0xBF,0xFF,0xFF,0,0,0xBF,0,0,0x70,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
+            return addr>=0xFF30?io[addr-0xFF00]:(u8)(io[addr-0xFF00]|masks[addr-0xFF10]);
+        }
+        if(addr==0xFF03||(addr>=0xFF08&&addr<=0xFF0E)||(addr>=0xFF4C&&addr<=0xFF7F))return 0xFF;
         switch(addr) {
             case 0xFF00:return joypadRead();
+            case 0xFF02:return io[2]|0x7E;
             case 0xFF04:return (u8)(divCounter>>8);
             case 0xFF07:return io[7]|0xF8;
             case 0xFF0F:return io[0x0F]|0xE0;
@@ -156,6 +204,32 @@ public:
             case 0xFF26:return (io[0x26]&0x8F)|0x70;
             default:return io[addr-0xFF00];
         }
+    }
+    u8 cpuRead(u16 addr) const {
+        if(dmaPos<160){
+            if(addr>=0xFE00&&addr<0xFEA0)return 0xFF;
+            const bool dmaVideo=dmaSource>=0x8000&&dmaSource<0xA000;
+            const bool cpuVideo=addr>=0x8000&&addr<0xA000;
+            if(addr<0xFE00&&dmaVideo==cpuVideo)return 0xFF;
+        }
+        if(io[0x40]&0x80){
+            if(addr>=0x8000&&addr<0xA000&&(ppuMode==3||(ppuMode==2&&ppuDot>=80)))return 0xFF;
+            if(addr>=0xFE00&&addr<0xFEA0&&(ppuStatMode==2||ppuMode==3||dmaPos<160))return 0xFF;
+        }
+        return read(addr);
+    }
+    void cpuWrite(u16 addr,u8 v){
+        if(dmaPos<160){
+            if(addr>=0xFE00&&addr<0xFEA0)return;
+            const bool dmaVideo=dmaSource>=0x8000&&dmaSource<0xA000;
+            const bool cpuVideo=addr>=0x8000&&addr<0xA000;
+            if(addr<0xFE00&&dmaVideo==cpuVideo)return;
+        }
+        if(io[0x40]&0x80){
+            if(addr>=0x8000&&addr<0xA000&&ppuMode==3)return;
+            if(addr>=0xFE00&&addr<0xFEA0&&((ppuMode==2&&ppuDot<80)||ppuMode==3||dmaPos<160))return;
+        }
+        write(addr,v);
     }
     bool timerSignal() const {
         static constexpr int bits[4]={9,3,5,7};
@@ -166,18 +240,15 @@ public:
         if(io[5]==0xFF) {io[5]=0;timerReload=4;}
         else ++io[5];
     }
-    void rtcSecond() {
-        if(!hasRTC || (rtc[4]&0x40))return;
-        if(++rtc[0]<60)return;
-        rtc[0]=0;
-        if(++rtc[1]<60)return;
-        rtc[1]=0;
-        if(++rtc[2]<24)return;
-        rtc[2]=0;
-        u16 d=(u16)(rtc[3]|((rtc[4]&1)<<8));++d;
-        if(d>=512){d=0;rtc[4]|=0x80;}
-        rtc[3]=d&255; rtc[4]=(rtc[4]&0xFE)|((d>>8)&1);
+    void advanceRTC(u64 seconds) {
+        if(!hasRTC||(rtc[4]&0x40))return;
+        const u64 total=seconds+(rtc[0]%60)+(rtc[1]%60)*60+(rtc[2]%24)*3600;
+        const u64 days=(rtc[3]|((rtc[4]&1)<<8))+total/86400;
+        rtc[0]=total%60;rtc[1]=(total/60)%60;rtc[2]=(total/3600)%24;
+        if(days>=512)rtc[4]|=0x80;
+        rtc[3]=days&255;rtc[4]=(rtc[4]&0xFE)|((days>>8)&1);
     }
+    void rtcSecond(){advanceRTC(1);}
     void write(u16 addr,u8 v) {
         if(addr<0x8000) {
             if(mbc==0)return;
@@ -187,12 +258,12 @@ public:
             }
             if(addr<0x2000){ramEnabled=(v&15)==10;return;}
             if(addr<0x4000){
-                if(mbc==1)romBank=v&31;
+                if(mbc==1){romBank=v&31;if(!romBank)romBank=1;}
                 if(mbc==3){romBank=v&127;if(!romBank)romBank=1;}
                 if(mbc==5){if(addr<0x3000)romBank=(romBank&0x100)|v;else romBank=(romBank&255)|((v&1)<<8);}
                 return;
             }
-            if(addr<0x6000){if(mbc==1)bankHigh=v&3;else ramBank=(mbc==5)?(v&15):v;return;}
+            if(addr<0x6000){if(mbc==1)bankHigh=v&3;else ramBank=(mbc==5)?(v&(rumble?7:15)):v;return;}
             if(mbc==1)mbcMode=v&1;
             if(mbc==3){if(latchWrite==0&&v==1){latchedRTC=rtc;rtcLatched=true;} latchWrite=v;}
             return;
@@ -212,29 +283,43 @@ public:
         if(addr<0xFF00)return;
         if(addr==0xFFFF){ie=v;return;}
         if(addr>=0xFF80){hram[addr-0xFF80]=v;return;}
+        if(addr>=0xFF10&&addr<=0xFF3F&&soundWrite){soundWrite(addr,v);return;}
         switch(addr){
             case 0xFF00:{const u8 before=joypadRead();io[0]=(io[0]&~0x30)|(v&0x30);joyChanged(before);break;}
-            case 0xFF04:{const bool old=timerSignal();divCounter=0;if(old&&!timerSignal())advanceTima();break;}
-            case 0xFF05:io[5]=v;timerReload=-1;break;
-            case 0xFF06:io[6]=v;break;
+            case 0xFF04:{const bool old=timerSignal();if((divCounter&0x1000)&&dividerReset)dividerReset();divCounter=0;if(old&&!timerSignal())advanceTima();break;}
+            case 0xFF05:if(!timerJustReloaded){io[5]=v;timerReload=-1;}break;
+            case 0xFF06:io[6]=v;if(timerJustReloaded)io[5]=v;break;
             case 0xFF07:{const bool old=timerSignal();io[7]=v&7;if(old&&!timerSignal())advanceTima();break;}
             case 0xFF0F:io[0x0F]=v|0xE0;break;
-            case 0xFF02:io[2]=v;if(v&0x80)serialTicks=4096;break;
+            case 0xFF02:io[2]=v&0x81;serialTicks=(v&0x81)==0x81?4096:0;serialSent=io[1];break;
             case 0xFF14:case 0xFF19:case 0xFF1E:case 0xFF23:{io[addr-0xFF00]=v;if(v&0x80){int channel=addr==0xFF14?0:addr==0xFF19?1:addr==0xFF1E?2:3;++soundTrigger[channel];io[0x26]|=(u8)(1<<channel);}break;}
             case 0xFF26:io[0x26]=(io[0x26]&15)|(v&0x80);if(!(v&0x80)){for(int i=0x10;i<=0x25;++i)io[i]=0;io[0x26]=0;}break;
-            case 0xFF41:io[0x41]=(io[0x41]&0x87)|(v&0x78);refreshStat();break;
+            case 0xFF40:{bool changed=(io[0x40]^v)&0x80;io[0x40]=v;if(changed&&lcdPower)lcdPower((v&0x80)!=0);break;}
+            case 0xFF41:if((io[0x40]&0x80)&&!statLine&&(ppuMode!=3||io[0x44]==io[0x45]))io[0x0F]|=2;
+                io[0x41]=(io[0x41]&0x87)|(v&0x78);refreshStat();break;
             case 0xFF45:io[0x45]=v;refreshStat();break;
             case 0xFF44:break; // LY is read-only
-            case 0xFF46:dmaSource=(u16)(v<<8);dmaPos=0;dmaTicks=0;io[0x46]=v;break;
+            case 0xFF46:pendingDmaSource=(u16)(v<<8);dmaDelay=8;io[0x46]=v;break;
             default:io[addr-0xFF00]=v;break;
         }
     }
     void tick(int cycles) {
         for(int i=0;i<cycles;++i) {
-            if(timerReload>=0){if(--timerReload==0){io[5]=io[6];io[0x0F]|=4;timerReload=-1;}}
-            const bool old=timerSignal();++divCounter;if(old&&!timerSignal())advanceTima();
-            if(serialTicks>0&&--serialTicks==0){io[2]&=~0x80;io[1]=0xFF;io[0x0F]|=8;}
-            if(dmaPos<160 && ++dmaTicks==4){dmaTicks=0;oam[dmaPos]=read((u16)(dmaSource+dmaPos));++dmaPos;}
+            timerJustReloaded=false;
+            if(timerReload>=0){if(--timerReload==0){io[5]=io[6];io[0x0F]|=4;timerReload=-1;timerJustReloaded=true;}}
+            const bool old=timerSignal();
+            ++divCounter;if(old&&!timerSignal())advanceTima();
+            // Serial's divider edge precedes the readable DIV phase by one M-cycle.
+            if(serialTicks>0&&((divCounter+4)&511)==0){
+                io[1]=(u8)((io[1]<<1)|1);serialTicks-=512;
+                if(serialTicks==0){if(serialOutput.size()<65536)serialOutput+=(char)serialSent;io[2]&=~0x80;io[0x0F]|=8;}
+            }
+            if(dmaPos<160 && ++dmaTicks==4){
+                dmaTicks=0;u16 source=(u16)(dmaSource+dmaPos);
+                if(source>=0xE000)source-=0x2000;
+                oam[dmaPos]=read(source);++dmaPos;
+            }
+            if(dmaDelay>0&&--dmaDelay==0){dmaSource=pendingDmaSource;dmaPos=0;dmaTicks=0;}
             if(hasRTC && ++rtcCycles>=GB_CLOCK){rtcCycles-=GB_CLOCK;rtcSecond();}
         }
     }
@@ -243,16 +328,13 @@ public:
     bool saveBattery() const {
         if(!hasBattery||romPath.empty())return false;
         if(!eram.empty()){
-            std::ofstream f(savePath(),std::ios::binary|std::ios::trunc);
-            if(!f)return false;
-            f.write((const char*)eram.data(),(std::streamsize)eram.size());if(!f)return false;
+            if(!writeAtomic(savePath(),std::string_view((const char*)eram.data(),eram.size())))return false;
         }
         if(hasRTC){
-            std::ofstream f(rtcPath(),std::ios::binary|std::ios::trunc);
-            if(!f)return false;
-            f.write("GBRTC01",7); f.write((const char*)rtc.data(),5);
+            std::string bytes="GBRTC01";bytes.append((const char*)rtc.data(),5);
             const auto now=std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-            std::int64_t stamp=(std::int64_t)now;f.write((const char*)&stamp,sizeof(stamp));
+            std::int64_t stamp=(std::int64_t)now;bytes.append((const char*)&stamp,sizeof(stamp));
+            if(!writeAtomic(rtcPath(),bytes))return false;
         }
         return true;
     }
@@ -265,7 +347,7 @@ public:
         if(f && f.read(magic,7) && std::string(magic,7)=="GBRTC01" && f.read((char*)rtc.data(),5) && f.read((char*)&stamp,sizeof(stamp))){
             const auto now=(std::int64_t)std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
             auto elapsed=std::clamp<std::int64_t>(now-stamp,0,86400*365LL);
-            if(!(rtc[4]&0x40))for(std::int64_t i=0;i<elapsed;++i)rtcSecond();
+            advanceRTC((u64)elapsed);
         }
     }
 };
@@ -279,6 +361,22 @@ public:
     bool stopped = false;
     bool haltBug = false;
     int imeDelay = 0;
+    bool locked=false;
+    int elapsed=0;
+    std::function<void(int)> clock;
+    void idle(int cycles){elapsed+=cycles;if(clock)clock(cycles);}
+    u8 read8(u16 addr){idle(4);return m.cpuRead(addr);}
+    void write8(u16 addr,u8 value){
+        if(addr==0xFF07){idle(3);m.cpuWrite(addr,value);idle(1);}
+        else {idle(4);m.cpuWrite(addr,value);}
+    }
+    int step(){
+        elapsed=0;
+        const int cycles=locked?4:execute();
+        if(cycles>elapsed)idle(cycles-elapsed);
+        if(imeDelay>0&&--imeDelay==0)IME=true;
+        return elapsed;
+    }
 
     explicit CPU(Memory& mem) : m(mem) {}
 
@@ -299,29 +397,29 @@ public:
         F = static_cast<u8>((Z ? 0x80 : 0) | (N ? 0x40 : 0) | (Hf ? 0x20 : 0) | (Cf ? 0x10 : 0));
     }
 
-    u8 fetch8() { const u8 v = m.read(PC); if (haltBug) haltBug = false; else PC = static_cast<u16>(PC + 1); return v; }
+    u8 fetch8() { const u8 v = read8(PC); if (haltBug) haltBug = false; else PC = static_cast<u16>(PC + 1); return v; }
     u16 fetch16() { const u16 lo = fetch8(); const u16 hi = fetch8(); return static_cast<u16>(lo | hi << 8); }
 
     void push16(u16 v) {
-        m.write(--SP, static_cast<u8>(v >> 8));
-        m.write(--SP, static_cast<u8>(v & 0xFF));
+        write8(--SP, static_cast<u8>(v >> 8));
+        write8(--SP, static_cast<u8>(v & 0xFF));
     }
     u16 pop16() {
-        const u16 lo = m.read(SP++);
-        const u16 hi = m.read(SP++);
+        const u16 lo = read8(SP++);
+        const u16 hi = read8(SP++);
         return static_cast<u16>(lo | hi << 8);
     }
 
     u8 readR8(int r) {
         switch (r & 7) {
             case 0: return B; case 1: return C; case 2: return D; case 3: return E;
-            case 4: return H; case 5: return L; case 6: return m.read(HL()); default: return A;
+            case 4: return H; case 5: return L; case 6: return read8(HL()); default: return A;
         }
     }
     void writeR8(int r, u8 v) {
         switch (r & 7) {
             case 0: B = v; break; case 1: C = v; break; case 2: D = v; break; case 3: E = v; break;
-            case 4: H = v; break; case 5: L = v; break; case 6: m.write(HL(), v); break; default: A = v; break;
+            case 4: H = v; break; case 5: L = v; break; case 6: write8(HL(), v); break; default: A = v; break;
         }
     }
 
@@ -335,12 +433,12 @@ public:
     void inc8(u8& x) {
         const u8 old = x++;
         const bool Hf = ((old & 0x0F) + 1) > 0x0F;
-        F = static_cast<u8>((old + 1 == 0 ? 0x80 : 0) | (Hf ? 0x20 : 0) | (F & 0x10));
+        F = static_cast<u8>((x == 0 ? 0x80 : 0) | (Hf ? 0x20 : 0) | (F & 0x10));
     }
     void dec8(u8& x) {
         const u8 old = x--;
         const bool Hf = (old & 0x0F) == 0;
-        F = static_cast<u8>((old - 1 == 0 ? 0x80 : 0) | 0x40 | (Hf ? 0x20 : 0) | (F & 0x10));
+        F = static_cast<u8>((x == 0 ? 0x80 : 0) | 0x40 | (Hf ? 0x20 : 0) | (F & 0x10));
     }
     u8 incR8(int r) {
         u8 v = readR8(r); const u8 old = v; ++v;
@@ -416,29 +514,29 @@ public:
     }
 
     int serviceInterrupt() {
-        if(stopped && (m.io[0x0F]&0x10))stopped=false;
+        if(stopped){if(m.io[0x0F]&0x10)stopped=false;else return 0;}
         const u8 pending = static_cast<u8>(m.ie & m.io[0x0F] & 0x1F);
         if (!pending) return 0;
         if (!IME) { halted = false; stopped = false; return 0; }
         IME = false;
+        imeDelay = 0;
         halted = false;
         int bit = 0;
         while (((pending >> bit) & 1) == 0) ++bit;
-        m.io[0x0F] = static_cast<u8>(m.io[0x0F] & ~(1 << bit));
-        push16(PC);
-        PC = static_cast<u16>(0x40 + bit * 8);
+        idle(8);
+        write8(--SP,(u8)(PC>>8));
+        const u8 selected=(u8)(m.ie&m.io[0x0F]&0x1F);
+        write8(--SP,(u8)PC);
+        if(selected){bit=0;while(!(selected&(1<<bit)))++bit;m.io[0x0F]&=(u8)~(1<<bit);}
+        haltBug=false;
+        PC = selected?static_cast<u16>(0x40 + bit * 8):0;
         return 20;
     }
 
-    int step() {
+    int execute() {
         const int irqCycles = serviceInterrupt();
         if (irqCycles) return irqCycles;
         if (stopped || halted) return 4;
-
-        if (imeDelay > 0) {
-            --imeDelay;
-            if (imeDelay == 0) IME = true;
-        }
 
         const u8 op = fetch8();
 
@@ -484,14 +582,14 @@ public:
             case 0x21: setHL(fetch16()); return 12;
             case 0x31: SP = fetch16(); return 12;
 
-            case 0x02: m.write(BC(), A); return 8;
-            case 0x12: m.write(DE(), A); return 8;
-            case 0x22: m.write(HL(), A); setHL(static_cast<u16>(HL() + 1)); return 8;
-            case 0x32: m.write(HL(), A); setHL(static_cast<u16>(HL() - 1)); return 8;
-            case 0x0A: A = m.read(BC()); return 8;
-            case 0x1A: A = m.read(DE()); return 8;
-            case 0x2A: A = m.read(HL()); setHL(static_cast<u16>(HL() + 1)); return 8;
-            case 0x3A: A = m.read(HL()); setHL(static_cast<u16>(HL() - 1)); return 8;
+            case 0x02: write8(BC(), A); return 8;
+            case 0x12: write8(DE(), A); return 8;
+            case 0x22: write8(HL(), A); setHL(static_cast<u16>(HL() + 1)); return 8;
+            case 0x32: write8(HL(), A); setHL(static_cast<u16>(HL() - 1)); return 8;
+            case 0x0A: A = read8(BC()); return 8;
+            case 0x1A: A = read8(DE()); return 8;
+            case 0x2A: A = read8(HL()); setHL(static_cast<u16>(HL() + 1)); return 8;
+            case 0x3A: A = read8(HL()); setHL(static_cast<u16>(HL() - 1)); return 8;
 
             case 0x03: setBC(static_cast<u16>(BC() + 1)); return 8;
             case 0x13: setDE(static_cast<u16>(DE() + 1)); return 8;
@@ -507,8 +605,8 @@ public:
             case 0x17: { const bool oldC = c(); const u8 old = A; A = static_cast<u8>((A << 1) | (oldC ? 1 : 0)); setFlags(false, false, false, old & 0x80); return 4; }
             case 0x1F: { const bool oldC = c(); const u8 old = A; A = static_cast<u8>((A >> 1) | (oldC ? 0x80 : 0)); setFlags(false, false, false, old & 1); return 4; }
 
-            case 0x08: { const u16 a = fetch16(); m.write(a, SP & 0xFF); m.write(static_cast<u16>(a + 1), SP >> 8); return 20; }
-            case 0x10: fetch8(); stopped = true; return 4;
+            case 0x08: { const u16 a = fetch16(); write8(a, SP & 0xFF); write8(static_cast<u16>(a + 1), SP >> 8); return 20; }
+            case 0x10: ++PC; m.write(0xFF04,0); stopped = true; return 4;
             case 0x18: { const s8 d = static_cast<s8>(fetch8()); PC = static_cast<u16>(PC + d); return 12; }
 
             case 0x20: { const s8 d = static_cast<s8>(fetch8()); if (!z()) { PC = static_cast<u16>(PC + d); return 12; } return 8; }
@@ -528,36 +626,36 @@ public:
             case 0xDA: { const u16 a = fetch16(); if (c()) PC = a; return c() ? 16 : 12; }
             case 0xE9: PC = HL(); return 4;
 
-            case 0xCD: { const u16 a = fetch16(); push16(PC); PC = a; return 24; }
-            case 0xC4: { const u16 a = fetch16(); if (!z()) { push16(PC); PC = a; return 24; } return 12; }
-            case 0xCC: { const u16 a = fetch16(); if (z())  { push16(PC); PC = a; return 24; } return 12; }
-            case 0xD4: { const u16 a = fetch16(); if (!c()) { push16(PC); PC = a; return 24; } return 12; }
-            case 0xDC: { const u16 a = fetch16(); if (c())  { push16(PC); PC = a; return 24; } return 12; }
+            case 0xCD: { const u16 a = fetch16(); idle(4); push16(PC); PC = a; return 24; }
+            case 0xC4: { const u16 a = fetch16(); if (!z()) { idle(4); push16(PC); PC = a; return 24; } return 12; }
+            case 0xCC: { const u16 a = fetch16(); if (z())  { idle(4); push16(PC); PC = a; return 24; } return 12; }
+            case 0xD4: { const u16 a = fetch16(); if (!c()) { idle(4); push16(PC); PC = a; return 24; } return 12; }
+            case 0xDC: { const u16 a = fetch16(); if (c())  { idle(4); push16(PC); PC = a; return 24; } return 12; }
 
             case 0xC9: PC = pop16(); return 16;
-            case 0xC0: if (!z()) { PC = pop16(); return 20; } return 8;
-            case 0xC8: if (z())  { PC = pop16(); return 20; } return 8;
-            case 0xD0: if (!c()) { PC = pop16(); return 20; } return 8;
-            case 0xD8: if (c())  { PC = pop16(); return 20; } return 8;
+            case 0xC0: idle(4); if (!z()) { PC = pop16(); return 20; } return 8;
+            case 0xC8: idle(4); if (z())  { PC = pop16(); return 20; } return 8;
+            case 0xD0: idle(4); if (!c()) { PC = pop16(); return 20; } return 8;
+            case 0xD8: idle(4); if (c())  { PC = pop16(); return 20; } return 8;
             case 0xD9: PC = pop16(); IME = true; imeDelay = 0; return 16;
 
             case 0xC1: setBC(pop16()); return 12;
             case 0xD1: setDE(pop16()); return 12;
             case 0xE1: setHL(pop16()); return 12;
             case 0xF1: setAF(pop16()); return 12;
-            case 0xC5: push16(BC()); return 16;
-            case 0xD5: push16(DE()); return 16;
-            case 0xE5: push16(HL()); return 16;
-            case 0xF5: push16(AF()); return 16;
+            case 0xC5: idle(4); push16(BC()); return 16;
+            case 0xD5: idle(4); push16(DE()); return 16;
+            case 0xE5: idle(4); push16(HL()); return 16;
+            case 0xF5: idle(4); push16(AF()); return 16;
 
-            case 0xC7: push16(PC); PC = 0x00; return 16;
-            case 0xCF: push16(PC); PC = 0x08; return 16;
-            case 0xD7: push16(PC); PC = 0x10; return 16;
-            case 0xDF: push16(PC); PC = 0x18; return 16;
-            case 0xE7: push16(PC); PC = 0x20; return 16;
-            case 0xEF: push16(PC); PC = 0x28; return 16;
-            case 0xF7: push16(PC); PC = 0x30; return 16;
-            case 0xFF: push16(PC); PC = 0x38; return 16;
+            case 0xC7: idle(4); push16(PC); PC = 0x00; return 16;
+            case 0xCF: idle(4); push16(PC); PC = 0x08; return 16;
+            case 0xD7: idle(4); push16(PC); PC = 0x10; return 16;
+            case 0xDF: idle(4); push16(PC); PC = 0x18; return 16;
+            case 0xE7: idle(4); push16(PC); PC = 0x20; return 16;
+            case 0xEF: idle(4); push16(PC); PC = 0x28; return 16;
+            case 0xF7: idle(4); push16(PC); PC = 0x30; return 16;
+            case 0xFF: idle(4); push16(PC); PC = 0x38; return 16;
 
 
             case 0x09: addHL(BC()); return 8;
@@ -566,12 +664,12 @@ public:
             case 0x39: addHL(SP); return 8;
 
 
-            case 0xEA: { const u16 a = fetch16(); m.write(a, A); return 16; }
-            case 0xFA: { const u16 a = fetch16(); A = m.read(a); return 16; }
-            case 0xE0: { const u8 a = fetch8(); m.write(static_cast<u16>(0xFF00 | a), A); return 12; }
-            case 0xF0: { const u8 a = fetch8(); A = m.read(static_cast<u16>(0xFF00 | a)); return 12; }
-            case 0xE2: m.write(static_cast<u16>(0xFF00 | C), A); return 8;
-            case 0xF2: A = m.read(static_cast<u16>(0xFF00 | C)); return 8;
+            case 0xEA: { const u16 a = fetch16(); write8(a, A); return 16; }
+            case 0xFA: { const u16 a = fetch16(); A = read8(a); return 16; }
+            case 0xE0: { const u8 a = fetch8(); write8(static_cast<u16>(0xFF00 | a), A); return 12; }
+            case 0xF0: { const u8 a = fetch8(); A = read8(static_cast<u16>(0xFF00 | a)); return 12; }
+            case 0xE2: write8(static_cast<u16>(0xFF00 | C), A); return 8;
+            case 0xF2: A = read8(static_cast<u16>(0xFF00 | C)); return 8;
 
             case 0xF9: SP = HL(); return 8;
             case 0xF8: { const s8 d = static_cast<s8>(fetch8()); const u16 result = static_cast<u16>(SP + d); setFlags(false, false, ((SP & 0x0F) + (static_cast<u8>(d) & 0x0F)) > 0x0F, ((SP & 0xFF) + static_cast<u8>(d)) > 0xFF); setHL(result); return 12; }
@@ -587,11 +685,11 @@ public:
             case 0xFE: cpA(fetch8()); return 8;
 
             case 0xF3: IME = false; imeDelay = 0; return 4;
-            case 0xFB: imeDelay = 2; return 4;
+            case 0xFB: if(!imeDelay)imeDelay = 2; return 4;
 
             default:
                 std::cerr << "Unimplemented opcode 0x" << std::hex << int(op) << " at PC=0x" << int(static_cast<u16>(PC - 1)) << std::dec << "\n";
-                halted = true;
+                locked = true;
                 return 4;
         }
     }
@@ -608,161 +706,400 @@ public:
 class PPU {
 public:
     Memory& m;
-    std::array<u32,GB_W*GB_H> pixels{};
+    std::array<u32,GB_W*GB_H> pixels{}, drawing{};
     int dot=0, palette=0;
     bool lcdWasOn=true;
+    u64 frameNumber=0;
+    struct Sprite {int id=0,x=0,y=0,tile=0;u8 attr=0;};
+    struct Pipeline {
+        int line=0,windowLine=0,selectedCount=0,x=0,stall=0,scx=0,lastSpriteTile=-100000,windowX=0;
+        bool windowYTriggered=false,windowActive=false,windowDrawn=false,firstLine=false;
+        std::array<Sprite,10> sprites{};
+        std::array<bool,10> fetched{};
+    } state;
     static constexpr std::array<std::array<u32,4>,4> palettes{{
-        {{0xFF9BBD0F,0xFF8BAC0F,0xFF306230,0xFF0F380F}}, // Classic green, dark to light
-        {{0xFFE9F0EC,0xFFAFBEC0,0xFF586B70,0xFF182022}}, // Grey
-        {{0xFFDCEAF6,0xFF8CA7C2,0xFF3E6991,0xFF192F4A}}, // Blue
-        {{0xFFFFE8B8,0xFFD6A078,0xFF89506B,0xFF34172A}}  // Amber
+        {{0xFF9BBD0F,0xFF8BAC0F,0xFF306230,0xFF0F380F}},
+        {{0xFFFFFFFF,0xFFAAAAAA,0xFF555555,0xFF000000}},
+        {{0xFFDCEAF6,0xFF8CA7C2,0xFF3E6991,0xFF192F4A}},
+        {{0xFFFFE8B8,0xFFD6A078,0xFF89506B,0xFF34172A}}
     }};
-    explicit PPU(Memory& mem):m(mem){pixels.fill(palettes[0][0]);syncStat();}
+    explicit PPU(Memory& mem):m(mem){reset();}
     u32 shade(int value)const{return palettes[palette&3][value&3];}
-    int tileAt(bool win,int px,int py)const {
-        const u8 lcdc=m.io[0x40];
-        int mapBase=(win ? (lcdc&0x40):(lcdc&0x08)) ? 0x1C00:0x1800;
-        int tx=(px&255)/8,ty=(py&255)/8;
-        const u8 t=m.vram[mapBase+ty*32+tx];
-        int offset=(lcdc&0x10)?(int)t*16:(0x1000+(int)(s8)t*16);
-        int row=py&7,bit=7-(px&7);
-        const u8 low=m.vram[offset+row*2],high=m.vram[offset+row*2+1];
-        return ((high>>bit)&1)*2+((low>>bit)&1);
+    void reset(){
+        dot=0;state={};frameNumber=0;lcdWasOn=(m.io[0x40]&0x80)!=0;
+        m.io[0x44]=m.ppuCompareLY=0;m.ppuDot=0;m.ppuMode=m.ppuStatMode=lcdWasOn?2:0;
+        pixels.fill(shade(0));drawing=pixels;beginLine();syncStat();
     }
-    void renderLine(int y) {
-        if(y<0||y>=GB_H)return;
-        const u8 lcdc=m.io[0x40],bgp=m.io[0x47];
-        const int wx=(int)m.io[0x4B]-7,wy=(int)m.io[0x4A];
-        std::array<u8,GB_W> bg{};
-        const bool bgOn=lcdc&1, winOn=bgOn&&(lcdc&0x20)&&y>=wy&&wx<GB_W;
-        for(int x=0;x<GB_W;++x){
-            const bool win=winOn&&x>=wx;
-            const int raw=bgOn?(win?tileAt(true,x-wx,y-wy):tileAt(false,x+m.io[0x43],y+m.io[0x42])):0;
-            bg[x]=(u8)raw;
-            pixels[y*GB_W+x]=shade((bgp>>(raw*2))&3);
+    void power(bool enabled){
+        dot=enabled?-2:0;state={};state.firstLine=enabled;lcdWasOn=enabled;m.io[0x44]=0;m.ppuMode=m.ppuStatMode=0;
+        m.ppuDot=dot;if(enabled)m.ppuCompareLY=0;
+        if(!enabled){pixels.fill(shade(0));drawing=pixels;}
+        else beginLine();
+        syncStat();
+    }
+    void beginLine(){
+        state.selectedCount=0;state.x=0;state.windowActive=state.windowDrawn=false;
+        state.fetched.fill(false);state.lastSpriteTile=-100000;
+        if(state.line==m.io[0x4A])state.windowYTriggered=true;
+    }
+    int tileAt(bool window,int px,int py)const {
+        const u8 lcdc=m.io[0x40];
+        const int mapBase=(window?(lcdc&0x40):(lcdc&8))?0x1C00:0x1800;
+        const u8 tile=m.vram[mapBase+((py&255)/8)*32+(px&255)/8];
+        const int offset=(lcdc&0x10)?tile*16:0x1000+(int)(s8)tile*16;
+        const int row=(py&7)*2,bit=7-(px&7);
+        return ((m.vram[offset+row]>>bit)&1)|(((m.vram[offset+row+1]>>bit)&1)<<1);
+    }
+    void scanSprite(int id){
+        if(m.dmaPos<160)return;
+        const int height=(m.io[0x40]&4)?16:8;
+        const int y=(int)m.oam[id*4]-16;
+        if(state.selectedCount<10&&state.line>=y&&state.line<y+height){
+            state.sprites[state.selectedCount++]={id,(int)m.oam[id*4+1]-8,y,(int)m.oam[id*4+2],m.oam[id*4+3]};
         }
-        if(!(lcdc&2))return;
-        const int sprH=(lcdc&4)?16:8;
-        struct Sprite {int id,x,y;};
-        std::vector<Sprite> visible;visible.reserve(10);
-        for(int id=0;id<40;++id){
-            const int y0=(int)m.oam[id*4]-16;
-            if(y>=y0&&y<y0+sprH){visible.push_back({id,(int)m.oam[id*4+1]-8,y0});if(visible.size()==10)break;}
-        }
-        // DMG: sprite with smaller X wins; for equal X smaller OAM index wins.
-        std::sort(visible.begin(),visible.end(),[](const Sprite& a,const Sprite& b){
-            return a.x==b.x ? a.id>b.id : a.x>b.x;
-        });
-        for(int k=0;k<(int)visible.size();++k){
-            const auto [id,sx,sy]=visible[k];
-            int tile=m.oam[id*4+2];u8 attr=m.oam[id*4+3];
-            int yy=y-sy;if(attr&0x40)yy=sprH-1-yy;
-            if(sprH==16)tile&=0xFE;
-            tile+=yy/8;
-            const int off=tile*16+(yy&7)*2;
-            const u8 lo=m.vram[off],hi=m.vram[off+1];
-            const u8 pal=m.io[(attr&0x10)?0x49:0x48];
-            for(int px=0;px<8;++px){
-                int x=sx+px;if(x<0||x>=GB_W)continue;
-                const int bit=(attr&0x20)?px:7-px;
-                int raw=((hi>>bit)&1)*2+((lo>>bit)&1);
-                if(!raw || ((attr&0x80) && bg[x]))continue;
-                pixels[y*GB_W+x]=shade((pal>>(2*raw))&3);
+    }
+    void pixel(){
+        const int x=state.x,y=state.line;
+        const u8 lcdc=m.io[0x40];
+        const int bg=(lcdc&1)?tileAt(state.windowActive,
+            state.windowActive?x-state.windowX:x+m.io[0x43],
+            state.windowActive?state.windowLine:y+m.io[0x42]):0;
+        u32 color=shade((lcdc&1)?((m.io[0x47]>>(2*bg))&3):0);
+        if(lcdc&2){
+            // Select the winning OBJ first, then apply its BG priority. A hidden
+            // winner still masks lower-priority OBJs (important in Mario games).
+            for(int i=0;i<state.selectedCount;++i){
+                const auto& s=state.sprites[i];
+                if(x<s.x||x>=s.x+8)continue;
+                const int height=(lcdc&4)?16:8;
+                int row=y-s.y;
+                if(s.attr&0x40)row=height-1-row;
+                int tile=height==16?(s.tile&0xFE):s.tile;
+                tile+=row/8;
+                const int off=tile*16+(row&7)*2;
+                const int bit=(s.attr&0x20)?x-s.x:7-(x-s.x);
+                const int raw=((m.vram[off]>>bit)&1)|(((m.vram[off+1]>>bit)&1)<<1);
+                if(!raw)continue;
+                if(!(s.attr&0x80)||!bg)color=shade((m.io[(s.attr&0x10)?0x49:0x48]>>(raw*2))&3);
+                break;
             }
         }
+        drawing[y*GB_W+x]=color;
+    }
+    void transferDot(){
+        if(state.stall>0){--state.stall;return;}
+        const int wx=(int)m.io[0x4B]-7;
+        if(!state.windowActive&&state.windowYTriggered&&(m.io[0x40]&0x21)==0x21&&
+           wx<160&&state.x>=std::max(0,wx)){
+            state.windowActive=state.windowDrawn=true;state.windowX=wx;
+            state.lastSpriteTile=-100000;state.stall=5;return;
+        }
+        if(m.io[0x40]&2){
+            for(int i=0;i<state.selectedCount;++i){
+                const auto& s=state.sprites[i];
+                if(state.fetched[i]||s.x>=160||s.x>state.x)continue;
+                state.fetched[i]=true;
+                const int pos=state.windowActive?s.x-state.windowX:s.x+state.scx;
+                const int key=(pos>=0?pos/8:(pos-7)/8)+(state.windowActive?64:0);
+                const int penalty=6+(state.lastSpriteTile==key?0:s.x==-8?5:std::max(0,5-(pos&7)));
+                state.lastSpriteTile=key;state.stall=penalty-1;return;
+            }
+        }
+        pixel();
+        ++state.x;
+        if(state.x==GB_W-4){m.ppuStatMode=0;syncStat();}
+        if(state.x==GB_W){m.ppuMode=0;syncStat();}
     }
     void syncStat(){m.refreshStat();}
     void tick(int cycles){
-        if(!(m.io[0x40]&0x80)){
-            if(lcdWasOn){dot=0;m.io[0x44]=0;m.ppuMode=0;m.statLine=false;
-                pixels.fill(shade(0));syncStat();lcdWasOn=false;}
-            return;
-        }
-        if(!lcdWasOn){lcdWasOn=true;dot=0;m.io[0x44]=0;m.ppuMode=2;syncStat();}
+        if(!(m.io[0x40]&0x80)){if(lcdWasOn)power(false);return;}
+        if(!lcdWasOn)power(true);
         for(int t=0;t<cycles;++t){
             ++dot;
-            if(m.io[0x44]<144){
-                if(dot==80){m.ppuMode=3;syncStat();}
-                else if(dot==252){renderLine(m.io[0x44]);m.ppuMode=0;syncStat();}
-            }
-            if(dot>=456){
-                dot=0;u8 ly=++m.io[0x44];
-                if(ly==144){m.io[0x0F]|=1;m.ppuMode=1;}
-                else if(ly==154){m.io[0x44]=0;m.ppuMode=2;}
-                else if(ly<144)m.ppuMode=2;
+            m.ppuDot=dot;
+            if(dot==4){m.ppuCompareLY=state.line==153?0:(u8)state.line;syncStat();}
+            if(state.line<GB_H){
+                const int oamEnd=state.firstLine?76:84;
+                if(!state.firstLine&&dot==4){m.ppuMode=2;syncStat();}
+                if(dot>(state.firstLine?0:4)&&dot<=oamEnd&&!(dot&1))scanSprite((dot-(state.firstLine?0:4))/2-1);
+                if(dot==oamEnd){
+                    std::sort(state.sprites.begin(),state.sprites.begin()+state.selectedCount,
+                        [](const Sprite& a,const Sprite& b){return a.x==b.x?a.id<b.id:a.x<b.x;});
+                    state.scx=m.io[0x43];state.stall=12+(state.scx&7);
+                    // The first OBJ fetch overlaps a background startup dot.
+                    if((m.io[0x40]&2)&&state.selectedCount&&state.sprites[0].x<160)--state.stall;
+                    m.ppuMode=m.ppuStatMode=3;syncStat();
+                }else if(m.ppuMode==3)transferDot();
+            }else if(state.line==153&&dot==4){m.io[0x44]=m.ppuCompareLY=0;syncStat();}
+            if(dot==(state.firstLine?448:456)){
+                dot=0;
+                m.ppuDot=0;
+                state.firstLine=false;
+                if(state.line<GB_H&&state.windowDrawn)++state.windowLine;
+                ++state.line;
+                m.ppuCompareLY=0xFF; // LY comparison is inactive for the first four dots.
+                if(state.line==144){
+                    pixels=drawing;++frameNumber;m.io[0x0F]|=1;
+                    if((m.io[0x41]&0x20)&&!m.statLine)m.io[0x0F]|=2;
+                    m.ppuMode=m.ppuStatMode=1;
+                }
+                else if(state.line==154){state.line=0;state.windowLine=0;state.windowYTriggered=false;m.ppuMode=0;m.ppuStatMode=2;}
+                else if(state.line<144){m.ppuMode=0;m.ppuStatMode=2;}
+                m.io[0x44]=(u8)state.line;
+                if(state.line<144)beginLine();
                 syncStat();
             }
         }
     }
 };
 
-// Deliberately approximate APU: four channels, basic pulse/wave/noise, NOT cycle-accurate.
+// APU counters run on the emulated clock, never on the host's audio callbacks.
 class APU {
 public:
     Memory& m;
     static constexpr int rate=44100;
-    std::array<double,4> phase{};
-    std::array<u32,4> seen{};
-    std::array<double,4> envelopeTime{};
-    std::array<int,4> envelopeVol{};
-    std::array<bool,4> active{};
-    u16 lfsr=0x7FFF;
+    struct Channel {
+        int timer=1,length=0,phase=0,volume=0,envelopeTimer=0;
+        bool enabled=false,dac=false,lengthEnabled=false,envelopeRunning=false,started=false;
+    };
+    struct State {
+        std::array<Channel,4> channels{};
+        int frameStep=0,sweepShadow=0,sweepTimer=0,waveAccess=0,waveByte=0;
+        bool sweepEnabled=false,sweepNegated=false;
+        u16 lfsr=0x7FFF;
+        u8 waveBuffer=0;
+        u32 sampleClock=0;
+        int mixDivider=0,mixCount=0;
+        double sumLeft=0,sumRight=0,capLeft=0,capRight=0;
+    } state;
+    std::array<std::int16_t,32768> queue{};
+    std::size_t readPos=0,writePos=0,count=0;
     explicit APU(Memory& memory):m(memory){}
-    void reset(){phase.fill(0);seen.fill(0);active.fill(false);envelopeTime.fill(0);envelopeVol.fill(0);lfsr=0x7FFF;}
-    void samples(std::int16_t* stereo,int frames){
-        static constexpr std::array<std::array<int,8>,4> duties{{{{0,0,0,0,0,0,0,1}},{{1,0,0,0,0,0,0,1}},{{1,0,0,0,0,1,1,1}},{{0,1,1,1,1,1,1,0}}}};
-        for(int j=0;j<frames;++j){
-            double ch[4]{};
-            if(m.io[0x26]&0x80){
-                for(int c=0;c<4;++c){
-                    if(seen[c]!=m.soundTrigger[c]){
-                        seen[c]=m.soundTrigger[c];active[c]=true;phase[c]=0;
-                        int envReg=(c==0)?0x12:(c==1)?0x17:0x21;
-                        envelopeVol[c]=(m.io[envReg]>>4)&15;envelopeTime[c]=0;
-                        if(c==3)lfsr=0x7FFF;
-                    }
-                    if(!active[c])continue;
-                    if(c==0||c==1){
-                        int reg=c==0?0x13:0x18, hi=c==0?0x14:0x19;
-                        const int period=m.io[reg]|((m.io[hi]&7)<<8);
-                        const double hz=131072.0/std::max(1,2048-period);
-                        phase[c]+=hz/rate;phase[c]-=std::floor(phase[c]);
-                        const int duty=(m.io[c==0?0x11:0x16]>>6)&3;
-                        ch[c]=(duties[duty][std::min(7,(int)(phase[c]*8))]?1.0:-1.0)*envelopeVol[c]/15.0;
-                    } else if(c==2){
-                        if(!(m.io[0x1A]&0x80))continue;
-                        int period=m.io[0x1D]|((m.io[0x1E]&7)<<8);
-                        const double hz=65536.0/std::max(1,2048-period);
-                        phase[c]+=hz/rate;phase[c]-=std::floor(phase[c]);
-                        const int ix=std::min(31,(int)(phase[c]*32));
-                        const u8 byte=m.io[0x30+ix/2];
-                        const int nibble=(ix&1)?(byte&15):(byte>>4);
-                        const int vol=(m.io[0x1C]>>5)&3;
-                        const double scale=vol==0?0.0:vol==1?1.0:vol==2?0.5:0.25;
-                        ch[c]=((nibble/7.5)-1.0)*scale;
-                    }else{
-                        const int nr43=m.io[0x22];
-                        static constexpr int divisors[8]={8,16,32,48,64,80,96,112};
-                        const double hz=(double)524288.0/divisors[nr43&7]/(1<<(nr43>>4));
-                        phase[c]+=hz/rate;
-                        while(phase[c]>=1.0){phase[c]-=1.0;int bit=(lfsr^(lfsr>>1))&1;lfsr=(lfsr>>1)|(bit<<14);if(nr43&8)lfsr=(lfsr&~(1<<6))|(bit<<6);}
-                        ch[c]=((lfsr&1)?-1.0:1.0)*envelopeVol[c]/15.0;
-                    }
-                    if(c!=2){
-                        const int envReg=c==0?0x12:c==1?0x17:0x21;
-                        const int env=m.io[envReg],pace=env&7;
-                        if(pace && (envelopeTime[c]+=1.0/rate)>=pace/64.0){
-                            envelopeTime[c]-=pace/64.0;
-                            envelopeVol[c]=std::clamp(envelopeVol[c]+((env&8)?1:-1),0,15);
-                        }
+    void clearQueue(){readPos=writePos=count=0;}
+    std::size_t available()const{return count/2;}
+    int period(int channel)const{
+        static constexpr int lo[3]={0x13,0x18,0x1D};
+        return m.io[lo[channel]]|((m.io[lo[channel]+1]&7)<<8);
+    }
+    int reload(int channel)const{
+        if(channel<3)return (2048-period(channel))*(channel==2?2:4);
+        static constexpr int divs[8]={8,16,32,48,64,80,96,112};
+        return divs[m.io[0x22]&7]<<(m.io[0x22]>>4);
+    }
+    int envelopeRegister(int channel)const{return channel==0?0x12:channel==1?0x17:0x21;}
+    void status(){
+        m.io[0x26]&=0x80;
+        for(int i=0;i<4;++i)if(state.channels[i].enabled)m.io[0x26]|=(u8)(1<<i);
+    }
+    void reset(){
+        state={};clearQueue();
+        for(int i=0;i<4;++i){
+            auto& c=state.channels[i];
+            c.dac=i==2?(m.io[0x1A]&0x80)!=0:(m.io[envelopeRegister(i)]&0xF8)!=0;
+            c.enabled=c.dac&&(m.io[0x26]&(1<<i));c.timer=reload(i);
+            c.started=c.enabled;c.length=i==2?256:64;
+        }
+        status();
+    }
+    u8 read(u16 addr)const{
+        static constexpr u8 masks[32]={0x80,0x3F,0,0xFF,0xBF,0xFF,0x3F,0,0xFF,0xBF,
+            0x7F,0xFF,0x9F,0xFF,0xBF,0xFF,0xFF,0,0,0xBF,0,0,0x70,
+            0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
+        if(addr>=0xFF30){
+            if(state.channels[2].enabled)
+                return state.waveAccess>0?m.io[0x30+state.waveByte]:0xFF;
+            return m.io[addr-0xFF00];
+        }
+        return (u8)(m.io[addr-0xFF00]|masks[addr-0xFF10]);
+    }
+    int sweepCalculation(){
+        const int delta=state.sweepShadow>>(m.io[0x10]&7);
+        if(m.io[0x10]&8)state.sweepNegated=true;
+        const int value=state.sweepShadow+((m.io[0x10]&8)?-delta:delta);
+        if(value>2047)state.channels[0].enabled=false;
+        return value;
+    }
+    void trigger(int i){
+        auto& c=state.channels[i];
+        c.enabled=c.dac;c.started=true;
+        if(!c.length){c.length=i==2?256:64;if(c.lengthEnabled&&(state.frameStep&1))--c.length;}
+        c.timer=reload(i)+(i==2?6:0);
+        if(i<2)c.timer=(c.timer&~3)|(state.channels[i].timer&3);
+        if(i==2){
+            c.phase=0;state.waveAccess=0;
+        }else{
+            const int env=m.io[envelopeRegister(i)];
+            c.volume=env>>4;c.envelopeTimer=(env&7)?(env&7):8;
+            if(state.frameStep==7)++c.envelopeTimer;
+            c.envelopeRunning=true;
+        }
+        if(i==0){
+            state.sweepShadow=period(0);state.sweepTimer=(m.io[0x10]>>4)&7;
+            if(!state.sweepTimer)state.sweepTimer=8;
+            state.sweepEnabled=(m.io[0x10]&0x77)!=0;state.sweepNegated=false;
+            if(m.io[0x10]&7)sweepCalculation();
+        }
+        if(i==3)state.lfsr=0x7FFF;
+        status();
+    }
+    void write(u16 addr,u8 value){
+        const int reg=addr-0xFF00;
+        if(reg>=0x30){
+            if(state.channels[2].enabled){if(state.waveAccess>0)m.io[0x30+state.waveByte]=value;}
+            else m.io[reg]=value;
+            return;
+        }
+        if(reg==0x26){
+            const bool old=(m.io[reg]&0x80)!=0,on=(value&0x80)!=0;
+            if(old&&!on){
+                for(int j=0x10;j<=0x25;++j)m.io[j]=0;
+                for(auto& c:state.channels){const int len=c.length;c={};c.length=len;}
+                state.frameStep=0;state.sweepEnabled=false;state.waveBuffer=0;
+            }else if(!old&&on){
+                state.frameStep=0;state.waveBuffer=0;
+                for(auto& c:state.channels)c.phase=0;
+            }
+            m.io[reg]=(u8)(on?0x80:0);status();return;
+        }
+        if(!(m.io[0x26]&0x80)){
+            // On DMG, length registers remain writable while sound is off.
+            if(reg==0x11||reg==0x16||reg==0x1B||reg==0x20){
+                const int i=reg==0x11?0:reg==0x16?1:reg==0x1B?2:3;
+                state.channels[i].length=i==2?256-value:64-(value&63);
+            }
+            return;
+        }
+        if(reg==0x15||reg==0x1F||reg>=0x27)return;
+        const u8 old=m.io[reg];
+        m.io[reg]=value;
+        if(reg==0x10){
+            if((old&8)&&!(value&8)&&state.sweepNegated)state.channels[0].enabled=false;
+        }
+        if(reg==0x11||reg==0x16||reg==0x1B||reg==0x20){
+            const int i=reg==0x11?0:reg==0x16?1:reg==0x1B?2:3;
+            state.channels[i].length=i==2?256-value:64-(value&63);
+        }
+        if(reg==0x12||reg==0x17||reg==0x21){
+            const int i=reg==0x12?0:reg==0x17?1:3;
+            auto& c=state.channels[i];
+            if(c.enabled){
+                // Common DMG manual-volume ("zombie envelope") behaviour.
+                if(!(old&7)&&c.envelopeRunning)++c.volume;
+                if(!(old&8))c.volume+=2;
+                if((old^value)&8)c.volume=16-c.volume;
+                c.volume&=15;
+            }
+            c.dac=(value&0xF8)!=0;if(!c.dac)c.enabled=false;
+        }
+        if(reg==0x1A){state.channels[2].dac=(value&0x80)!=0;if(!state.channels[2].dac)state.channels[2].enabled=false;}
+        if(reg==0x14||reg==0x19||reg==0x1E||reg==0x23){
+            const int i=reg==0x14?0:reg==0x19?1:reg==0x1E?2:3;
+            auto& c=state.channels[i];const bool enable=(value&0x40)!=0;
+            if(!c.lengthEnabled&&enable&&(state.frameStep&1)&&c.length>0)
+                if(--c.length==0)c.enabled=false;
+            c.lengthEnabled=enable;
+            if(value&0x80){
+                if(i==2&&c.enabled&&c.timer==2){
+                    const int byte=((c.phase+1)&31)/2;
+                    if(byte<4)m.io[0x30]=m.io[0x30+byte];
+                    else {const int base=byte&~3;for(int j=0;j<4;++j)m.io[0x30+j]=m.io[0x30+base+j];}
+                }
+                trigger(i);
+            }
+        }
+        status();
+    }
+    void sequencer(){
+        if(!(m.io[0x26]&0x80))return;
+        const int step=state.frameStep;
+        if(!(step&1))for(auto& c:state.channels)
+            if(c.lengthEnabled&&c.length>0&&--c.length==0)c.enabled=false;
+        if(step==2||step==6){
+            if(--state.sweepTimer<=0){
+                const int pace=(m.io[0x10]>>4)&7;state.sweepTimer=pace?pace:8;
+                if(state.sweepEnabled&&pace){
+                    const int value=sweepCalculation();
+                    if(value<=2047&&(m.io[0x10]&7)){
+                        state.sweepShadow=value;m.io[0x13]=value&255;m.io[0x14]=(m.io[0x14]&0xF8)|(value>>8);
+                        sweepCalculation();
                     }
                 }
             }
-            int l=0,r=0;for(int c=0;c<4;++c){if(m.io[0x25]&(1<<(c+4)))l+= (int)(ch[c]*2000);if(m.io[0x25]&(1<<c))r+=(int)(ch[c]*2000);}
-            l=l*((m.io[0x24]>>4&7)+1)/8;r=r*((m.io[0x24]&7)+1)/8;
-            stereo[j*2]=(std::int16_t)std::clamp(l,-32000,32000);
-            stereo[j*2+1]=(std::int16_t)std::clamp(r,-32000,32000);
         }
+        if(step==7){
+            for(int i:{0,1,3}){
+                auto& c=state.channels[i];
+                if(c.envelopeRunning&&--c.envelopeTimer<=0){
+                    const int env=m.io[envelopeRegister(i)];c.envelopeTimer=(env&7)?(env&7):8;
+                    if(env&7){const int v=c.volume+((env&8)?1:-1);
+                        if(v>=0&&v<=15)c.volume=v;else c.envelopeRunning=false;}
+                }
+            }
+        }
+        state.frameStep=(step+1)&7;status();
+    }
+    int output(int i)const{
+        const auto& c=state.channels[i];
+        if(!c.enabled)return 0;
+        if(i<2){
+            static constexpr u8 duty[4]={0x80,0x81,0xE1,0x7E};
+            return ((duty[m.io[i==0?0x11:0x16]>>6]>>c.phase)&1)?c.volume:0;
+        }
+        if(i==2){const int volume=(m.io[0x1C]>>5)&3;
+            const int sample=(c.phase&1)?(state.waveBuffer&15):(state.waveBuffer>>4);
+            return volume?sample>>(volume-1):0;}
+        return (state.lfsr&1)?0:c.volume;
+    }
+    void mix(){
+        double left=0,right=0;
+        if(m.io[0x26]&0x80)for(int i=0;i<4;++i)if(state.channels[i].dac){
+            const int sample=15-output(i)*2;
+            if(m.io[0x25]&(1<<(i+4)))left+=sample;
+            if(m.io[0x25]&(1<<i))right+=sample;
+        }
+        state.sumLeft+=left*(((m.io[0x24]>>4)&7)+1);
+        state.sumRight+=right*((m.io[0x24]&7)+1);++state.mixCount;
+    }
+    void emit(){
+        const double left=state.mixCount?state.sumLeft/state.mixCount:0;
+        const double right=state.mixCount?state.sumRight/state.mixCount:0;
+        const double filteredL=left-state.capLeft,filteredR=right-state.capRight;
+        // DMG high-pass capacitor, resampled from its 4.194 MHz charge rate.
+        static const double charge=std::pow(0.999958,(double)GB_CLOCK/rate);
+        state.capLeft=left-filteredL*charge;state.capRight=right-filteredR*charge;
+        if(count+2>queue.size()){readPos=(readPos+2)%queue.size();count-=2;}
+        queue[writePos]=(std::int16_t)std::clamp(filteredL*48.0,-32767.0,32767.0);writePos=(writePos+1)%queue.size();
+        queue[writePos]=(std::int16_t)std::clamp(filteredR*48.0,-32767.0,32767.0);writePos=(writePos+1)%queue.size();count+=2;
+        state.sumLeft=state.sumRight=0;state.mixCount=0;
+    }
+    void tick(){
+        if(state.waveAccess>0)--state.waveAccess;
+        if(m.io[0x26]&0x80){
+            for(int i=0;i<4;++i){
+                auto& c=state.channels[i];
+                if(!c.started)continue;
+                if(--c.timer<=0){
+                    c.timer=reload(i);
+                    if(i<2)c.phase=(c.phase+1)&7;
+                    else if(i==2){
+                        if(c.enabled){c.phase=(c.phase+1)&31;state.waveByte=c.phase/2;
+                            state.waveBuffer=m.io[0x30+state.waveByte];state.waveAccess=2;}
+                    }else if((m.io[0x22]>>4)<14){
+                        const int bit=(state.lfsr^(state.lfsr>>1))&1;
+                        state.lfsr=(state.lfsr>>1)|(bit<<14);
+                        if(m.io[0x22]&8)state.lfsr=(state.lfsr&~0x40)|(bit<<6);
+                    }
+                }
+            }
+        }
+        if(++state.mixDivider==4){state.mixDivider=0;mix();}
+        state.sampleClock+=rate;
+        if(state.sampleClock>=GB_CLOCK){state.sampleClock-=GB_CLOCK;emit();}
+    }
+    void samples(std::int16_t* stereo,int frames){
+        const std::size_t take=std::min(count,(std::size_t)frames*2);
+        for(std::size_t i=0;i<take;++i){stereo[i]=queue[readPos];readPos=(readPos+1)%queue.size();}
+        count-=take;std::fill(stereo+take,stereo+frames*2,0);
     }
 };
 
@@ -772,16 +1109,37 @@ public:
     CPU cpu;
     PPU ppu;
     APU apu;
-    int currentPalette=0;
-    GameBoy():cpu(mem),ppu(mem),apu(mem){reset();}
+    int currentPalette=0,frameDebt=0;
+    u64 totalCycles=0;
+    GameBoy():cpu(mem),ppu(mem),apu(mem){
+        cpu.clock=[this](int cycles){tick(cycles);};
+        mem.soundWrite=[this](u16 addr,u8 value){apu.write(addr,value);};
+        mem.soundRead=[this](u16 addr){return apu.read(addr);};
+        mem.dividerReset=[this](){apu.sequencer();};
+        mem.lcdPower=[this](bool on){ppu.power(on);};
+        reset();
+    }
+    GameBoy(const GameBoy&)=delete;
+    GameBoy& operator=(const GameBoy&)=delete;
+    void tick(int cycles){
+        if(cpu.stopped){totalCycles+=cycles;return;}
+        for(int i=0;i<cycles;++i){
+            const bool apuBit=(mem.divCounter&0x1000)!=0;
+            mem.tick(1);ppu.tick(1);
+            if(apuBit&&!(mem.divCounter&0x1000))apu.sequencer();
+            apu.tick();
+        }
+        totalCycles+=cycles;
+    }
     void reset(){
         mem.resetIO();
         mem.romBank=1;mem.bankHigh=0;mem.ramBank=0;mem.mbcMode=0;mem.ramEnabled=mem.mbc==0;
         cpu.setAF(0x01B0);cpu.setBC(0x0013);cpu.setDE(0x00D8);cpu.setHL(0x014D);
         cpu.SP=0xFFFE;cpu.PC=0x100;cpu.IME=false;cpu.imeDelay=0;
         cpu.halted=false;cpu.stopped=false;cpu.haltBug=false;
-        ppu.dot=0;ppu.lcdWasOn=true;ppu.palette=currentPalette;
-        ppu.pixels.fill(ppu.shade(0));ppu.syncStat();apu.reset();
+        cpu.locked=false;cpu.elapsed=0;frameDebt=0;totalCycles=0;
+        mem.divCounter=0xABC8;
+        ppu.palette=currentPalette;ppu.reset();apu.reset();
     }
     bool load(const std::filesystem::path& path){
         mem.saveBattery();
@@ -789,20 +1147,26 @@ public:
         reset();return true;
     }
     void runFrame(){
-        int t=0;
+        int t=frameDebt;
         while(t<GB_FRAME){
             const int c=cpu.step();
-            mem.tick(c);ppu.tick(c);t+=c;
+            t+=c;
         }
+        frameDebt=t-GB_FRAME;
     }
     void setPalette(int p){currentPalette=(p+4)%4;ppu.palette=currentPalette;}
     u32 romHash() const {u32 h=2166136261u;for(u8 x:mem.rom){h^=x;h*=16777619u;}return h;}
     std::filesystem::path statePath()const{auto p=mem.romPath;p.replace_extension(".state");return p;}
     bool saveState()const{
         if(mem.rom.empty())return false;
-        std::ofstream f(statePath(),std::ios::binary|std::ios::trunc);if(!f)return false;
-        auto put=[&](auto v){f.write((const char*)&v,sizeof(v));};
-        f.write("GBSTATE2",8);put(romHash());
+        std::ostringstream f(std::ios::binary|std::ios::out);
+        u32 checksum=2166136261u;
+        auto write=[&](const char* data,std::streamsize size){
+            f.write(data,size);
+            for(std::streamsize i=0;i<size;++i){checksum^=(u8)data[i];checksum*=16777619u;}
+        };
+        auto put=[&](auto v){write((const char*)&v,sizeof(v));};
+        write("GBSTATE3",8);put(romHash());
         for(u8 v:{cpu.A,cpu.F,cpu.B,cpu.C,cpu.D,cpu.E,cpu.H,cpu.L})put(v);
         put(cpu.SP);put(cpu.PC);put((u8)cpu.IME);put((u8)cpu.halted);put((u8)cpu.stopped);put((u8)cpu.haltBug);put((std::int32_t)cpu.imeDelay);
         put(mem.ie);put(mem.divCounter);put((std::int32_t)mem.timerReload);
@@ -810,26 +1174,35 @@ public:
         put((std::int32_t)mem.ppuMode);put((u8)mem.statLine);put((u8)mem.ramEnabled);
         put(mem.romBank);put(mem.bankHigh);put(mem.ramBank);put(mem.mbcMode);put(mem.latchWrite);
         put((u8)mem.rtcLatched);put(mem.rtcCycles);
-        auto bytes=[&](const auto& arr){if(!arr.empty())f.write((const char*)arr.data(),(std::streamsize)arr.size()*sizeof(arr[0]));};
+        auto bytes=[&](const auto& arr){if(!arr.empty())write((const char*)arr.data(),(std::streamsize)arr.size()*sizeof(arr[0]));};
         bytes(mem.vram);bytes(mem.wram);bytes(mem.oam);bytes(mem.io);bytes(mem.hram);
         bytes(mem.rtc);bytes(mem.latchedRTC);bytes(mem.soundTrigger);
         std::uint32_t ext=(u32)mem.eram.size();put(ext);bytes(mem.eram);
+        put((u8)cpu.locked);put((u8)mem.timerJustReloaded);put((std::int32_t)mem.dmaDelay);
+        put(mem.pendingDmaSource);put(mem.serialSent);put(mem.ppuCompareLY);put((std::int32_t)mem.ppuStatMode);
+        put((std::int32_t)frameDebt);put(totalCycles);put(ppu.frameNumber);put(ppu.state);put(apu.state);
         put((std::int32_t)ppu.dot);put((u8)ppu.lcdWasOn);put((std::int32_t)currentPalette);
-        f.write((const char*)ppu.pixels.data(),(std::streamsize)ppu.pixels.size()*sizeof(u32));
-        return (bool)f;
+        write((const char*)ppu.pixels.data(),(std::streamsize)ppu.pixels.size()*sizeof(u32));
+        write((const char*)ppu.drawing.data(),(std::streamsize)ppu.drawing.size()*sizeof(u32));
+        f.write((const char*)&checksum,sizeof(checksum));
+        return (bool)f&&Memory::writeAtomic(statePath(),f.str());
     }
     bool loadState(){
         if(mem.rom.empty())return false;
         // Reject truncated/wrong-version/different-ROM states before mutating live objects.
         const auto bytes=Memory::loadBytes(statePath());
-        if(bytes.size()<120 || bytes.size()>200000 || mem.eram.size()>131072)return false;
+        if(bytes.size()<120 || bytes.size()>400000 || mem.eram.size()>131072)return false;
+        u32 storedChecksum=0;std::memcpy(&storedChecksum,bytes.data()+bytes.size()-4,4);
+        u32 actualChecksum=2166136261u;
+        for(std::size_t i=0;i<bytes.size()-4;++i){actualChecksum^=bytes[i];actualChecksum*=16777619u;}
+        if(actualChecksum!=storedChecksum)return false;
         GameBoy tmp;
         tmp.mem.rom=mem.rom;tmp.mem.eram=mem.eram;tmp.mem.romPath=mem.romPath;
         tmp.mem.mbc=mem.mbc;tmp.mem.hasBattery=mem.hasBattery;tmp.mem.hasRTC=mem.hasRTC;tmp.mem.cgbROM=mem.cgbROM;
         std::size_t off=0;
         auto pull=[&](auto& val)->bool {if(off+sizeof(val)>bytes.size())return false;std::memcpy(&val,bytes.data()+off,sizeof(val));off+=sizeof(val);return true;};
         auto array=[&](auto& arr)->bool {const auto n=arr.size()*sizeof(arr[0]);if(off+n>bytes.size())return false;if(n)std::memcpy(arr.data(),bytes.data()+off,n);off+=n;return true;};
-        if(std::string((const char*)bytes.data(),8)!="GBSTATE2")return false;off=8;
+        if(std::string((const char*)bytes.data(),8)!="GBSTATE3")return false;off=8;
         u32 hash=0;if(!pull(hash)||hash!=romHash())return false;
         if(!pull(tmp.cpu.A)||!pull(tmp.cpu.F)||!pull(tmp.cpu.B)||!pull(tmp.cpu.C)||!pull(tmp.cpu.D)||!pull(tmp.cpu.E)||!pull(tmp.cpu.H)||!pull(tmp.cpu.L))return false;
         u8 flag=0;
@@ -851,12 +1224,28 @@ public:
         if(!array(tmp.mem.vram)||!array(tmp.mem.wram)||!array(tmp.mem.oam)||!array(tmp.mem.io)||!array(tmp.mem.hram))return false;
         if(!array(tmp.mem.rtc)||!array(tmp.mem.latchedRTC)||!array(tmp.mem.soundTrigger))return false;
         u32 ext=0;if(!pull(ext)||ext!=mem.eram.size()||!array(tmp.mem.eram))return false;
+        if(!pull(flag))return false;tmp.cpu.locked=flag!=0;
+        if(!pull(flag))return false;tmp.mem.timerJustReloaded=flag!=0;
+        if(!pull(n))return false;tmp.mem.dmaDelay=n;
+        if(!pull(tmp.mem.pendingDmaSource)||!pull(tmp.mem.serialSent)||!pull(tmp.mem.ppuCompareLY)||!pull(n))return false;tmp.mem.ppuStatMode=n;
+        if(!pull(n))return false;tmp.frameDebt=n;
+        if(!pull(tmp.totalCycles)||!pull(tmp.ppu.frameNumber)||!pull(tmp.ppu.state)||!pull(tmp.apu.state))return false;
         if(!pull(n))return false;tmp.ppu.dot=n;
         if(!pull(flag))return false;tmp.ppu.lcdWasOn=flag!=0;
         if(!pull(n)||n<0||n>3)return false;tmp.currentPalette=n;tmp.ppu.palette=n;
         const auto len=tmp.ppu.pixels.size()*sizeof(u32);
-        if(off+len!=bytes.size()||tmp.ppu.dot<0||tmp.ppu.dot>=456||tmp.mem.ppuMode<0||tmp.mem.ppuMode>3||tmp.cpu.imeDelay<0||tmp.cpu.imeDelay>2)return false;
+        if(off+len*2+4!=bytes.size()||tmp.ppu.dot< -2||tmp.ppu.dot>=456||tmp.mem.ppuMode<0||tmp.mem.ppuMode>3||tmp.mem.ppuStatMode<0||tmp.mem.ppuStatMode>3||tmp.cpu.imeDelay<0||tmp.cpu.imeDelay>2)return false;
+        if(tmp.mem.dmaPos<0||tmp.mem.dmaPos>160||tmp.mem.dmaTicks<0||tmp.mem.dmaTicks>3||
+           tmp.mem.dmaDelay<0||tmp.mem.dmaDelay>8||tmp.frameDebt<0||tmp.frameDebt>24||
+           tmp.ppu.state.line<0||tmp.ppu.state.line>153||tmp.ppu.state.selectedCount<0||tmp.ppu.state.selectedCount>10||
+           tmp.ppu.state.x<0||tmp.ppu.state.x>160||tmp.ppu.state.windowLine<0||tmp.ppu.state.windowLine>144||
+           tmp.mem.timerReload< -1||tmp.mem.timerReload>4||tmp.mem.serialTicks<0||tmp.mem.serialTicks>4096||
+           tmp.apu.state.frameStep<0||tmp.apu.state.frameStep>7||tmp.apu.state.waveByte<0||tmp.apu.state.waveByte>15||
+           tmp.apu.state.sampleClock>=GB_CLOCK)return false;
+        for(int i=0;i<4;++i){const auto& c=tmp.apu.state.channels[i];
+            if(c.phase<0||c.phase>(i==2?31:7)||c.volume<0||c.volume>15||c.length<0||c.length>(i==2?256:64)||c.timer<0||c.timer>4000000)return false;}
         std::memcpy(tmp.ppu.pixels.data(),bytes.data()+off,len);
+        std::memcpy(tmp.ppu.drawing.data(),bytes.data()+off+len,len);
         // References in CPU/PPU/APU must remain bound to this GameBoy's Memory.
         mem.vram=tmp.mem.vram;mem.wram=tmp.mem.wram;mem.oam=tmp.mem.oam;mem.io=tmp.mem.io;mem.hram=tmp.mem.hram;
         mem.eram=std::move(tmp.mem.eram);mem.ie=tmp.mem.ie;mem.divCounter=tmp.mem.divCounter;
@@ -870,8 +1259,14 @@ public:
         cpu.A=tmp.cpu.A;cpu.F=tmp.cpu.F;cpu.B=tmp.cpu.B;cpu.C=tmp.cpu.C;
         cpu.D=tmp.cpu.D;cpu.E=tmp.cpu.E;cpu.H=tmp.cpu.H;cpu.L=tmp.cpu.L;
         cpu.SP=tmp.cpu.SP;cpu.PC=tmp.cpu.PC;cpu.IME=tmp.cpu.IME;
+        cpu.locked=tmp.cpu.locked;cpu.elapsed=0;
         cpu.halted=tmp.cpu.halted;cpu.stopped=tmp.cpu.stopped;cpu.haltBug=tmp.cpu.haltBug;cpu.imeDelay=tmp.cpu.imeDelay;
         ppu.dot=tmp.ppu.dot;ppu.lcdWasOn=tmp.ppu.lcdWasOn;ppu.pixels=tmp.ppu.pixels;
-        setPalette(tmp.currentPalette);apu.reset();return true;
+        ppu.drawing=tmp.ppu.drawing;ppu.state=tmp.ppu.state;ppu.frameNumber=tmp.ppu.frameNumber;
+        mem.pendingDmaSource=tmp.mem.pendingDmaSource;mem.dmaDelay=tmp.mem.dmaDelay;mem.timerJustReloaded=tmp.mem.timerJustReloaded;
+        mem.serialSent=tmp.mem.serialSent;mem.ppuStatMode=tmp.mem.ppuStatMode;
+        mem.ppuCompareLY=tmp.mem.ppuCompareLY;mem.ppuDot=ppu.dot;
+        frameDebt=tmp.frameDebt;totalCycles=tmp.totalCycles;apu.state=tmp.apu.state;apu.clearQueue();
+        mem.serialOutput.clear();setPalette(tmp.currentPalette);return true;
     }
 };
