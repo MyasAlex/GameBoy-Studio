@@ -1,13 +1,24 @@
-# 0.6 DMG compatibility
+# 0.8 — 2026-10-13
 
-CPU memory accesses now advance the rest of the machine at each bus cycle. Interrupt dispatch, EI/HALT/STOP, timer reloads, serial edges and DMA startup/restart follow independently verified timing.
+- External DMG/CGB boot assets, GBSTATE5 boot/input snapshots and legacy v3/v4 reading; bounded file/state loading and battery backups.
+- In-memory RLE rewind, input movies with frame-sampled deterministic input, named states, nine isolated quick slots, autosession and speed/frame controls.
+- RU/EN Win32 menus, configurable game keys, recent ROMs, client themes, palettes/LCD/CRT/ghosting and raw/processed comparison.
+- Event-driven WASAPI worker, lock-free SPSC, waveOut fallback, master gain/channel mute and raw WAV recording.
+- SM83/CB disassembler, Studio stepping/stops/trace/dumps, strict Unicode CLI and ROM/header/CRC32 diagnostics.
+- Transactional IPS/BPS copies, pure cheat decoding APIs, resource-bound/corruption and multithreaded tests; ten suites and sanitizer/release CI.
+- Full requested roadmap retained with explicit pending feature status.
 
-The renderer handles the window's internal line counter, object-to-object and object-to-background priority, ten-object selection, LCD startup, LY/STAT comparison and separate read/write memory-access windows. A completed frame is published at VBlank; Win32 uses a separate back buffer.
+# Changelog
 
-Audio generation moved from host callbacks into the emulated clock. Four channels now have length, envelope, sweep, DAC state, wave access/corruption behavior and stereo routing. The host consumes queued PCM without changing the emulated APU state.
+## 0.7 — Game Boy Color (2026-10-12)
 
-Save states include all emulated timing and audio/pixel pipeline state and use ROM identification plus a checksum. State/cartridge writes commit through temporary files. Corrupt states leave the running machine intact.
+- Automatic cartridge-based DMG/CGB selection and manual frontend/headless model selection.
+- Native RGB555, BG/OBJ palettes, banked VRAM/WRAM, tile banks/attributes/flips and CGB priorities.
+- KEY1/STOP double-speed CPU, stable display/audio/RTC clock, GDMA/HDMA bus stalls and independent OAM DMA buses.
+- CGB fast serial, timer/STAT differences, wave RAM/retrigger/power behavior and PCM registers.
+- GBSTATE4 color/clock/DMA state, original GBSTATE3 DMG loading and invalid-state checks.
+- Original CGB demo and independent image reference; four new internal suites and pinned CGB hardware runner.
+- Native Windows binaries, both demos in build/install paths, updated batch/Visual Studio/CI checks.
+- 144 external checks, 5 internal suites and original demo image pass. Provided Super Mario Land V1.1 passes a 600-frame scripted smoke, identical to 0.6 in the recorded CPU/memory/video/audio traces.
 
-The Windows app adds automatic demo loading, F11 fullscreen, XInput with throttled polling, focus pause, a shorter audio queue and explicit cartridge-load errors. The original demo now follows real VRAM/OAM access restrictions.
-
-Added a Visual Studio solution, a one-click compiler script, repeatable pinned-ROM/image tests, per-test evidence and Windows/Linux CI builds. Color remains a separate future hardware model.
+The full evidence and remaining timing limitations are in COMPATIBILITY.md.

@@ -104,7 +104,7 @@ def main():
         suite, name, rom, mode = test
         start = time.monotonic()
         try:
-            result = subprocess.run([str(executable), str(rom.resolve()), '20000', mode], capture_output=True, text=True, timeout=90)
+            result = subprocess.run([str(executable), str(rom.resolve()), '20000', mode, '--model', 'dmg'], capture_output=True, text=True, timeout=90)
             output = result.stdout + result.stderr
             status = 'PASS' if result.returncode == 0 else 'FAIL'
             if 'RESULT: TIMEOUT' in output:
@@ -123,7 +123,7 @@ def main():
     try:
         from PIL import Image, ImageChops
         image_path = args.cache/'acid2-result.ppm'
-        result = subprocess.run([str(executable), str((args.cache/'dmg-acid2.gb').resolve()), '60', '--grey', '--output', str(image_path.resolve())], capture_output=True, text=True, timeout=30)
+        result = subprocess.run([str(executable), str((args.cache/'dmg-acid2.gb').resolve()), '60', '--model', 'dmg', '--grey', '--output', str(image_path.resolve())], capture_output=True, text=True, timeout=30)
         if result.returncode:
             raise RuntimeError(result.stdout+result.stderr)
         actual = Image.open(image_path).convert('RGB')
