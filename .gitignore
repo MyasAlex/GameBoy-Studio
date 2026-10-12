@@ -1,0 +1,9 @@
+build/
+*.sav
+*.rtc
+*.state
+*_screen.bmp
+*.obj
+*.exe
+*.pdb
+*.ilk
