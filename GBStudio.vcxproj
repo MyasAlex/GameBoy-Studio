@@ -20,6 +20,8 @@
   <PropertyGroup>
     <OutDir>$(ProjectDir)dist\</OutDir><IntDir>$(ProjectDir)build\vs\$(Configuration)\</IntDir><TargetName>GBStudio</TargetName>
     <LocalDebuggerWorkingDirectory>$(OutDir)</LocalDebuggerWorkingDirectory>
+    <GBCoreCompiler>$(VCToolsInstallDir)bin\Hostx64\x64\cl.exe</GBCoreCompiler>
+    <GBCoreCompilerOptions>/nologo /std:c++20 /O2 /EHsc /utf-8 /MT /W3</GBCoreCompilerOptions>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile><LanguageStandard>stdcpp20</LanguageStandard><ExceptionHandling>Sync</ExceptionHandling>
@@ -31,9 +33,31 @@
       <Optimization Condition="'$(Configuration)'=='Debug'">Disabled</Optimization>
     </ClCompile>
     <Link><SubSystem>Windows</SubSystem><GenerateDebugInformation>true</GenerateDebugInformation></Link>
-    <PostBuildEvent><Command>copy /Y "$(ProjectDir)demo.gb" "$(OutDir)demo.gb"</Command></PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup><ClCompile Include="src\windows_main.cpp" /></ItemGroup>
-  <ItemGroup><ClInclude Include="src\gameboy.hpp" /></ItemGroup>
+  <ItemGroup><ClInclude Include="src\gameboy.hpp" /><ClInclude Include="src\session.hpp" /><ClInclude Include="src\studio_tools.hpp" /><ClInclude Include="src\audio_buffer.hpp" /><ClInclude Include="src\host_audio.hpp" /><ClInclude Include="src\cartridge_tools.hpp" /></ItemGroup>
+  <ItemGroup>
+    <GBCoreSuite Include="core;cgb_memory;cgb_ppu;cgb_apu;cgb_integration;core_extension;session;studio_tools;audio_buffer;cartridge_tools" />
+    <GBDistributionFile Include="$(ProjectDir)demo.gb;$(ProjectDir)demo.gbc;$(ProjectDir)README_RU.md;$(ProjectDir)COMPATIBILITY.md;$(ProjectDir)LICENSE" />
+    <None Include="tests\core_tests.cpp;tests\cgb_memory_tests.cpp;tests\cgb_ppu_tests.cpp;tests\cgb_apu_tests.cpp;tests\cgb_integration_tests.cpp;tests\fixtures\dmg-v0.6.state;demo.gb;demo.gbc;LICENSE" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Target Name="BuildAndTestCore" AfterTargets="Build" Condition="'$(DesignTimeBuild)' != 'true'">
+    <MakeDir Directories="$(IntDir)" />
+    <Exec Command="set &quot;INCLUDE=$(IncludePath)&quot;&#xD;&#xA;set &quot;LIB=$(LibraryPath)&quot;&#xD;&#xA;&quot;$(GBCoreCompiler)&quot; $(GBCoreCompilerOptions) /Fo:&quot;$(IntDir)headless.obj&quot; /Fe:&quot;$(IntDir)gb_headless.exe&quot; &quot;$(ProjectDir)src\headless.cpp&quot;" />
+    <Exec Command="set &quot;INCLUDE=$(IncludePath)&quot;&#xD;&#xA;set &quot;LIB=$(LibraryPath)&quot;&#xD;&#xA;&quot;$(GBCoreCompiler)&quot; $(GBCoreCompilerOptions) /Fo:&quot;$(IntDir)%(GBCoreSuite.Identity)_tests.obj&quot; /Fe:&quot;$(IntDir)gb_%(GBCoreSuite.Identity)_tests.exe&quot; &quot;$(ProjectDir)tests\%(GBCoreSuite.Identity)_tests.cpp&quot;" />
+    <Exec Command="&quot;$(IntDir)gb_core_tests.exe&quot; &quot;$(ProjectDir)demo.gb&quot;" />
+    <Exec Command="&quot;$(IntDir)gb_cgb_memory_tests.exe&quot; &quot;$(ProjectDir)tests\fixtures\dmg-v0.6.state&quot; &quot;$(ProjectDir)demo.gb&quot;" />
+    <Exec Command="&quot;$(IntDir)gb_cgb_ppu_tests.exe&quot;" />
+    <Exec Command="&quot;$(IntDir)gb_cgb_apu_tests.exe&quot;" />
+    <Exec Command="&quot;$(IntDir)gb_cgb_integration_tests.exe&quot; &quot;$(ProjectDir)demo.gbc&quot;" />
+    <Exec Command="&quot;$(IntDir)gb_core_extension_tests.exe&quot; &quot;$(ProjectDir)demo.gb&quot;" />
+    <Exec Command="&quot;$(IntDir)gb_session_tests.exe&quot; &quot;$(ProjectDir)demo.gb&quot;" />
+    <Exec Command="&quot;$(IntDir)gb_studio_tools_tests.exe&quot;" />
+    <Exec Command="&quot;$(IntDir)gb_audio_buffer_tests.exe&quot;" />
+    <Exec Command="&quot;$(IntDir)gb_cartridge_tools_tests.exe&quot;" />
+    <MakeDir Directories="$(OutDir)tools" />
+    <Copy SourceFiles="$(IntDir)gb_headless.exe" DestinationFolder="$(OutDir)tools" />
+    <Copy SourceFiles="@(GBDistributionFile)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

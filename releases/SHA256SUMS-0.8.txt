@@ -1,0 +1,2 @@
+93247af185a8c2ca7fca6587957aeb4d6fcdc1047543c65dd4807911d98eef38  GameBoy-Studio-0.8-source.zip
+c6d5b384c4bb248ee261c2f6afbcbbe996bbb94efcaad6e6e89e793cfa9ddda6  GBStudio-0.8-Windows-x64.zip

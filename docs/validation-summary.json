@@ -1,0 +1,102 @@
+{
+    "version":  "0.8",
+    "validation_date":  "2026-10-13",
+    "timezone":  "Asia/Irkutsk",
+    "platform":  "Windows x64",
+    "compiler":  "MSVC 19.51.36260",
+    "runtime":  "static",
+    "native_suites":  [
+                          "core",
+                          "cgb_memory",
+                          "cgb_ppu",
+                          "cgb_apu",
+                          "cgb_integration",
+                          "core_extension",
+                          "session",
+                          "studio_tools",
+                          "audio_buffer",
+                          "cartridge_tools"
+                      ],
+    "native_result":  "10/10 PASS",
+    "external":  {
+                     "result":  "145/145 PASS",
+                     "cgb_and_demo":  15,
+                     "dmg":  130,
+                     "reference_images_different_pixels":  0
+                 },
+    "windows_asan":  {
+                         "result":  "4/4 PASS",
+                         "core_extension_repeated_after_final_bounded_reader":  true,
+                         "suites":  [
+                                        "core_extension",
+                                        "session",
+                                        "audio_buffer",
+                                        "cartridge_tools"
+                                    ]
+                     },
+    "gui":  {
+                "offscreen_combinations_per_demo":  48,
+                "bad_rom_exit":  2,
+                "raw_ppu_unchanged":  true,
+                "dmg_demo_exit":  0,
+                "interactive_visual_qa":  false,
+                "cgb_demo_exit":  0
+            },
+    "audio":  {
+                  "waveout_silent_fallback":  "PASS in scratch harness",
+                  "unicode_wav_and_reopen":  "PASS",
+                  "wasapi_silent_init_flush_close_ms":  [
+                                                            20,
+                                                            40,
+                                                            80
+                                                        ],
+                  "subjective_listening_qa":  false
+              },
+    "cli":  {
+                "source_output_collision_rejection":  "PASS",
+                "valid_json":  "PASS",
+                "bad_numeric_arguments":  "PASS",
+                "bounded_trace":  "PASS",
+                "unicode_cyrillic_emoji":  "PASS"
+            },
+    "independent_review":  [
+                               "recorded transient/held input IRQ determinism",
+                               "recorded non-default channel mute replay",
+                               "first-instruction debugger watch stop",
+                               "separate GB/GBC quick slots",
+                               "canonical/case-insensitive export collision guards"
+                           ],
+    "build_paths":  {
+                        "visual_studio_project":  "not independently invoked",
+                        "cmake":  "PASS",
+                        "windows_batch":  "PASS"
+                    },
+    "source_sha256":  {
+                          "audio_buffer.hpp":  "13b06e885ebac66a51e7a39265086fb3b2840de593572615f4bbb19cd2d86723",
+                          "cartridge_tools.hpp":  "3b43c4456de729dd995ea354b330f3297f2666ba5a0cf292c3b8ca450b951200",
+                          "gameboy.hpp":  "7028a9e695cef0a58c5f266e407ac6e62470a6967f8adcf093194e5cadc2188c",
+                          "headless.cpp":  "b47a27d4bd01e17e22654c269d4d827609db0038167372b4160c460dfb7ee13c",
+                          "host_audio.hpp":  "388a3294c1dcd986b19abf20c7b3254de9095b01399bf361664c6b5998365d2d",
+                          "session.hpp":  "453197e37d1b2020e76abc99e0cd0f9563d8b199b647baf09e4bd9b66ba614ae",
+                          "studio_tools.hpp":  "62c836816e63da7ee9fdf9ab120ec037b5aefa9938b7fb2d58369f4d36bd0266",
+                          "windows_main.cpp":  "556defac36d98a5427844ddcde43d5728fd8e4423ca9fd16e8861fe43a9819a6"
+                      },
+    "binaries":  {
+                     "GBStudio":  "6f96322510d46dc39ce83254dc925119953c6fe4d03d884403d7f8f445e97bc3",
+                     "headless":  "e83a4e30d46e512744445d58d59d2fb229564b4a70af56f30f4531d48181aa3d"
+                 },
+    "remaining_features":  "FEATURE_STATUS_RU.md",
+    "commercial_games_tested_in_0_8":  [
+
+                                       ],
+    "manufacturer_boot_roms_tested":  [
+
+                                      ],
+    "notes":  [
+                  "GBSTATE5 retains native structure ABI; BESS pending.",
+                  "Boot mapping/handoff validated using synthetic project fixtures.",
+                  "WAV and APU are 44.1 kHz; Windows device SRC is external.",
+                  "No claim of complete requested roadmap or all hardware revisions.",
+                  "Linux ASan/UBSan configured in CI; local result not claimed."
+              ]
+}

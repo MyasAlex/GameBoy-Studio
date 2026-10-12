@@ -1,49 +1,62 @@
-# Verified DMG compatibility — 0.6
+# Verified compatibility — 0.8
 
-Validation date: 2026-10-12. The full, reproducible per-ROM output is in [docs/test-results.json](docs/test-results.json).
+Validation date: 2026-10-13 (Asia/Irkutsk). Native Windows x64 MSVC release, static C++ runtime.
 
-| Check | Result | Coverage |
+| Check | Result | Evidence |
 |---|---:|---|
-| Blargg | **35 / 35 PASS** | 11 individual CPU ROMs and the combined ROM; instruction timing; both memory-timing suites, singles and combined; 12 individual DMG sound ROMs and the combined ROM; HALT bug |
-| Mooneye, DMG ABC selection | **94 / 94 PASS** | Applicable acceptance and emulator-only ROMs from the pinned suite, including CPU timing, interrupts, DMA, timers, boot registers/divider/serial phase, LCD/STAT, sprite timings, MBC1/MBC1M/MBC2/MBC5 |
-| dmg-acid2 | **PASS: 0 different pixels** | Full 160×144 image compared byte for byte in canonical grayscale |
-| Core regressions | **PASS** | Documented opcode execution, interrupt/EI/HALT/STOP behavior, memory restrictions, frame-clock debt, PCM sample production, RTC rollover, demo/input, deterministic state restore, corruption/wrong-ROM rejection and 128 KiB RAM states |
-| AddressSanitizer + UndefinedBehaviorSanitizer | **PASS** | Core regressions; leak scanning disabled because this execution environment prevents the required process inspection |
-| Windows x64 | **Cross-build PASS** | MinGW-w64 C++20; PE GUI binary, static C++ runtime, only Windows system DLL imports |
+| Blargg DMG | 35/35 PASS | CPU, instruction/memory timing, HALT, DMG audio singles and combined |
+| Mooneye DMG ABC selection | 94/94 PASS | Pinned applicable acceptance and emulator-only selection |
+| dmg-acid2 | PASS, 0 differing pixels | Complete canonical grayscale RGB comparison |
+| Blargg CGB audio | 13/13 PASS | Twelve singles and combined in native Color mode |
+| cgb-acid2 v1.1 | PASS, 0 differing pixels | All 160×144 RGB pixels |
+| Original Color demo | PASS, 0 differing pixels | Independent project reference image |
+| Internal native tests | 10/10 suites PASS | Core, CGB memory/PPU/APU/integration, boot/state/bounds, rewind/movies, Studio, SPSC/WAV, IPS/BPS |
+| Windows AddressSanitizer | 4/4 new suites PASS | Core extension, sessions, audio buffers, cartridge tools; extension repeated after final file-reader hardening |
+| GUI hidden self-test | PASS on DMG and CGB demos | 12 frames and 48 offscreen configurations each; raw PPU invariant; bad-ROM exit2 |
+| WASAPI silent lifecycle | PASS at 20/40/80 ms | Device creation, flush and close; waveOut fallback path also exercised in a scratch harness |
+| Input recording review | PASS | Transient/held frame samples, non-default channel mute, exact serialized replay |
+| Unicode CLI/exports | PASS | Cyrillic and emoji paths, JSON parsing, trace bounds, invalid arguments and collision rejection |
 
-`130 PASS, 0 XFAIL, 0 FAIL` refers to the external ROM/image checks, not 130 commercial games. The runner has no enabled expected-failure exceptions.
+**144 external hardware/image checks** pass; with the original Color demo image this is **145 checks**. Internal suites are counted separately. Results describe tested scenarios, not the number of compatible games.
+
+The Windows GUI self-test exercises application startup and renderer code without interactive visual inspection. Native-menu usability, subjective sound quality and physical gamepad operation have not been certified. Light/dark themes cover the client canvas and status area; native menus/Studio controls use the Windows theme. ASan/UBSan on Linux is configured in CI; no local Linux sanitizer result is claimed.
+
+Machine-readable evidence: [DMG](docs/test-results.json), [CGB](docs/cgb-test-results.json), [summary](docs/validation-summary.json). The 0.7 Super Mario Land smoke remains historical evidence in the old release; it is not a fresh 0.8 full playthrough.
+
+## New regression coverage
+
+Synthetic DMG boot execution and FF50 unmapping, CGB segmented/packed images and cartridge-header hole, boot register locks and boot image identity; mapper reset and MBC1M; in-memory GBSTATE5/input resume and GBSTATE3/4 loading; canonical bool fields, finite APU filters, coordinate/counter/CPU-flag validation; checksum-valid malformed states, oversized files rejected before allocation, transactional rejection and battery backup.
+
+Independent RLE packet round-trips and corruption bounds, time/memory-bounded rewind, full initial-state input replay including mixer settings; exhaustive SM83/CB instruction-size/legal-set checks, golden mnemonics, conditions/run-to/changed-value watches, interrupt/idle/HALT bug traces, bounds and CRC/header diagnostics; 500,000-frame concurrent SPSC ordering/wrap test, ramps, exclusive Unicode WAV files and RIFF caps; all BPS actions and overlapping copies, all three CRC checks, IPS literal/RLE/truncation, malformed prefixes and resource limits.
 
 ## Reproduce
 
-```sh
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build --parallel
-ctest --test-dir build --output-on-failure
-python -m pip install Pillow
-python tests/run_rom_tests.py --emulator build/gb_headless --download --mooneye
+```powershell
+cmake -S . -B build -A x64
+cmake --build build --config Release --parallel
+ctest --test-dir build -C Release --output-on-failure
+py -m pip install Pillow
+py tests/run_rom_tests.py --emulator build/Release/gb_headless.exe --download --mooneye
+py tests/run_cgb_tests.py --emulator build/Release/gb_headless.exe --download
+build/Release/GBStudio.exe --self-test demo.gbc
 ```
 
-The checked-in report was produced by this runner with the same pinned test bytes. Windows uses `build/Release/gb_headless.exe` and `ctest -C Release`.
+Linux uses `-DCMAKE_BUILD_TYPE=Release`, `build/gb_headless`, and no `-C Release`. Sanitizers: `-DCMAKE_BUILD_TYPE=Debug -DGB_ENABLE_SANITIZERS=ON`. External test ROMs are downloaded from their authors, not bundled. The legacy state fixture contains the project's original demo only.
 
-## Sources and pins
+## Primary references and pins
 
-- [Blargg/retrio hardware tests](https://github.com/retrio/gb-test-roms), commit `c240dd7d700e5c0b00a7bbba52b53e4ee67b5f15`.
-- [Mooneye Test Suite](https://github.com/Gekkio/mooneye-test-suite), commit `31510e12eea6286d36eea060a6adde755e1067aa`, prebuilt `mts-20260714-0944-31510e1`. Only DMG ABC-compatible acceptance and emulator-only files are selected; other model revisions, CGB/SGB, manual and madness tests are excluded.
-- [dmg-acid2 v1.0](https://github.com/mattcurrie/dmg-acid2), reference image from commit `8a98ce731f96dde032ffb22ec36dc985d78fdb18`; ROM, reference image and Mooneye archive checksums are enforced by the downloader.
-- [Pan Docs](https://gbdev.io/pandocs/) and the hardware behavior documented by the above test authors informed the implementation.
+- [Blargg tests](https://github.com/retrio/gb-test-roms), commit `c240dd7d700e5c0b00a7bbba52b53e4ee67b5f15`.
+- [Mooneye](https://github.com/Gekkio/mooneye-test-suite), `mts-20260714-0944-31510e1`, pinned archive SHA-256.
+- [dmg-acid2 v1.0](https://github.com/mattcurrie/dmg-acid2), reference `8a98ce731f96dde032ffb22ec36dc985d78fdb18`.
+- [cgb-acid2 v1.1](https://github.com/mattcurrie/cgb-acid2), reference `fa5b7f86d6fb599f79e55169494d981a7af75a31` with ROM/image SHA-256 checks.
+- [Pan Docs](https://github.com/gbdev/pandocs): instruction set, power-up, CGB registers, audio, DMA and memory maps.
+- [Microsoft WASAPI](https://learn.microsoft.com/en-us/windows/win32/coreaudio/rendering-a-stream), [shared-mode conversion flags](https://learn.microsoft.com/en-us/windows/win32/coreaudio/audclnt-streamflags-xxx-constants).
+- [BPS format](https://github.com/blakesmith/rombp/blob/master/docs/bps_spec.md), [Flips IPS](https://github.com/Alcaro/Flips/blob/master/libips.cpp), [SameBoy cheat decoding](https://github.com/LIJI32/SameBoy/blob/master/Core/cheats.c).
 
-External test ROMs and Nintendo boot ROMs are not distributed in the project archive. The included demo is original homebrew and now uploads graphics with the LCD disabled, as required on hardware.
+## Remaining limits
 
-## What these results do not establish
+No perfect cycle-accuracy or hardware-revision claim. Mealybug/SameSuite raster/audio suites, OAM corruption and every FIFO edge case remain unvalidated; mode3 stalls retain approximations. The 8200-T-cycle CGB speed-switch locking behavior is approximate. Manufacturer Boot ROMs have not been tested; supplied assets only are supported, and no Nintendo images are distributed.
 
-Mario / Super Mario Land / Tetris ROMs were not supplied and have not been directly tested. Hardware tests provide substantial evidence for the core but do not certify every game or ROM revision. Commercial-game playthroughs, audible sound quality, physical controller input and native Windows GUI behavior still need real-device testing.
+CGB compatibility mode for DMG-only cartridges and automatic boot colorization remain unsupported. Pocket/Light are display palette presets, not hardware revisions. Link peers/netplay, infrared communication, SGB, Camera/Printer, HuC/MMM01/MBC6/MBC7 and physical rumble/tilt remain pending. RTC advances with emulated base dots while running; turbo therefore accelerates its running clock.
 
-This is a dot-clocked renderer, not a transistor-level hardware simulation. The complete mealybug/SameSuite raster-effect suites and Blargg OAM-corruption suite have not been validated. Analog behavior and every obscure mid-scanline FIFO/OAM interaction are not guaranteed. Link-cable multiplayer, SGB, Game Boy Camera, HuC controllers, MBC7 and physical rumble are not implemented.
-
-MBC3 battery RAM and RTC have local regression coverage; the pinned Mooneye emulator-only selection does not contain a full MBC3 commercial-game suite. RTC advances from emulated cycles during execution and from the saved wall timestamp when loading; turbo accelerates its running clock.
-
-The app skips the Nintendo boot ROM using tested DMG post-boot registers and clock phases. State format `GBSTATE3` contains pipeline/audio/timing state and a checksum; old 0.5 state files are rejected. Battery `.sav` format remains compatible.
-
-## Color follows DMG
-
-CGB-only ROMs are rejected with an explanation. Dual GB/CGB cartridges run in DMG mode. The next stage must add banked VRAM/WRAM, tile attributes, color palettes, double-speed operation, HDMA/GDMA and CGB tests while retaining this DMG suite.
+GBSTATE5 continues the native-struct ABI of earlier states; cross-compiler/architecture portability is not certified, and BESS is pending. Watches detect value changes after a CPU step rather than bus access. CPU effects are not GPU shaders; WAV is 44.1 kHz PCM, not FLAC. Game Genie/GameShark are parsers only, not an active cheat manager. See [complete feature status](docs/FEATURE_STATUS_RU.md).
