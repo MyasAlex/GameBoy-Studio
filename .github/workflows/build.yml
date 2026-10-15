@@ -1,5 +1,8 @@
-name: Build and DMG compatibility
-on: [push, pull_request, workflow_dispatch]
+name: Build, compatibility, and release
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -11,12 +14,56 @@ jobs:
       - run: cmake --build build --parallel 2
       - run: ctest --test-dir build --output-on-failure
       - run: python3 -m pip install Pillow
-      - run: python3 tests/run_rom_tests.py --emulator build/gb_headless --download --mooneye
+      - name: Verify ROM test protocols
+        run: |
+          python3 -m unittest discover -s tests -p test_extended_harness.py
+          python3 -m unittest discover -s tests -p test_fetch_extended_suite.py
+          python3 -m unittest discover -s tests -p test_rom_test_runner.py
+          python3 tests/test_headless_protocols.py --emulator build/gb_headless --demo demo.gb
+      - run: |
+          python3 tests/run_rom_tests.py --emulator build/gb_headless --download --mooneye || true
+          python3 tests/check_compatibility_regressions.py --current build/rom-tests.json --baseline docs/1.0-dmg-results.json
+      - run: python3 tests/run_cgb_tests.py --emulator build/gb_headless --download
+      - name: Verify PPU fixes and extended compatibility
+        run: |
+          python3 tests/fetch_extended_suite.py --output build/extended-suite
+          python3 tests/run_extended_tests.py --emulator build/gb_headless --suite build/extended-suite --rom m3_lcdc_obj_size_change_scx --rom m3_wx_4_change_sprites --rom m3_lcdc_obj_size_change --rom m3_wx_4_change --report build/ppu-regressions.json
+          python3 tests/run_extended_tests.py --emulator build/gb_headless --suite build/extended-suite --report build/extended-results.json || true
+          python3 tests/check_compatibility_regressions.py --current build/extended-results.json --baseline docs/stage2-extended-results.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: DMG-test-report
-          path: build/rom-tests.json
+          name: GB-CGB-test-reports
+          path: |
+            build/rom-tests.json
+            build/cgb-rom-tests.json
+            build/ppu-regressions.json
+            build/extended-results.json
+  sanitizers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DGB_ENABLE_SANITIZERS=ON
+      - run: cmake --build build --parallel 2
+      - run: ctest --test-dir build --output-on-failure
+        env:
+          ASAN_OPTIONS: detect_leaks=1
+          UBSAN_OPTIONS: halt_on_error=1
+  coverage-feedback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=RelWithDebInfo -DGB_BUILD_COVERAGE_FUZZER=ON -DBUILD_TESTING=OFF
+      - run: cmake --build build --target gb_coverage_fuzzer --parallel 2
+      - run: build/gb_coverage_fuzzer demo.gb build/corpus 30
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-loader-coverage-corpus
+          path: build/corpus
   windows-build:
     runs-on: windows-2022
     steps:
@@ -24,9 +71,55 @@ jobs:
       - run: cmake -S . -B build -A x64
       - run: cmake --build build --config Release --parallel 2
       - run: ctest --test-dir build -C Release --output-on-failure
+      - name: Verify Windows QA process handling
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests/test_windows_qa.ps1
+      - run: python -m pip install Pillow
+      - name: Verify ROM test protocols on Windows
+        run: |
+          python -m unittest discover -s tests -p test_extended_harness.py
+          python -m unittest discover -s tests -p test_fetch_extended_suite.py
+          python -m unittest discover -s tests -p test_rom_test_runner.py
+          python tests/test_headless_protocols.py --emulator build/Release/gb_headless.exe --demo demo.gb
+      - name: Verify PPU fixes on the packaged Windows core
+        run: |
+          python tests/fetch_extended_suite.py --output build/extended-suite
+          python tests/run_extended_tests.py --emulator build/Release/gb_headless.exe --suite build/extended-suite --rom m3_lcdc_obj_size_change_scx --rom m3_wx_4_change_sprites --rom m3_lcdc_obj_size_change --rom m3_wx_4_change --report build/ppu-regressions.json
       - run: cmake --install build --config Release --prefix dist
-      - run: Compress-Archive -Path dist/* -DestinationPath GBStudio-Windows-x64.zip
+      - name: Run native CPU rendering and demo checks
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File RUN_WINDOWS_QA.ps1 -OutputFolder build/windows-qa
+      - name: Package portable Windows build and sources
+        shell: pwsh
+        run: |
+          Compress-Archive -Path dist/* -DestinationPath GBStudio-Windows-x64.zip
+          git archive --format=zip --prefix=GameBoy-Studio/ -o GameBoy-Studio-source.zip HEAD
+          @('GBStudio-Windows-x64.zip','GameBoy-Studio-source.zip') | ForEach-Object {
+            $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $_).Hash.ToLowerInvariant()
+            "$hash  $_"
+          } | Set-Content -Encoding ascii SHA256SUMS.txt
       - uses: actions/upload-artifact@v4
         with:
           name: GBStudio-Windows-x64
-          path: GBStudio-Windows-x64.zip
+          path: |
+            GBStudio-Windows-x64.zip
+            GameBoy-Studio-source.zip
+            SHA256SUMS.txt
+            build/windows-qa
+            build/ppu-regressions.json
+  release:
+    if: startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push'
+    needs: [linux-tests, sanitizers, windows-build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: GBStudio-Windows-x64
+          path: artifacts
+      - name: Publish verified tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: gh release create "$RELEASE_TAG" artifacts/* --verify-tag --title "GameBoy Studio $RELEASE_TAG" --notes-file docs/RELEASE_NOTES.md

@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "rom": "demo.gbc",
+  "original_homebrew": true,
+  "frames": 72000,
+  "emulated_seconds": 1205.474853515625,
+  "output": "\nframes=72000 PC=$01ED LY=7 ROM=STUDIOCOLOR MODEL=CGB SPEED=1\n",
+  "scope": "Startup and idle execution of the original demo; no real-game play or device/leak verification."
+}

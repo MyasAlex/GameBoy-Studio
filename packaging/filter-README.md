@@ -1,0 +1,1 @@
+Separate GPLv3 image-processing helper; corresponding complete source is included here. Build with CMake and a C++20 compiler: cmake -S . -B build ; cmake --build build --config Release. The original project archive also includes this source, its pinned upstream identity and all frontend/core sources.

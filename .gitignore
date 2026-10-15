@@ -15,3 +15,7 @@ __pycache__/
 *.ilk
 *.suo
 *.user
+*.gbmovie
+*.ini
+.Sessions/
+*_screen_*.bmp

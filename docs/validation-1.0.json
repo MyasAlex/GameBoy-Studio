@@ -1,0 +1,249 @@
+{
+  "version": "1.0-preview",
+  "date": "2026-10-13",
+  "core": "SameBoy 1.0.4 + Studio bridge API v3",
+  "core_commit": "c4cf7abab79a4e22dc17e0704995976cb2751b2d",
+  "compiler_linux": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0",
+  "compiler_windows": "MinGW GCC 13 POSIX, x86_64, static C++ runtime; dynamic Studio C ABI engine DLL",
+  "windows_native_execution": "Not available in this environment; cross-build/link and PE imports checked. GUI/WIC/SM4/GPU/devices/installer/service transport not executed.",
+  "tests": "16/16 PASS",
+  "sanitizers": "16/16 PASS; new PPU/IR/rumble 2/2 PASS; latest offline achievement state restoration PASS",
+  "leak_sanitizer": "Unavailable / detect_leaks=0. No claim about leak-free physical Windows sessions.",
+  "hardware_tests": {
+    "1.0-dmg-results.json": {
+      "PASS": 127,
+      "FAIL": 3,
+      "ERROR": 0
+    },
+    "1.0-cgb-results.json": {
+      "PASS": 15,
+      "FAIL": 0,
+      "ERROR": 0
+    },
+    "1.0-extended-results.json": {
+      "PASS": 138,
+      "FAIL": 11,
+      "ERROR": 0
+    }
+  },
+  "coverage_fuzzer": {
+    "status": "PASS",
+    "seconds": 30.0119,
+    "iterations": 1810,
+    "accepted": 800,
+    "rejected": 1010,
+    "coverage_slots": 1756,
+    "new_corpus_inputs": 6,
+    "corpus_inputs": 9,
+    "scope": "GCC trace-pc native state/BESS loader feedback; finite run, hashed coverage slots; not exhaustive"
+  },
+  "long_demo_run": {
+    "status": "PASS",
+    "rom": "demo.gbc",
+    "original_homebrew": true,
+    "frames": 72000,
+    "emulated_seconds": 1205.474853515625,
+    "output": "\nframes=72000 PC=$01ED LY=7 ROM=STUDIOCOLOR MODEL=CGB SPEED=1\n",
+    "scope": "Startup and idle execution of the original demo; no real-game play or device/leak verification."
+  },
+  "benchmark": {
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "rom": "demo.gbc",
+    "frames_per_run": 1800,
+    "seconds": [
+      4.4568640379998214,
+      8.667519997,
+      5.400703406000048,
+      4.6262132059996475,
+      4.183175255000151
+    ],
+    "median_frames_per_second": 389.0871258734064,
+    "median_speed_multiple": 6.514371473153614,
+    "scope": "Headless core only; no claims about weak PCs or host-device latency."
+  },
+  "binaries": {
+    "GBStudio.exe": {
+      "sha256": "654c2dc84eb685437cde75089d65dfc576889212359250688db8a6c54153d450",
+      "size": 4765831,
+      "imports": [
+        "AVICAP32.dll",
+        "AVRT.dll",
+        "comdlg32.dll",
+        "d3d11.dll",
+        "D3DCOMPILER_47.dll",
+        "GDI32.dll",
+        "KERNEL32.dll",
+        "msvcrt.dll",
+        "ole32.dll",
+        "SHELL32.dll",
+        "USER32.dll",
+        "WINHTTP.dll",
+        "WINMM.dll",
+        "WS2_32.dll"
+      ],
+      "format": "PE32+ x86-64",
+      "signature": "unsigned"
+    },
+    "gb_accuracy.dll": {
+      "sha256": "458a5e498b9a5fc6bc0247f243467c6099a568f0d0f8d25224430706c2b7577d",
+      "size": 535719,
+      "imports": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "format": "PE32+ x86-64",
+      "signature": "unsigned"
+    },
+    "gb_pixel_filters.exe": {
+      "sha256": "659469f7ce4840a70afacf167b1c731dc26951dffe29dcccefa9967fffc1f277",
+      "size": 2677459,
+      "imports": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "format": "PE32+ x86-64",
+      "signature": "unsigned"
+    },
+    "tools/gb_headless.exe": {
+      "sha256": "6316e92a692d90c015faf566ce0cb99163b8aeabd2243bf2a230b90cbee5e873",
+      "size": 3236298,
+      "imports": [
+        "KERNEL32.dll",
+        "msvcrt.dll",
+        "SHELL32.dll"
+      ],
+      "format": "PE32+ x86-64",
+      "signature": "unsigned"
+    }
+  },
+  "media": {
+    "AVI_PCM": "PASS",
+    "samples": 9600,
+    "decoded_pcm_sha256": "fd06e1302d0faa652513e8da620a5b1da58dff204058d647ec8e29b86576b354",
+    "probe": {
+      "streams": [
+        {
+          "index": 0,
+          "codec_name": "rawvideo",
+          "codec_long_name": "raw video",
+          "codec_type": "video",
+          "codec_tag_string": "[0][0][0][0]",
+          "codec_tag": "0x0000",
+          "width": 160,
+          "height": 144,
+          "coded_width": 160,
+          "coded_height": 144,
+          "closed_captions": 0,
+          "film_grain": 0,
+          "has_b_frames": 0,
+          "pix_fmt": "bgr24",
+          "level": -99,
+          "refs": 1,
+          "r_frame_rate": "262144/4389",
+          "avg_frame_rate": "262144/4389",
+          "time_base": "4389/262144",
+          "start_pts": 0,
+          "start_time": "0.000000",
+          "duration_ts": 12,
+          "duration": "0.200912",
+          "bit_rate": "36029366",
+          "nb_frames": "12",
+          "extradata_size": 9,
+          "disposition": {
+            "default": 0,
+            "dub": 0,
+            "original": 0,
+            "comment": 0,
+            "lyrics": 0,
+            "karaoke": 0,
+            "forced": 0,
+            "hearing_impaired": 0,
+            "visual_impaired": 0,
+            "clean_effects": 0,
+            "attached_pic": 0,
+            "timed_thumbnails": 0,
+            "non_diegetic": 0,
+            "captions": 0,
+            "descriptions": 0,
+            "metadata": 0,
+            "dependent": 0,
+            "still_image": 0
+          }
+        },
+        {
+          "index": 1,
+          "codec_name": "pcm_s16le",
+          "codec_long_name": "PCM signed 16-bit little-endian",
+          "codec_type": "audio",
+          "codec_tag_string": "[1][0][0][0]",
+          "codec_tag": "0x0001",
+          "sample_fmt": "s16",
+          "sample_rate": "48000",
+          "channels": 2,
+          "bits_per_sample": 16,
+          "initial_padding": 0,
+          "r_frame_rate": "0/0",
+          "avg_frame_rate": "0/0",
+          "time_base": "1/48000",
+          "start_pts": 0,
+          "start_time": "0.000000",
+          "bit_rate": "1536000",
+          "nb_frames": "9600",
+          "disposition": {
+            "default": 0,
+            "dub": 0,
+            "original": 0,
+            "comment": 0,
+            "lyrics": 0,
+            "karaoke": 0,
+            "forced": 0,
+            "hearing_impaired": 0,
+            "visual_impaired": 0,
+            "clean_effects": 0,
+            "attached_pic": 0,
+            "timed_thumbnails": 0,
+            "non_diegetic": 0,
+            "captions": 0,
+            "descriptions": 0,
+            "metadata": 0,
+            "dependent": 0,
+            "still_image": 0
+          }
+        }
+      ]
+    },
+    "Windows_WIC_MotionJPEG": "not executed in this Linux environment"
+  },
+  "hlsl": {
+    "compiler": "Microsoft DXC v1.8.2407",
+    "note": "HLSL syntax/semantics with SM6.0; Windows D3DCompile SM4.0/device execution still needs native testing.",
+    "results": [
+      {
+        "entry": "vertex",
+        "target": "vs_6_0",
+        "status": "PASS",
+        "output": ""
+      },
+      {
+        "entry": "pixel",
+        "target": "ps_6_0",
+        "status": "PASS",
+        "output": ""
+      }
+    ]
+  },
+  "filter": {
+    "xbrz_pipe": "PASS",
+    "solid_color_pixels": 81,
+    "invalid_large_input": "rejected",
+    "output_sha256": "8a6d29e845858292c99115a18875c7d60fe701ad1e057cb4d1a13ebb8cee55fc"
+  },
+  "limitations": "11 Mealybug image failures + 3 replacement-boot initial-value failures remain; no commercial games or original Boot ROMs supplied. Real Pokemon trades, devices, WAN, external BESS programs, RetroAchievements approval/account and trusted code signature remain unverified. See FEATURE_STATUS_RU.md for all feature-level limits.",
+  "logs": {
+    "native": "Internal ctest changing into directory: /workspace/scratch/334e2f3e895e/work/GameBoy-Studio/build-native-cmake\nTest project /workspace/scratch/334e2f3e895e/work/GameBoy-Studio/build-native-cmake\n      Start  1: accuracy_fuzz\n 1/16 Test  #1: accuracy_fuzz ....................   Passed    3.62 sec\n      Start  2: integration_pack\n 2/16 Test  #2: integration_pack .................   Passed    1.35 sec\n      Start  3: achievements\n 3/16 Test  #3: achievements .....................   Passed    0.36 sec\n      Start  4: accuracy\n 4/16 Test  #4: accuracy .........................   Passed    8.70 sec\n      Start  5: core\n 5/16 Test  #5: core .............................   Passed    0.39 sec\n      Start  6: cgb_memory\n 6/16 Test  #6: cgb_memory .......................   Passed    0.03 sec\n      Start  7: cgb_ppu\n 7/16 Test  #7: cgb_ppu ..........................   Passed    0.00 sec\n      Start  8: cgb_apu\n 8/16 Test  #8: cgb_apu ..........................   Passed    0.01 sec\n      Start  9: cgb_integration\n 9/16 Test  #9: cgb_integration ..................   Passed    0.19 sec\n      Start 10: core_extension\n10/16 Test #10: core_extension ...................   Passed    0.07 sec\n      Start 11: session\n11/16 Test #11: session ..........................   Passed    0.49 sec\n      Start 12: studio_tools\n12/16 Test #12: studio_tools .....................   Passed    0.01 sec\n      Start 13: audio_buffer\n13/16 Test #13: audio_buffer .....................   Passed    0.01 sec\n      Start 14: cartridge_tools\n14/16 Test #14: cartridge_tools ..................   Passed    0.07 sec\n      Start 15: feature_pack\n15/16 Test #15: feature_pack .....................   Passed    0.96 sec\n      Start 16: loader_fuzz\n16/16 Test #16: loader_fuzz ......................   Passed    2.10 sec\n\n100% tests passed, 0 tests failed out of 16\n\nTotal Test time (real) =  18.37 sec\n",
+    "sanitizers": "Internal ctest changing into directory: /workspace/scratch/334e2f3e895e/work/GameBoy-Studio/build-sanitize\nTest project /workspace/scratch/334e2f3e895e/work/GameBoy-Studio/build-sanitize\n      Start  1: accuracy_fuzz\n 1/16 Test  #1: accuracy_fuzz ....................   Passed   56.78 sec\n      Start  2: integration_pack\n 2/16 Test  #2: integration_pack .................   Passed   13.49 sec\n      Start  3: achievements\n 3/16 Test  #3: achievements .....................   Passed    5.03 sec\n      Start  4: accuracy\n 4/16 Test  #4: accuracy .........................   Passed  102.40 sec\n      Start  5: core\n 5/16 Test  #5: core .............................   Passed   11.46 sec\n      Start  6: cgb_memory\n 6/16 Test  #6: cgb_memory .......................   Passed    0.74 sec\n      Start  7: cgb_ppu\n 7/16 Test  #7: cgb_ppu ..........................   Passed    0.05 sec\n      Start  8: cgb_apu\n 8/16 Test  #8: cgb_apu ..........................   Passed    0.15 sec\n      Start  9: cgb_integration\n 9/16 Test  #9: cgb_integration ..................   Passed    5.58 sec\n      Start 10: core_extension\n10/16 Test #10: core_extension ...................   Passed    1.05 sec\n      Start 11: session\n11/16 Test #11: session ..........................   Passed   14.37 sec\n      Start 12: studio_tools\n12/16 Test #12: studio_tools .....................   Passed    0.07 sec\n      Start 13: audio_buffer\n13/16 Test #13: audio_buffer .....................   Passed    0.03 sec\n      Start 14: cartridge_tools\n14/16 Test #14: cartridge_tools ..................   Passed    0.04 sec\n      Start 15: feature_pack\n15/16 Test #15: feature_pack .....................   Passed   20.96 sec\n      Start 16: loader_fuzz\n16/16 Test #16: loader_fuzz ......................   Passed   21.05 sec\n\n100% tests passed, 0 tests failed out of 16\n\nTotal Test time (real) = 253.26 sec\n",
+    "new_observers": "Internal ctest changing into directory: /workspace/scratch/334e2f3e895e/work/GameBoy-Studio/build-sanitize\nTest project /workspace/scratch/334e2f3e895e/work/GameBoy-Studio/build-sanitize\n    Start 2: integration_pack\n1/2 Test #2: integration_pack .................   Passed   16.99 sec\n    Start 4: accuracy\n2/2 Test #4: accuracy .........................   Passed  103.27 sec\n\n100% tests passed, 0 tests failed out of 2\n\nTotal Test time (real) = 120.25 sec\n",
+    "offline_achievement_restore": "Offline rc_client login, ROM identity, native memory trigger, unlock request, state progress and Hardcore reset PASS\n"
+  }
+}

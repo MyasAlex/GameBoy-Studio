@@ -77,18 +77,38 @@ def prepare(cache, mooneye):
                     bundle.extractall(dest)
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--emulator', required=True, type=Path)
     parser.add_argument('--cache', type=Path, default=ROOT/'tests/roms')
     parser.add_argument('--download', action='store_true')
     parser.add_argument('--mooneye', action='store_true')
+    parser.add_argument('--boot-rom', type=Path,
+                        help='Use a user-supplied 256-byte DMG boot image for every test; default: bundled SameBoy replacement firmware')
     parser.add_argument('--allow-known-failures', action='store_true')
     parser.add_argument('--report', type=Path, default=ROOT/'build/rom-tests.json')
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     executable = args.emulator.resolve()
     if not executable.is_file():
         parser.error(f'Emulator executable not found: {executable}')
+    boot_options = []
+    boot_firmware = {'source': 'bundled_sameboy_replacement', 'model': 'DMG',
+                     'sha256': None,
+                     'note': 'Default accuracy-core boot policy; the executable does not expose the embedded firmware hash.'}
+    if args.boot_rom:
+        boot_path = args.boot_rom.resolve()
+        try:
+            if boot_path.stat().st_size != 256:
+                parser.error('This DMG suite requires a 256-byte Boot ROM.')
+            boot_bytes = boot_path.read_bytes()
+        except OSError as error:
+            parser.error(f'Could not read DMG Boot ROM: {error}')
+        if len(boot_bytes) != 256:
+            parser.error('This DMG suite requires a complete 256-byte Boot ROM.')
+        boot_options = ['--boot-rom', str(boot_path)]
+        boot_firmware = {'source': 'external', 'model': 'DMG', 'file': str(boot_path),
+                         'bytes': len(boot_bytes),
+                         'sha256': hashlib.sha256(boot_bytes).hexdigest()}
     if args.download:
         prepare(args.cache, args.mooneye)
     tests = [('Blargg', n, args.cache/'blargg'/n, '--test') for n in BLARGG]
@@ -104,7 +124,7 @@ def main():
         suite, name, rom, mode = test
         start = time.monotonic()
         try:
-            result = subprocess.run([str(executable), str(rom.resolve()), '20000', mode], capture_output=True, text=True, timeout=90)
+            result = subprocess.run([str(executable), str(rom.resolve()), '20000', mode, '--model', 'dmg', *boot_options], capture_output=True, text=True, timeout=90)
             output = result.stdout + result.stderr
             status = 'PASS' if result.returncode == 0 else 'FAIL'
             if 'RESULT: TIMEOUT' in output:
@@ -123,7 +143,7 @@ def main():
     try:
         from PIL import Image, ImageChops
         image_path = args.cache/'acid2-result.ppm'
-        result = subprocess.run([str(executable), str((args.cache/'dmg-acid2.gb').resolve()), '60', '--grey', '--output', str(image_path.resolve())], capture_output=True, text=True, timeout=30)
+        result = subprocess.run([str(executable), str((args.cache/'dmg-acid2.gb').resolve()), '60', '--model', 'dmg', '--grey', '--output', str(image_path.resolve()), *boot_options], capture_output=True, text=True, timeout=30)
         if result.returncode:
             raise RuntimeError(result.stdout+result.stderr)
         actual = Image.open(image_path).convert('RGB')
@@ -136,7 +156,7 @@ def main():
         results.append({'suite': 'PPU image', 'rom': 'dmg-acid2', 'status': 'ERROR', 'output': str(error)})
     args.report.parent.mkdir(parents=True, exist_ok=True)
     report = {'blargg_commit': BLARGG_COMMIT, 'mooneye_version': MOONEYE_VERSION,
-              'commercial_games_tested': [], 'results': results}
+              'boot_firmware': boot_firmware, 'commercial_games_tested': [], 'results': results}
     args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
     failures = [r for r in results if r['status'] not in {'PASS','XFAIL'}]
     print(f"PASS={sum(r['status']=='PASS' for r in results)} XFAIL={sum(r['status']=='XFAIL' for r in results)} FAIL={len(failures)}")

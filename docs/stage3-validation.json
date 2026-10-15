@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-15T14:52:33.8756232+08:00",
+  "platform": "Microsoft Windows NT 10.0.19045.0",
+  "frontend_build": {
+    "compiler": "MSVC 19.51",
+    "configuration": "Release",
+    "status": "PASS"
+  },
+  "binary_sha256": {
+    "GBStudio.exe": "f2ebd88c24037246a60bd7ea80929b6c776b676125eddf54ac49d7d38f5de6c0",
+    "gb_accuracy.dll": "c3c82b7af2099a49407ed02ca06d627e0863bcb7c884785c01b8f2d1d631c210",
+    "gb_pixel_filters.exe": "d311f4a97fda89359e2cd382f37f5b1d2e4858ae929b36c199d307f02ba9d725",
+    "tools/gb_headless.exe": "cbed5199c6263de66a1a57fc05a071e4a347dcbef53dc68a5cb766484a5c4750"
+  },
+  "core_changed_from_stage2": false,
+  "abi_version": 3,
+  "native_state_version": 17,
+  "reported_issue": "Games appear accelerated; sustained acceleration has not been reproduced with the available original probes.",
+  "confirmed_defects": [
+    "Accelerated time debt could survive Turbo release.",
+    "Selecting normal speed did not cancel an active Turbo override."
+  ],
+  "changes": [
+    "Discard timing debt on speed/reset/pause transitions.",
+    "Bound catch-up batches to two frames at 1x, retaining fractional timing phase.",
+    "Ctrl+0 selects 1x and cancels Turbo; custom hotkeys retain priority.",
+    "Show selected speed and measured speed percentage.",
+    "Add hidden Win32 wall-clock diagnostic and three original DMG/CGB probes.",
+    "Guard nested timer dispatch and inactive Turbo-key releases."
+  ],
+  "frame_pacing_test": {
+    "status": "PASS",
+    "runner": "MSVC executable and CTest -R ^frame_pacing$",
+    "cases": "10 simulated seconds at 60/144/240 Hz with jitter, rates 0.25x..16x, stall cap, Turbo transitions, pause/reset and invalid clocks"
+  },
+  "timing_runner_path_checks": {
+    "PASS": 3,
+    "FAIL": 0,
+    "report": "stage3-runner-path-checks.json"
+  },
+  "windows_timer_tests": {
+    "PASS": 6,
+    "FAIL": 0,
+    "seconds_per_probe": 5,
+    "speed_ratio_min": 0.992345189703,
+    "speed_ratio_max": 0.995309829097,
+    "ppu_fps_min": 59.2702751488,
+    "ppu_fps_max": 59.4473570214,
+    "audio_backend": "WASAPI",
+    "reports": [
+      "stage3-timing-no-audio.json",
+      "stage3-timing-audio.json"
+    ]
+  },
+  "windows_basic_qa": {
+    "PASS": 3,
+    "FAIL": 0,
+    "frames_per_demo": 600,
+    "report": "stage3-windows-qa.json"
+  },
+  "core_clock_probe": {
+    "PASS": 3,
+    "clock_hz": 4194304,
+    "dots_per_frame": 70224,
+    "report": "stage3-core-speed.json"
+  },
+  "carried_forward_core_results": {
+    "source": "stage2-validation.json",
+    "rerun_in_stage3": false,
+    "same_suite_pass": 78,
+    "mealybug_pass": 64,
+    "mealybug_fail": 7,
+    "boot_fail": 3
+  },
+  "limitations": [
+    "No affected user ROM or exact acceleration factor was provided.",
+    "Timing diagnostics use a hidden window and original probes; GPU presentation, audible quality, physical controls and real games were not verified.",
+    "A wall-clock pass allows 3 percent scheduling tolerance and does not certify every workload.",
+    "Original Boot ROMs, external services, server Hardcore, devices and code signing remain unverified.",
+    "Remote CI and Linux/sanitizer builds were not run in this stage."
+  ]
+}

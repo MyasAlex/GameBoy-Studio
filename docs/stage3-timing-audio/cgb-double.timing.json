@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "wall_seconds": 5.0039876,
+  "emulated_seconds": 4.97258424759,
+  "speed_ratio": 0.993724334487,
+  "clock_rate": 4194304,
+  "base_cycles": 20856530,
+  "ppu_frames": 297,
+  "ppu_fps": 59.3526650626,
+  "cpu_double_speed": true,
+  "speed_setting": 1,
+  "turbo": false,
+  "maximum_frame_batch": 2,
+  "sound_requested": true,
+  "audio_opened": true,
+  "audio_backend": "WASAPI",
+  "scope": "Actual hidden Win32 timer loop and hardware backend at 1x. GPU rendering and audible quality are outside this check."
+}

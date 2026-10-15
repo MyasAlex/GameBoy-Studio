@@ -1,0 +1,295 @@
+# Recorded hardware-test results; no commercial game compatibility claims.
+Blargg	cpu_instrs/individual/01-special.gb		PASS	1.0-dmg-results.json
+Blargg	cpu_instrs/individual/02-interrupts.gb		PASS	1.0-dmg-results.json
+Blargg	cpu_instrs/individual/03-op sp,hl.gb		PASS	1.0-dmg-results.json
+Blargg	cpu_instrs/individual/04-op r,imm.gb		PASS	1.0-dmg-results.json
+Blargg	cpu_instrs/individual/05-op rp.gb		PASS	1.0-dmg-results.json
+Blargg	cpu_instrs/individual/06-ld r,r.gb		PASS	1.0-dmg-results.json
+Blargg	cpu_instrs/individual/07-jr,jp,call,ret,rst.gb		PASS	1.0-dmg-results.json
+Blargg	cpu_instrs/individual/08-misc instrs.gb		PASS	1.0-dmg-results.json
+Blargg	cpu_instrs/individual/09-op r,r.gb		PASS	1.0-dmg-results.json
+Blargg	cpu_instrs/individual/10-bit ops.gb		PASS	1.0-dmg-results.json
+Blargg	cpu_instrs/individual/11-op a,(hl).gb		PASS	1.0-dmg-results.json
+Blargg	cpu_instrs/cpu_instrs.gb		PASS	1.0-dmg-results.json
+Blargg	instr_timing/instr_timing.gb		PASS	1.0-dmg-results.json
+Blargg	halt_bug.gb		PASS	1.0-dmg-results.json
+Blargg	mem_timing/individual/01-read_timing.gb		PASS	1.0-dmg-results.json
+Blargg	mem_timing/individual/02-write_timing.gb		PASS	1.0-dmg-results.json
+Blargg	mem_timing/individual/03-modify_timing.gb		PASS	1.0-dmg-results.json
+Blargg	mem_timing/mem_timing.gb		PASS	1.0-dmg-results.json
+Blargg	mem_timing-2/rom_singles/01-read_timing.gb		PASS	1.0-dmg-results.json
+Blargg	mem_timing-2/rom_singles/02-write_timing.gb		PASS	1.0-dmg-results.json
+Blargg	mem_timing-2/rom_singles/03-modify_timing.gb		PASS	1.0-dmg-results.json
+Blargg	mem_timing-2/mem_timing.gb		PASS	1.0-dmg-results.json
+Blargg	dmg_sound/rom_singles/01-registers.gb		PASS	1.0-dmg-results.json
+Blargg	dmg_sound/rom_singles/02-len ctr.gb		PASS	1.0-dmg-results.json
+Blargg	dmg_sound/rom_singles/03-trigger.gb		PASS	1.0-dmg-results.json
+Blargg	dmg_sound/rom_singles/04-sweep.gb		PASS	1.0-dmg-results.json
+Blargg	dmg_sound/rom_singles/05-sweep details.gb		PASS	1.0-dmg-results.json
+Blargg	dmg_sound/rom_singles/06-overflow on trigger.gb		PASS	1.0-dmg-results.json
+Blargg	dmg_sound/rom_singles/07-len sweep period sync.gb		PASS	1.0-dmg-results.json
+Blargg	dmg_sound/rom_singles/08-len ctr during power.gb		PASS	1.0-dmg-results.json
+Blargg	dmg_sound/rom_singles/09-wave read while on.gb		PASS	1.0-dmg-results.json
+Blargg	dmg_sound/rom_singles/10-wave trigger while on.gb		PASS	1.0-dmg-results.json
+Blargg	dmg_sound/rom_singles/11-regs after power.gb		PASS	1.0-dmg-results.json
+Blargg	dmg_sound/rom_singles/12-wave write while on.gb		PASS	1.0-dmg-results.json
+Blargg	dmg_sound/dmg_sound.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/add_sp_e_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/bits/mem_oam.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/bits/reg_f.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/bits/unused_hwio-GS.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/boot_div-dmgABCmgb.gb		FAIL	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/boot_hwio-dmgABCmgb.gb		FAIL	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/boot_regs-dmgABC.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/call_cc_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/call_cc_timing2.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/call_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/call_timing2.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/di_timing-GS.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/div_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ei_sequence.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ei_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/halt_ime0_ei.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/halt_ime0_nointr_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/halt_ime1_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/halt_ime1_timing2-GS.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/if_ie_registers.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/instr/daa.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/interrupts/ie_push.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/intr_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/jp_cc_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/jp_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ld_hl_sp_e_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/oam_dma/basic.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/oam_dma/reg_read.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/oam_dma/sources-GS.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/oam_dma_restart.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/oam_dma_start.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/oam_dma_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/pop_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ppu/hblank_ly_scx_timing-GS.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ppu/intr_1_2_timing-GS.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ppu/intr_2_0_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ppu/intr_2_mode0_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ppu/intr_2_mode0_timing_sprites.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ppu/intr_2_mode3_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ppu/intr_2_oam_ok_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ppu/lcdon_timing-GS.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ppu/lcdon_write_timing-GS.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ppu/stat_irq_blocking.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ppu/stat_lyc_onoff.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ppu/vblank_stat_intr-GS.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/push_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/rapid_di_ei.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ret_cc_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/ret_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/reti_intr_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/reti_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/rst_timing.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/serial/boot_sclk_align-dmgABCmgb.gb		FAIL	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/timer/div_write.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/timer/rapid_toggle.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/timer/tim00.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/timer/tim00_div_trigger.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/timer/tim01.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/timer/tim01_div_trigger.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/timer/tim10.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/timer/tim10_div_trigger.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/timer/tim11.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/timer/tim11_div_trigger.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/timer/tima_reload.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/timer/tima_write_reloading.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	acceptance/timer/tma_write_reloading.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc1/bits_bank1.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc1/bits_bank2.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc1/bits_mode.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc1/bits_ramg.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc1/multicart_rom_8Mb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc1/ram_256kb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc1/ram_64kb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc1/rom_16Mb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc1/rom_1Mb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc1/rom_2Mb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc1/rom_4Mb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc1/rom_512kb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc1/rom_8Mb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc2/bits_ramg.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc2/bits_romb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc2/bits_unused.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc2/ram.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc2/rom_1Mb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc2/rom_2Mb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc2/rom_512kb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc5/rom_16Mb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc5/rom_1Mb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc5/rom_2Mb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc5/rom_32Mb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc5/rom_4Mb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc5/rom_512kb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc5/rom_64Mb.gb		PASS	1.0-dmg-results.json
+Mooneye DMG ABC	emulator-only/mbc5/rom_8Mb.gb		PASS	1.0-dmg-results.json
+PPU image	dmg-acid2		PASS	1.0-dmg-results.json
+Blargg CGB	cgb_sound/rom_singles/01-registers.gb		PASS	1.0-cgb-results.json
+Blargg CGB	cgb_sound/rom_singles/02-len ctr.gb		PASS	1.0-cgb-results.json
+Blargg CGB	cgb_sound/rom_singles/03-trigger.gb		PASS	1.0-cgb-results.json
+Blargg CGB	cgb_sound/rom_singles/04-sweep.gb		PASS	1.0-cgb-results.json
+Blargg CGB	cgb_sound/rom_singles/05-sweep details.gb		PASS	1.0-cgb-results.json
+Blargg CGB	cgb_sound/rom_singles/06-overflow on trigger.gb		PASS	1.0-cgb-results.json
+Blargg CGB	cgb_sound/rom_singles/07-len sweep period sync.gb		PASS	1.0-cgb-results.json
+Blargg CGB	cgb_sound/rom_singles/08-len ctr during power.gb		PASS	1.0-cgb-results.json
+Blargg CGB	cgb_sound/rom_singles/09-wave read while on.gb		PASS	1.0-cgb-results.json
+Blargg CGB	cgb_sound/rom_singles/10-wave trigger while on.gb		PASS	1.0-cgb-results.json
+Blargg CGB	cgb_sound/rom_singles/11-regs after power.gb		PASS	1.0-cgb-results.json
+Blargg CGB	cgb_sound/rom_singles/12-wave.gb		PASS	1.0-cgb-results.json
+Blargg CGB	cgb_sound/cgb_sound.gb		PASS	1.0-cgb-results.json
+CGB PPU image	cgb-acid2 v1.1		PASS	1.0-cgb-results.json
+CGB PPU image	original CGB demo		PASS	1.0-cgb-results.json
+same-suite	same-suite/apu/channel_1/channel_1_align.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_align_cpu.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_delay.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_duty.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_duty_delay.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_extra_length_clocking-cgb0B.gb	cgbb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_freq_change.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_freq_change_timing-A.gb	agb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_freq_change_timing-cgb0BC.gb	cgbc	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_freq_change_timing-cgbDE.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_nrx2_glitch.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_nrx2_speed_change.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_restart.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_restart_nrx2_glitch.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_stop_div.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_stop_restart.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_sweep.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_sweep_restart.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_sweep_restart_2.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_volume.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_1/channel_1_volume_div.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_2/channel_2_align.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_2/channel_2_align_cpu.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_2/channel_2_delay.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_2/channel_2_duty.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_2/channel_2_duty_delay.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_2/channel_2_extra_length_clocking-cgb0B.gb	cgbb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_2/channel_2_freq_change.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_2/channel_2_nrx2_glitch.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_2/channel_2_nrx2_speed_change.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_2/channel_2_restart.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_2/channel_2_restart_nrx2_glitch.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_2/channel_2_stop_div.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_2/channel_2_stop_restart.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_2/channel_2_volume.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_2/channel_2_volume_div.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_and_glitch.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_delay.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_extra_length_clocking-cgb0.gb	cgb0	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_extra_length_clocking-cgbB.gb	cgbb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_first_sample.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_freq_change_delay.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_restart_delay.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_restart_during_delay.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_restart_stop_delay.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_shift_delay.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_shift_skip_delay.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_stop_delay.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_stop_div.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_wave_ram_dac_on_rw.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_wave_ram_locked_write.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_3/channel_3_wave_ram_sync.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_4/channel_4_align.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_4/channel_4_delay.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_4/channel_4_equivalent_frequencies.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_4/channel_4_extra_length_clocking-cgb0B.gb	cgbb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_4/channel_4_freq_change.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_4/channel_4_frequency_alignment.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_4/channel_4_lfsr.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_4/channel_4_lfsr15.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_4/channel_4_lfsr_15_7.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_4/channel_4_lfsr_7_15.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_4/channel_4_lfsr_restart.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_4/channel_4_lfsr_restart_fast.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/channel_4/channel_4_volume_div.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/div_trigger_volume_10.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/div_write_trigger.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/div_write_trigger_10.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/div_write_trigger_volume.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/apu/div_write_trigger_volume_10.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/dma/gbc_dma_cont.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/dma/gdma_addr_mask.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/dma/hdma_lcd_off.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/dma/hdma_mode0.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/interrupt/ei_delay_halt.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/ppu/blocking_bgpi_increase.gb	cgb	PASS	1.0-extended-results.json
+same-suite	same-suite/sgb/command_mlt_req.gb	sgb	PASS	1.0-extended-results.json
+same-suite	same-suite/sgb/command_mlt_req_1_incrementing.gb	sgb	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m2_win_en_toggle.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m2_win_en_toggle.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m2_win_en_toggle.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_bgp_change.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_bgp_change.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_bgp_change.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_bgp_change_sprites.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_bgp_change_sprites.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_bgp_change_sprites.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_lcdc_bg_en_change.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_lcdc_bg_en_change.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_lcdc_bg_en_change.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_lcdc_bg_en_change2.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_lcdc_bg_map_change.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_lcdc_bg_map_change.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_lcdc_bg_map_change.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_lcdc_bg_map_change2.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_lcdc_obj_en_change.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_lcdc_obj_en_change.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_lcdc_obj_en_change.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_lcdc_obj_en_change_variant.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_lcdc_obj_en_change_variant.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_lcdc_obj_en_change_variant.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_scx.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_scx.gb	cgbc	FAIL	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_scx.gb	cgbd	FAIL	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_change.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_change.gb	cgbc	FAIL	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_change.gb	cgbd	FAIL	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_change2.gb	cgbc	FAIL	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_win_change.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_win_change.gb	cgbc	FAIL	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_win_change.gb	cgbd	FAIL	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_win_change2.gb	cgbc	FAIL	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_lcdc_win_en_change_multiple.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_lcdc_win_en_change_multiple.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_lcdc_win_en_change_multiple.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_lcdc_win_en_change_multiple_wx.gb	dmg	FAIL	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_lcdc_win_map_change.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_lcdc_win_map_change.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_lcdc_win_map_change.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_lcdc_win_map_change2.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_obp0_change.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_obp0_change.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_obp0_change.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_scx_high_5_bits.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_scx_high_5_bits.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_scx_high_5_bits.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_scx_high_5_bits_change2.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_scx_low_3_bits.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_scx_low_3_bits.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_scx_low_3_bits.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_scy_change.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_scy_change.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_scy_change.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_scy_change2.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_window_timing.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_window_timing.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_window_timing.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_window_timing_wx_0.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_window_timing_wx_0.gb	cgbc	PASS	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_window_timing_wx_0.gb	cgbd	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_wx_4_change.gb	dmg	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_wx_4_change_sprites.gb	dmg	PASS	1.0-extended-results.json
+mealybug-cgb-c	mealybug-tearoom-tests/ppu/m3_wx_4_change_sprites.gb	cgbc	FAIL	1.0-extended-results.json
+mealybug-cgb-d	mealybug-tearoom-tests/ppu/m3_wx_4_change_sprites.gb	cgbd	FAIL	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_wx_5_change.gb	dmg	PASS	1.0-extended-results.json
+mealybug-dmg	mealybug-tearoom-tests/ppu/m3_wx_6_change.gb	dmg	PASS	1.0-extended-results.json

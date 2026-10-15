@@ -1,0 +1,146 @@
+{
+  "created_utc": "2026-10-14T14:02:29.251487+00:00",
+  "source_release": "https://github.com/c-sp/game-boy-test-roms/releases/tag/v7.0",
+  "source_archive_sha256": "b9a9d7a1075aa35a3d07c07c34974048672d8520dca9e07a50178f5860c3832c",
+  "boot_firmware": {
+    "source": "bundled_sameboy_replacement",
+    "original_boot_rom_used": false
+  },
+  "limitations": "This fresh subset uses the Mooneye ROMs included in c-sp v7.0, not the mts-20260714-0944-31510e1 source of the historical full DMG report. Results do not validate an original Nintendo Boot ROM.",
+  "binaries": {
+    "stage1_preserved": {
+      "executable_sha256": "cbed5199c6263de66a1a57fc05a071e4a347dcbef53dc68a5cb766484a5c4750",
+      "accuracy_dll_sha256": "458a5e498b9a5fc6bc0247f243467c6099a568f0d0f8d25224430706c2b7577d"
+    },
+    "stage2_final": {
+      "executable_sha256": "cbed5199c6263de66a1a57fc05a071e4a347dcbef53dc68a5cb766484a5c4750",
+      "accuracy_dll_sha256": "c3c82b7af2099a49407ed02ca06d627e0863bcb7c884785c01b8f2d1d631c210"
+    }
+  },
+  "summary": {
+    "stage1_preserved": {
+      "PASS": 0,
+      "FAIL": 3,
+      "TIMEOUT": 0,
+      "ERROR": 0,
+      "NOT_RUN": 0
+    },
+    "stage2_final": {
+      "PASS": 0,
+      "FAIL": 3,
+      "TIMEOUT": 0,
+      "ERROR": 0,
+      "NOT_RUN": 0
+    }
+  },
+  "results": [
+    {
+      "version": "stage1_preserved",
+      "suite": "Mooneye cached v7.0 Boot subset",
+      "rom": "acceptance/boot_div-dmgABCmgb.gb",
+      "model": "dmg",
+      "status": "FAIL",
+      "rom_sha256": "77448f882c19da0f0a3296dbad6b147716a23428bc1a2a35f3c905dafef05fb3",
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 1,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94922 stop=budget\nRESULT: FAIL\n",
+      "seconds": 0.485
+    },
+    {
+      "version": "stage1_preserved",
+      "suite": "Mooneye cached v7.0 Boot subset",
+      "rom": "acceptance/boot_hwio-dmgABCmgb.gb",
+      "model": "dmg",
+      "status": "FAIL",
+      "rom_sha256": "01aa82657e1b4cc8dfa8b2b45ad248de240eab1330a847389453a794c30b2591",
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 1,
+      "output": "\nframes=10 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=93357 stop=budget\nRESULT: FAIL\n",
+      "seconds": 0.485
+    },
+    {
+      "version": "stage1_preserved",
+      "suite": "Mooneye cached v7.0 Boot subset",
+      "rom": "acceptance/serial/boot_sclk_align-dmgABCmgb.gb",
+      "model": "dmg",
+      "status": "FAIL",
+      "rom_sha256": "b727e0eae7cefb9d5f3bbc9d7eaca33d69c24f745a60c6d3d2eb2a9c2f038278",
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 1,
+      "output": "\u0000\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=95373 stop=budget\nRESULT: FAIL\n",
+      "seconds": 0.469
+    },
+    {
+      "version": "stage2_final",
+      "suite": "Mooneye cached v7.0 Boot subset",
+      "rom": "acceptance/boot_div-dmgABCmgb.gb",
+      "model": "dmg",
+      "status": "FAIL",
+      "rom_sha256": "77448f882c19da0f0a3296dbad6b147716a23428bc1a2a35f3c905dafef05fb3",
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 1,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94922 stop=budget\nRESULT: FAIL\n",
+      "seconds": 0.421
+    },
+    {
+      "version": "stage2_final",
+      "suite": "Mooneye cached v7.0 Boot subset",
+      "rom": "acceptance/boot_hwio-dmgABCmgb.gb",
+      "model": "dmg",
+      "status": "FAIL",
+      "rom_sha256": "01aa82657e1b4cc8dfa8b2b45ad248de240eab1330a847389453a794c30b2591",
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 1,
+      "output": "\nframes=10 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=93357 stop=budget\nRESULT: FAIL\n",
+      "seconds": 0.421
+    },
+    {
+      "version": "stage2_final",
+      "suite": "Mooneye cached v7.0 Boot subset",
+      "rom": "acceptance/serial/boot_sclk_align-dmgABCmgb.gb",
+      "model": "dmg",
+      "status": "FAIL",
+      "rom_sha256": "b727e0eae7cefb9d5f3bbc9d7eaca33d69c24f745a60c6d3d2eb2a9c2f038278",
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 1,
+      "output": "\u0000\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=95373 stop=budget\nRESULT: FAIL\n",
+      "seconds": 0.421
+    }
+  ]
+}

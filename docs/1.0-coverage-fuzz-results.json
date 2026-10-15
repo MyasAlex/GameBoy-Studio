@@ -1,0 +1,1 @@
+{"status":"PASS","seconds":30.0119,"iterations":1810,"accepted":800,"rejected":1010,"coverage_slots":1756,"new_corpus_inputs":6,"corpus_inputs":9,"scope":"GCC trace-pc native state/BESS loader feedback; finite run, hashed coverage slots; not exhaustive"}

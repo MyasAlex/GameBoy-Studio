@@ -1,0 +1,10 @@
+* text=auto
+*.gb binary
+*.gbc binary
+*.state binary
+*.ppm binary
+*.png binary
+*.zip binary
+releases/ export-ignore
+dist/ export-ignore
+preview.png export-ignore

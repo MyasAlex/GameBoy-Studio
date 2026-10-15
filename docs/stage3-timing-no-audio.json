@@ -1,0 +1,136 @@
+{
+  "created_utc": "2026-10-15T06:53:04.741266+00:00",
+  "executable_sha256": "f2ebd88c24037246a60bd7ea80929b6c776b676125eddf54ac49d7d38f5de6c0",
+  "accuracy_dll_sha256": "c3c82b7af2099a49407ed02ca06d627e0863bcb7c884785c01b8f2d1d631c210",
+  "audio_requested": false,
+  "seconds_per_probe": 5.0,
+  "expected_clock_hz": 4194304,
+  "expected_dots_per_frame": 70224,
+  "expected_ppu_fps": 59.72750056960583,
+  "speed_ratio_tolerance": [
+    0.97,
+    1.03
+  ],
+  "scope": "Actual hidden Win32 timer loop and accuracy core. Original probes; no commercial ROMs. GPU rendering and audible quality are outside this check.",
+  "summary": {
+    "PASS": 3,
+    "FAIL": 0,
+    "ERROR": 0
+  },
+  "tests": [
+    {
+      "probe": "dmg-normal",
+      "rom_sha256": "5a9f4ecceff5866ab823bfcacca10d30ea118c8d4f25634843d2efc73c39f3c6",
+      "cgb": false,
+      "expected_cpu_double_speed": false,
+      "status": "PASS",
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\project\\GameBoy-Studio\\dist\\GBStudio.exe",
+        "--timing-test",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage3-speed\\timing-no-audio\\dmg-normal.timing.json",
+        "--timing-seconds",
+        "5.0",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage3-speed\\timing-no-audio\\dmg-normal.gb"
+      ],
+      "measurement": {
+        "status": "PASS",
+        "wall_seconds": 5.0143173,
+        "emulated_seconds": 4.98932743073,
+        "speed_ratio": 0.99501629678,
+        "clock_rate": 4194304,
+        "base_cycles": 20926756,
+        "ppu_frames": 298,
+        "ppu_fps": 59.4298250731,
+        "cpu_double_speed": false,
+        "speed_setting": 1,
+        "turbo": false,
+        "maximum_frame_batch": 2,
+        "sound_requested": false,
+        "audio_opened": false,
+        "audio_backend": "No device",
+        "scope": "Actual hidden Win32 timer loop and hardware backend at 1x. GPU rendering and audible quality are outside this check."
+      },
+      "errors": [],
+      "returncode": 0,
+      "measurement_sha256": "f4cd9e13ca5d54582e1494736c9874c04a70917d708ca2c25642c31d59bf8bd6",
+      "host_seconds": 5.265,
+      "measurement_file": "stage3-timing-no-audio/dmg-normal.timing.json"
+    },
+    {
+      "probe": "cgb-normal",
+      "rom_sha256": "9e21ed91c4bc97c2807f340f7611812dc75317c93cec6ac46830af79110c0d96",
+      "cgb": true,
+      "expected_cpu_double_speed": false,
+      "status": "PASS",
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\project\\GameBoy-Studio\\dist\\GBStudio.exe",
+        "--timing-test",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage3-speed\\timing-no-audio\\cgb-normal.timing.json",
+        "--timing-seconds",
+        "5.0",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage3-speed\\timing-no-audio\\cgb-normal.gbc"
+      ],
+      "measurement": {
+        "status": "PASS",
+        "wall_seconds": 5.0020449,
+        "emulated_seconds": 4.9725856781,
+        "speed_ratio": 0.994110564282,
+        "clock_rate": 4194304,
+        "base_cycles": 20856536,
+        "ppu_frames": 297,
+        "ppu_fps": 59.3757165195,
+        "cpu_double_speed": false,
+        "speed_setting": 1,
+        "turbo": false,
+        "maximum_frame_batch": 2,
+        "sound_requested": false,
+        "audio_opened": false,
+        "audio_backend": "No device",
+        "scope": "Actual hidden Win32 timer loop and hardware backend at 1x. GPU rendering and audible quality are outside this check."
+      },
+      "errors": [],
+      "returncode": 0,
+      "measurement_sha256": "14933d52b80c621f816c439a24078dc78d804e0333f25565e781264e5b8efcc2",
+      "host_seconds": 5.485,
+      "measurement_file": "stage3-timing-no-audio/cgb-normal.timing.json"
+    },
+    {
+      "probe": "cgb-double",
+      "rom_sha256": "82e284d485c430f097fabf167ad1d1598e29916ed8c9358cd11a09e08fb65782",
+      "cgb": true,
+      "expected_cpu_double_speed": true,
+      "status": "PASS",
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\project\\GameBoy-Studio\\dist\\GBStudio.exe",
+        "--timing-test",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage3-speed\\timing-no-audio\\cgb-double.timing.json",
+        "--timing-seconds",
+        "5.0",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage3-speed\\timing-no-audio\\cgb-double.gbc"
+      ],
+      "measurement": {
+        "status": "PASS",
+        "wall_seconds": 5.0045622,
+        "emulated_seconds": 4.97258424759,
+        "speed_ratio": 0.993610239791,
+        "clock_rate": 4194304,
+        "base_cycles": 20856530,
+        "ppu_frames": 297,
+        "ppu_fps": 59.3458504722,
+        "cpu_double_speed": true,
+        "speed_setting": 1,
+        "turbo": false,
+        "maximum_frame_batch": 2,
+        "sound_requested": false,
+        "audio_opened": false,
+        "audio_backend": "No device",
+        "scope": "Actual hidden Win32 timer loop and hardware backend at 1x. GPU rendering and audible quality are outside this check."
+      },
+      "errors": [],
+      "returncode": 0,
+      "measurement_sha256": "d4298087c09c7ff44840fbb2d6e802150e4451867fa6381f5ff940496c7c2d6a",
+      "host_seconds": 5.39,
+      "measurement_file": "stage3-timing-no-audio/cgb-double.timing.json"
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "date": "2026-10-14T21:58:04.0087998+08:00",
+  "platform": "Microsoft Windows NT 10.0.19045.0",
+  "core_build": {
+    "compiler": "MinGW GCC 16.2.0",
+    "toolchain": "w64devkit 2.10.1",
+    "configuration": "Release",
+    "source": "SameBoy 1.0.4 with Studio stage2 patches",
+    "status": "PASS",
+    "toolchain_archive_sha256": "add1edf984ce4d473cfeb7c52e0ab38db73a855bba6c7f564d5e16648eb2896a"
+  },
+  "frontend_build": {
+    "compiler": "MSVC 19.51",
+    "configuration": "RelWithDebInfo",
+    "source": "unchanged stage1 frontend; updated accuracy DLL"
+  },
+  "binary_sha256": {
+    "GBStudio.exe": "2ef022d35ad843b54cc9c3371721fe112fca7d95797784cf38e77161223f4cdd",
+    "gb_accuracy.dll": "c3c82b7af2099a49407ed02ca06d627e0863bcb7c884785c01b8f2d1d631c210",
+    "gb_pixel_filters.exe": "d311f4a97fda89359e2cd382f37f5b1d2e4858ae929b36c199d307f02ba9d725",
+    "tools/gb_headless.exe": "cbed5199c6263de66a1a57fc05a071e4a347dcbef53dc68a5cb766484a5c4750"
+  },
+  "core_imports": [
+    "KERNEL32.dll",
+    "msvcrt.dll"
+  ],
+  "abi_version": 3,
+  "native_state_version": 17,
+  "fixed": [
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_scx.gb",
+      "before_pixels": 15,
+      "after_pixels": 0
+    },
+    {
+      "suite": "mealybug-cgb-d",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_scx.gb",
+      "before_pixels": 15,
+      "after_pixels": 0
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_wx_4_change_sprites.gb",
+      "before_pixels": 10,
+      "after_pixels": 0
+    },
+    {
+      "suite": "mealybug-cgb-d",
+      "rom": "mealybug-tearoom-tests/ppu/m3_wx_4_change_sprites.gb",
+      "before_pixels": 10,
+      "after_pixels": 0
+    }
+  ],
+  "extended_summary": {
+    "same-suite": {
+      "PASS": 78,
+      "FAIL": 0,
+      "ERROR": 0
+    },
+    "mealybug-dmg": {
+      "PASS": 23,
+      "FAIL": 1,
+      "ERROR": 0
+    },
+    "mealybug-cgb-c": {
+      "PASS": 23,
+      "FAIL": 4,
+      "ERROR": 0
+    },
+    "mealybug-cgb-d": {
+      "PASS": 18,
+      "FAIL": 2,
+      "ERROR": 0
+    }
+  },
+  "mealybug_capture_completion": "71/71",
+  "new_regressions": [],
+  "targeted_and_acid2_ppu_checks": {
+    "PASS": 15,
+    "FAIL": 0
+  },
+  "neighbor_checks": {
+    "PASS": 4,
+    "FAIL": 0
+  },
+  "native_checks": {
+    "PASS": 16,
+    "FAIL": 0,
+    "runner": "Diagnostics.Process via RUN_WINDOWS_QA.ps1"
+  },
+  "native_ppu_latch_and_state_checks": {
+    "PASS": 9,
+    "FAIL": 0,
+    "report": "stage2-ppu-state-tests.txt"
+  },
+  "python_checks": {
+    "extended_harness": 11,
+    "pinned_fetcher": 4,
+    "firmware_runner": 3,
+    "headless_protocols": 4,
+    "status": "PASS"
+  },
+  "windows_qa": {
+    "PASS": 3,
+    "FAIL": 0,
+    "frames_per_demo": 600
+  },
+  "boot_checks": {
+    "baseline_FAIL": 3,
+    "stage2_FAIL": 3,
+    "source": "cached c-sp v7.0 Mooneye subset, replacement firmware",
+    "report": "stage2-boot-results.json"
+  },
+  "old_state_import": {
+    "models_tested": [
+      "DMG",
+      "CGB C",
+      "CGB D"
+    ],
+    "with_embedded_BESS": "PASS",
+    "without_BESS": "rejected",
+    "exact_old_cycle_continuation": false
+  },
+  "limitations": [
+    "Full GUI/GPU and physical devices remain unverified.",
+    "Original Boot ROMs and commercial games remain unverified.",
+    "Server RetroAchievements Hardcore and code signature remain unconfirmed.",
+    "Linux/sanitizer builds and remote GitHub Actions were not executed in this Windows stage.",
+    "Native checks used a bounded process runner because of the stage1 CTest collection issue."
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "compiler": "Microsoft DXC v1.8.2407",
+  "note": "HLSL syntax/semantics with SM6.0; Windows D3DCompile SM4.0/device execution still needs native testing.",
+  "results": [
+    {
+      "entry": "vertex",
+      "target": "vs_6_0",
+      "status": "PASS",
+      "output": ""
+    },
+    {
+      "entry": "pixel",
+      "target": "ps_6_0",
+      "status": "PASS",
+      "output": ""
+    }
+  ]
+}

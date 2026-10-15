@@ -1,0 +1,47 @@
+{
+  "clock_hz": 4194304,
+  "dots_per_frame": 70224,
+  "expected_fps": 59.7275005696,
+  "cases": [
+    {
+      "case": "dmg_normal",
+      "double_speed": false,
+      "clock_rate": 4194304,
+      "run_frame_calls": 600,
+      "base_dots": 42134400,
+      "ppu_frames": 600,
+      "loop_iterations": 2106720,
+      "emulated_seconds": 10.0456237793,
+      "unpaced_wall_seconds": 0.762364,
+      "key1": 255,
+      "final_pc": 341
+    },
+    {
+      "case": "cgb_normal",
+      "double_speed": false,
+      "clock_rate": 4194304,
+      "run_frame_calls": 600,
+      "base_dots": 42134400,
+      "ppu_frames": 600,
+      "loop_iterations": 2106720,
+      "emulated_seconds": 10.0456237793,
+      "unpaced_wall_seconds": 0.754071,
+      "key1": 126,
+      "final_pc": 341
+    },
+    {
+      "case": "cgb_double",
+      "double_speed": true,
+      "clock_rate": 4194304,
+      "run_frame_calls": 600,
+      "base_dots": 42134400,
+      "ppu_frames": 600,
+      "loop_iterations": 4213440,
+      "emulated_seconds": 10.0456237793,
+      "unpaced_wall_seconds": 1.394578,
+      "key1": 254,
+      "final_pc": 347
+    }
+  ],
+  "accuracy_dll_sha256": "c3c82b7af2099a49407ed02ca06d627e0863bcb7c884785c01b8f2d1d631c210"
+}

@@ -1,7 +1,10 @@
 @echo off
-setlocal
+setlocal EnableExtensions
+set "GB_NO_LAUNCH=0"
+if /i "%~1"=="--no-launch" set "GB_NO_LAUNCH=1"
+if not "%~1"=="" if /i not "%~1"=="--no-launch" exit /b 2
 cd /d "%~dp0"
-where cl >nul 2>&1
+where cmake >nul 2>&1
 if not errorlevel 1 goto build
 set "GB_VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
 if not exist "%GB_VSWHERE%" goto missing
@@ -9,27 +12,27 @@ for /f "usebackq tokens=*" %%i in (`"%GB_VSWHERE%" -latest -products * -requires
 if not defined GB_VS_ROOT goto missing
 call "%GB_VS_ROOT%\Common7\Tools\VsDevCmd.bat" -arch=amd64 -host_arch=amd64
 if errorlevel 1 goto failed
+set "PATH=%GB_VS_ROOT%\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin;%PATH%"
+where cmake >nul 2>&1
+if errorlevel 1 goto missing
 :build
-if not exist build mkdir build
-if not exist dist mkdir dist
-cl /nologo /std:c++20 /O2 /EHsc /utf-8 /MT /W3 /Fo:build\core_tests.obj /Fe:build\gb_core_tests.exe tests\core_tests.cpp
+cmake -S . -B build\cmake -A x64 -DBUILD_TESTING=ON
 if errorlevel 1 goto failed
-build\gb_core_tests.exe demo.gb
+cmake --build build\cmake --config Release --parallel 4
 if errorlevel 1 goto failed
-cl /nologo /std:c++20 /O2 /EHsc /utf-8 /MT /W3 /DUNICODE /D_UNICODE /Fo:build\windows_main.obj /Fe:dist\GBStudio.exe src\windows_main.cpp /link /SUBSYSTEM:WINDOWS
+ctest --test-dir build\cmake -C Release --output-on-failure
 if errorlevel 1 goto failed
-copy /y demo.gb dist\demo.gb >nul
-copy /y README_RU.md dist\README_RU.md >nul
-copy /y COMPATIBILITY.md dist\COMPATIBILITY.md >nul
+cmake --install build\cmake --config Release --prefix dist
+if errorlevel 1 goto failed
 echo SUCCESS: dist\GBStudio.exe
+if "%GB_NO_LAUNCH%"=="1" exit /b 0
 start "" "dist\GBStudio.exe"
-pause
 exit /b 0
 :missing
-echo Install Visual Studio 2022 or 2026 with Desktop development with C++.
-pause
+echo Install Visual Studio with Desktop development with C++ and CMake tools.
+if "%GB_NO_LAUNCH%"=="0" pause
 exit /b 1
 :failed
 echo Build or tests failed. Read the error above.
-pause
+if "%GB_NO_LAUNCH%"=="0" pause
 exit /b 1

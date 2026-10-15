@@ -1,0 +1,511 @@
+{
+  "created_utc": "2026-10-14T13:48:39.867590+00:00",
+  "emulator": "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+  "emulator_sha256": "cbed5199c6263de66a1a57fc05a071e4a347dcbef53dc68a5cb766484a5c4750",
+  "accuracy_dll_sha256": "c3c82b7af2099a49407ed02ca06d627e0863bcb7c884785c01b8f2d1d631c210",
+  "source_release": "https://github.com/c-sp/game-boy-test-roms/releases/tag/v7.0",
+  "capture_policy": "Fresh capture; exact RESULT: PASS line; 160x144 dimensions; exact RGB equality.",
+  "limitations": "Bundled replacement firmware; no original Boot ROM or physical hardware.",
+  "summary": {
+    "PASS": 15,
+    "FAIL": 0,
+    "ERROR": 0
+  },
+  "tests": [
+    {
+      "suite": "mealybug-focused",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_scx.gb",
+      "model": "dmg",
+      "rom_sha256": "f0ae9a6c51d1ae490a3b492e732ba4080ad92def08a806b4e3953277aaa7291a",
+      "status": "PASS",
+      "expected": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_scx_dmg_blob.png",
+      "expected_sha256": "a32dcd889e89623fc6225f1044043bddec22be533626517ad0d2cb2f3447f11a",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\mealybug-tearoom-tests\\ppu\\m3_lcdc_obj_size_change_scx.gb",
+        "--model",
+        "dmg",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-screens\\mealybug-focused-dmg-m3_lcdc_obj_size_change_scx.ppm",
+        "--grey"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=11 PC=$063C LY=144 ROM= MODEL=DMG SPEED=1 steps=146261 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "d1be7cc564ae61117260aade04202bb45e6a0624c6e949469372d469dab2932b",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.234
+    },
+    {
+      "suite": "mealybug-focused",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_scx.gb",
+      "model": "cgbc",
+      "rom_sha256": "f0ae9a6c51d1ae490a3b492e732ba4080ad92def08a806b4e3953277aaa7291a",
+      "status": "PASS",
+      "expected": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_scx_cgb_c.png",
+      "expected_sha256": "69263d215a439d0cf48a363306b388bc32ff8e0307e817a1813fec1626f0083f",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\mealybug-tearoom-tests\\ppu\\m3_lcdc_obj_size_change_scx.gb",
+        "--model",
+        "cgbc",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-screens\\mealybug-focused-cgbc-m3_lcdc_obj_size_change_scx.ppm"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=12 PC=$063C LY=144 ROM= MODEL=DMG SPEED=1 steps=152693 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "b09450f91ef1c0b69d31fffe609e1b43335deafaed2e6b473c08fefd82dbfa26",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.39
+    },
+    {
+      "suite": "mealybug-focused",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_scx.gb",
+      "model": "cgbd",
+      "rom_sha256": "f0ae9a6c51d1ae490a3b492e732ba4080ad92def08a806b4e3953277aaa7291a",
+      "status": "PASS",
+      "expected": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_scx_cgb_d.png",
+      "expected_sha256": "33f1bd1ca1ef875e1f0509fee793dfe68c0ad878afa748e23d3c3e45d8a70b21",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\mealybug-tearoom-tests\\ppu\\m3_lcdc_obj_size_change_scx.gb",
+        "--model",
+        "cgbd",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-screens\\mealybug-focused-cgbd-m3_lcdc_obj_size_change_scx.ppm"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=12 PC=$063C LY=144 ROM= MODEL=DMG SPEED=1 steps=152693 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "b09450f91ef1c0b69d31fffe609e1b43335deafaed2e6b473c08fefd82dbfa26",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.375
+    },
+    {
+      "suite": "mealybug-focused",
+      "rom": "mealybug-tearoom-tests/ppu/m3_wx_4_change_sprites.gb",
+      "model": "dmg",
+      "rom_sha256": "da10819cb8af5fb8fb31f6f50729e9afe221161a7b5743351a54ca05e9c94fec",
+      "status": "PASS",
+      "expected": "mealybug-tearoom-tests/ppu/m3_wx_4_change_sprites_dmg_blob.png",
+      "expected_sha256": "3f1e14d890041162df8b8f30c74f6a9423fc3f8d01aec3d5bb7527a9082f910c",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\mealybug-tearoom-tests\\ppu\\m3_wx_4_change_sprites.gb",
+        "--model",
+        "dmg",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-screens\\mealybug-focused-dmg-m3_wx_4_change_sprites.ppm",
+        "--grey"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=14 PC=$0650 LY=144 ROM= MODEL=DMG SPEED=1 steps=171127 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "93c1eb876116af947ca287bb71275534eda4bbd49c0aae46dfc8870eece4a407",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.25
+    },
+    {
+      "suite": "mealybug-focused",
+      "rom": "mealybug-tearoom-tests/ppu/m3_wx_4_change_sprites.gb",
+      "model": "cgbc",
+      "rom_sha256": "da10819cb8af5fb8fb31f6f50729e9afe221161a7b5743351a54ca05e9c94fec",
+      "status": "PASS",
+      "expected": "mealybug-tearoom-tests/ppu/m3_wx_4_change_sprites_cgb_c.png",
+      "expected_sha256": "45a9eafca1e9cce7e3a8ddca84358f8e4ea4457abb52de489d275d085567d395",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\mealybug-tearoom-tests\\ppu\\m3_wx_4_change_sprites.gb",
+        "--model",
+        "cgbc",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-screens\\mealybug-focused-cgbc-m3_wx_4_change_sprites.ppm"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=15 PC=$0650 LY=144 ROM= MODEL=DMG SPEED=1 steps=177559 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "5e32ab2b03a1b2ddeb329db89a7da18f4ab32ddbdbe4c9bffa59601494be4a2a",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.391
+    },
+    {
+      "suite": "mealybug-focused",
+      "rom": "mealybug-tearoom-tests/ppu/m3_wx_4_change_sprites.gb",
+      "model": "cgbd",
+      "rom_sha256": "da10819cb8af5fb8fb31f6f50729e9afe221161a7b5743351a54ca05e9c94fec",
+      "status": "PASS",
+      "expected": "mealybug-tearoom-tests/ppu/m3_wx_4_change_sprites_cgb_d.png",
+      "expected_sha256": "d4759c11e1c9c476a45cde2c135416f51415c8d2a343d0488eb162571bfcc0e0",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\mealybug-tearoom-tests\\ppu\\m3_wx_4_change_sprites.gb",
+        "--model",
+        "cgbd",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-screens\\mealybug-focused-cgbd-m3_wx_4_change_sprites.ppm"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=15 PC=$0650 LY=144 ROM= MODEL=DMG SPEED=1 steps=177559 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "5e32ab2b03a1b2ddeb329db89a7da18f4ab32ddbdbe4c9bffa59601494be4a2a",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.406
+    },
+    {
+      "suite": "acid2",
+      "rom": "dmg-acid2/dmg-acid2.gb",
+      "model": "dmg",
+      "rom_sha256": "464e14b7d42e7feea0b7ede42be7071dc88913f75b9ffa444299424b63d1dff1",
+      "status": "PASS",
+      "expected": "dmg-acid2/dmg-acid2-dmg.png",
+      "expected_sha256": "ca966d50895c7efef05838590d148c2cbfd7fba57dab986f25b35b4da71abb57",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\dmg-acid2\\dmg-acid2.gb",
+        "--model",
+        "dmg",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-screens\\acid2-dmg-dmg-acid2.ppm",
+        "--grey"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=17 PC=$02D7 LY=144 ROM=DMG-ACID2 MODEL=DMG SPEED=1 steps=248649 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "88dcd6f4df8466b02060126342b672b1751e0f37d21f2e2b99e7ca5b4e9a8c21",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.25
+    },
+    {
+      "suite": "acid2",
+      "rom": "dmg-acid2/dmg-acid2.gb",
+      "model": "cgbc",
+      "rom_sha256": "464e14b7d42e7feea0b7ede42be7071dc88913f75b9ffa444299424b63d1dff1",
+      "status": "PASS",
+      "expected": "dmg-acid2/dmg-acid2-cgb.png",
+      "expected_sha256": "cbf039fd613a6db3c3d830a6a1d887efbc892aea4578ffc569b61f66a9e07ced",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\dmg-acid2\\dmg-acid2.gb",
+        "--model",
+        "cgbc",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-screens\\acid2-cgbc-dmg-acid2.ppm"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=18 PC=$02D7 LY=144 ROM=DMG-ACID2 MODEL=DMG SPEED=1 steps=255079 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "c7b1203df3c9c91fa082c74abbe9a83d610d574cdbce7c407ff06ef1c6a48baf",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.39
+    },
+    {
+      "suite": "acid2",
+      "rom": "dmg-acid2/dmg-acid2.gb",
+      "model": "cgbd",
+      "rom_sha256": "464e14b7d42e7feea0b7ede42be7071dc88913f75b9ffa444299424b63d1dff1",
+      "status": "PASS",
+      "expected": "dmg-acid2/dmg-acid2-cgb.png",
+      "expected_sha256": "cbf039fd613a6db3c3d830a6a1d887efbc892aea4578ffc569b61f66a9e07ced",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\dmg-acid2\\dmg-acid2.gb",
+        "--model",
+        "cgbd",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-screens\\acid2-cgbd-dmg-acid2.ppm"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=18 PC=$02D7 LY=144 ROM=DMG-ACID2 MODEL=DMG SPEED=1 steps=255079 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "c7b1203df3c9c91fa082c74abbe9a83d610d574cdbce7c407ff06ef1c6a48baf",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.422
+    },
+    {
+      "suite": "acid2",
+      "rom": "cgb-acid2/cgb-acid2.gbc",
+      "model": "cgbc",
+      "rom_sha256": "197fb0bcec544f0400527fc707e0a94f55435974986e6986b424ace5de81720e",
+      "status": "PASS",
+      "expected": "cgb-acid2/cgb-acid2.png",
+      "expected_sha256": "9ea9c262c5383353e77d715d021a0f7c5ccbe438f88082cb225756e50c4fdf01",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\cgb-acid2\\cgb-acid2.gbc",
+        "--model",
+        "cgbc",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-screens\\acid2-cgbc-cgb-acid2.ppm"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=23 PC=$02BE LY=144 ROM=CGB-ACID2 MODEL=CGB SPEED=1 steps=309115 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "d5aef47f8331d31b0281414f086454e79b17672d32a3f4961719219eb0dd29e4",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.454
+    },
+    {
+      "suite": "acid2",
+      "rom": "cgb-acid2/cgb-acid2.gbc",
+      "model": "cgbd",
+      "rom_sha256": "197fb0bcec544f0400527fc707e0a94f55435974986e6986b424ace5de81720e",
+      "status": "PASS",
+      "expected": "cgb-acid2/cgb-acid2.png",
+      "expected_sha256": "9ea9c262c5383353e77d715d021a0f7c5ccbe438f88082cb225756e50c4fdf01",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\cgb-acid2\\cgb-acid2.gbc",
+        "--model",
+        "cgbd",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-screens\\acid2-cgbd-cgb-acid2.ppm"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=23 PC=$02BE LY=144 ROM=CGB-ACID2 MODEL=CGB SPEED=1 steps=309115 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "d5aef47f8331d31b0281414f086454e79b17672d32a3f4961719219eb0dd29e4",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.422
+    },
+    {
+      "suite": "acid2",
+      "rom": "cgb-acid2/cgb-acid2.gbc",
+      "model": "cgbe",
+      "rom_sha256": "197fb0bcec544f0400527fc707e0a94f55435974986e6986b424ace5de81720e",
+      "status": "PASS",
+      "expected": "cgb-acid2/cgb-acid2.png",
+      "expected_sha256": "9ea9c262c5383353e77d715d021a0f7c5ccbe438f88082cb225756e50c4fdf01",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\cgb-acid2\\cgb-acid2.gbc",
+        "--model",
+        "cgbe",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-screens\\acid2-cgbe-cgb-acid2.ppm"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=23 PC=$02BE LY=144 ROM=CGB-ACID2 MODEL=CGB SPEED=1 steps=309115 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "d5aef47f8331d31b0281414f086454e79b17672d32a3f4961719219eb0dd29e4",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.438
+    },
+    {
+      "suite": "same-suite-ppu",
+      "rom": "same-suite/ppu/blocking_bgpi_increase.gb",
+      "model": "cgbc",
+      "rom_sha256": "3bb5ac17d140d54135c9d993f626de682d5160025a7dd702c733df273f3ff502",
+      "status": "PASS",
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\same-suite\\ppu\\blocking_bgpi_increase.gb",
+        "--model",
+        "cgbc",
+        "--mooneye",
+        "--frames",
+        "1200"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\u0003\u0005\b\n\u0015\"\nframes=6 PC=$0528 LY=144 ROM= MODEL=CGB SPEED=1 steps=41825 stop=budget\nRESULT: PASS\n",
+      "seconds": 0.328
+    },
+    {
+      "suite": "same-suite-ppu",
+      "rom": "same-suite/ppu/blocking_bgpi_increase.gb",
+      "model": "cgbd",
+      "rom_sha256": "3bb5ac17d140d54135c9d993f626de682d5160025a7dd702c733df273f3ff502",
+      "status": "PASS",
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\same-suite\\ppu\\blocking_bgpi_increase.gb",
+        "--model",
+        "cgbd",
+        "--mooneye",
+        "--frames",
+        "1200"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\u0003\u0005\b\n\u0015\"\nframes=6 PC=$0528 LY=144 ROM= MODEL=CGB SPEED=1 steps=41825 stop=budget\nRESULT: PASS\n",
+      "seconds": 0.344
+    },
+    {
+      "suite": "same-suite-ppu",
+      "rom": "same-suite/ppu/blocking_bgpi_increase.gb",
+      "model": "cgbe",
+      "rom_sha256": "3bb5ac17d140d54135c9d993f626de682d5160025a7dd702c733df273f3ff502",
+      "status": "PASS",
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\same-suite\\ppu\\blocking_bgpi_increase.gb",
+        "--model",
+        "cgbe",
+        "--mooneye",
+        "--frames",
+        "1200"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\u0003\u0005\b\n\u0015\"\nframes=6 PC=$0528 LY=144 ROM= MODEL=CGB SPEED=1 steps=41825 stop=budget\nRESULT: PASS\n",
+      "seconds": 0.328
+    }
+  ]
+}

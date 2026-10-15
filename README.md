@@ -1,55 +1,23 @@
-# Game Boy Studio 0.6 — DMG
+# GameBoy Studio 1.0 preview
 
-An original C++20 Game Boy emulator with a native Windows frontend. Development prioritizes a verified monochrome Game Boy core; Game Boy Color is the next stage.
+Stage 3 addresses reported acceleration: discard Turbo timing debt, bound catch-up frames, add Ctrl+0 for normal speed and display the measured speed percentage. Six actual Windows timer-loop probes passed with audio off/on; sustained acceleration was not reproduced with the available test ROMs. See **docs/STAGE3_REPORT_RU.md** and **docs/STAGES_RU.md**. Custom hotkeys take priority over Ctrl+0; the speed menu also selects 1x.
 
-**[Русская инструкция](README_RU.md) · [Compatibility and test evidence](COMPATIBILITY.md)**
+The stage 2 core is unchanged: four Mealybug differences were fixed; seven and the three replacement-firmware Boot checks remain open. See **docs/STAGE2_REPORT_RU.md**. Native core snapshots use version 17; older version-16 snapshots import through BESS without preserving exact previous cycle phases.
 
-## Run on Windows
+Windows x64 frontend and Studio tools, with the SameBoy 1.0.4 accuracy core and free replacement boot firmware. The original Studio core remains available with `gb_headless --core original`.
 
-Download `releases/GBStudio-0.6-DMG-Windows-x64.zip`, extract it, and run **GBStudio.exe**. The original homebrew demo opens automatically. Open your `.gb` file with **Ctrl+O**, or drag it onto the window. Games and Nintendo boot ROMs are not bundled.
+Extract the full archive and run **START_WINDOWS.bat** or **dist/GBStudio.exe**. Keep `gb_accuracy.dll` and `gb_pixel_filters.exe` beside the frontend. No Visual Studio, SDL or MinGW runtime installation is needed to run it. Only original homebrew demos are bundled.
 
-In the complete project archive, run `START_WINDOWS.bat` or `dist/GBStudio.exe`. To build the sources, open `GBStudio.sln` in Visual Studio 2022/2026, select **Release / x64**, and press **F5**. `BUILD_WINDOWS.bat` also builds and checks the core automatically using the installed C++ compiler; it does not require CMake.
+New features include hardware revisions, CGB compatibility palettes, SGB borders, rare controllers, dual-console/TCP rollback and reconnect, BESS and paired snapshots, actual cheats/RAM search, RetroAchievements rc_client and local Hardcore restrictions, Direct3D/HQ2x/xBRZ, FLAC/PCM AVI, Lua plugins, native FIFO/APU inspectors, a TAS input grid, gamepad profiles and game-library tools.
 
-## Implemented
+**The full roadmap is not complete.** Mealybug still has hardware discrepancies; original Nintendo firmware, commercial games/Pokémon trades, physical devices, full Windows GUI/GPU behavior, external BESS roundtrips and official RetroAchievements approval remain unverified. Native CPU rendering and bundled demo execution have been checked in stage 1. This release is unsigned.
 
-- All documented SM83 base and CB instructions, machine-cycle bus accesses, EI delay, HALT bug and interrupt-dispatch cancellation.
-- Divider/TIMA falling edges and delayed reload/write behavior; serial transfer timing.
-- DMG 160×144 dot renderer, signed tile addressing, scrolling, window line counter, first ten OAM objects, DMG object priority, palettes and LCD/STAT timings.
-- OAM DMA startup/restart, source mirrors and video/main-bus restrictions.
-- Four clock-driven audio channels: pulse, sweep, wave and noise; length/envelope counters, stereo routing and a high-pass filter.
-- ROM-only, MBC1/MBC1M, MBC2, MBC3/RTC and MBC5/rumble-bank handling.
-- Atomic cartridge saves, checked save states containing CPU/PPU/APU/DMA/timer state, screenshots, four palettes, integer scaling, fullscreen, turbo and XInput controllers.
-- Completed-frame presentation with a Win32 back buffer, at the actual 4,194,304 Hz / 70,224 clocks per frame.
+Read **README_RU.md**, **docs/FEATURE_STATUS_RU.md** and **docs/validation-1.0.json** for setup, verified results and precise limitations. Third-party licenses are included in **docs/THIRD_PARTY_NOTICES.md**. The xBRZ helper is a separate GPLv3 program with full source; the frontend and accuracy core use MIT/Expat licenses.
 
-The project does not claim perfect compatibility with every commercial game. See the verified results and remaining limits in [COMPATIBILITY.md](COMPATIBILITY.md).
-
-## Controls
-
-| Action | Keyboard | XInput controller |
-|---|---|---|
-| Directions | Arrow keys | D-pad / left stick |
-| A / B | Z / X | A / B |
-| Start / Select | Enter / Shift | Start / Back |
-| Pause | P | — |
-| Save / load state | F5 / F9 | — |
-| Fullscreen | F11; Esc to leave | — |
-| Palette / screenshot | F1 / F12 | — |
-| Turbo | Hold Tab | — |
-
-The app pauses when it loses focus. Battery saves (`.sav`, `.rtc`) and states (`.state`) are written next to the ROM. F12 writes a BMP screenshot there.
-
-## CMake and tests
+Build with CMake (C11/C++20). On Windows, **BUILD_WINDOWS.bat --no-launch** or **GBStudio.sln** runs the complete CMake build/test/install pipeline. MSVC uses the included GNU-C engine DLL; MinGW can rebuild it from source. No dependencies are downloaded during a normal build.
 
 ```sh
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build --parallel
+cmake --build build --parallel 2
 ctest --test-dir build --output-on-failure
-python -m pip install Pillow
-python tests/run_rom_tests.py --emulator build/gb_headless --download --mooneye
 ```
-
-On Windows use `--config Release`, `ctest -C Release`, and `build/Release/gb_headless.exe`. The test runner downloads pinned public hardware test ROMs and compares dmg-acid2 to its reference image. Its JSON report records each result and explicitly lists commercial games as untested.
-
-## Color roadmap
-
-Add the CGB hardware alongside this verified DMG path: VRAM/WRAM banks and attributes, BG/OBJ color palettes, KEY1 double speed, HDMA/GDMA, CGB interrupt/bus timing and cgb-acid2/CGB sound tests. CGB-only cartridges currently produce an explanatory error; dual-compatible cartridges run in DMG mode.

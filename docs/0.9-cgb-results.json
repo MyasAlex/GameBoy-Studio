@@ -1,0 +1,128 @@
+{
+  "blargg_commit": "c240dd7d700e5c0b00a7bbba52b53e4ee67b5f15",
+  "cgb_acid_commit": "fa5b7f86d6fb599f79e55169494d981a7af75a31",
+  "acid_rom_sha256": "197fb0bcec544f0400527fc707e0a94f55435974986e6986b424ace5de81720e",
+  "acid_image_sha256": "9ea9c262c5383353e77d715d021a0f7c5ccbe438f88082cb225756e50c4fdf01",
+  "color_conversion": "(component << 3) | (component >> 2)",
+  "commercial_games_tested": [],
+  "results": [
+    {
+      "suite": "Blargg CGB",
+      "rom": "cgb_sound/rom_singles/01-registers.gb",
+      "status": "PASS",
+      "seconds": 0.099,
+      "output": "01-registers\n\n\nPassed\n\n\nframes=51 PC=$CAA2 LY=5 ROM= MODEL=CGB SPEED=1\nRESULT: PASS\n",
+      "rom_sha256": "8415d6c69f7954e9365a586bac235f5ce39270ece32c09cb8ebbbff043b9852c"
+    },
+    {
+      "suite": "Blargg CGB",
+      "rom": "cgb_sound/rom_singles/02-len ctr.gb",
+      "status": "PASS",
+      "seconds": 1.047,
+      "output": "02-len ctr\n\n0 1 2 3 \nPassed\n\n\nframes=566 PC=$CEF7 LY=5 ROM= MODEL=CGB SPEED=1\nRESULT: PASS\n",
+      "rom_sha256": "a1ccf47375a2bede3077ac85a4903cb037dd8a4c7c85fc5d0c176af52915271f"
+    },
+    {
+      "suite": "Blargg CGB",
+      "rom": "cgb_sound/rom_singles/03-trigger.gb",
+      "status": "PASS",
+      "seconds": 2.537,
+      "output": "03-trigger\n\n0 1 2 3 \nPassed\n\n\nframes=1010 PC=$CEB8 LY=5 ROM= MODEL=CGB SPEED=1\nRESULT: PASS\n",
+      "rom_sha256": "70173be396d14ac955c47aededcee90ba994206cc403273d0bb49ba163ae23ef"
+    },
+    {
+      "suite": "Blargg CGB",
+      "rom": "cgb_sound/rom_singles/04-sweep.gb",
+      "status": "PASS",
+      "seconds": 0.318,
+      "output": "04-sweep\n\n\nPassed\n\n\nframes=75 PC=$CC63 LY=5 ROM= MODEL=CGB SPEED=1\nRESULT: PASS\n",
+      "rom_sha256": "abfd1f6fa9e6701e46135ac9f5bb5b10a46cde22d0fc34922636aa09a5647483"
+    },
+    {
+      "suite": "Blargg CGB",
+      "rom": "cgb_sound/rom_singles/05-sweep details.gb",
+      "status": "PASS",
+      "seconds": 0.216,
+      "output": "05-sweep details\n\n\nPassed\n\n\nframes=72 PC=$CC98 LY=5 ROM= MODEL=CGB SPEED=1\nRESULT: PASS\n",
+      "rom_sha256": "f51a80c5538fe4b3afbc5c9af0e689a67869b1e2bbb73d4c60a8874826d056cb"
+    },
+    {
+      "suite": "Blargg CGB",
+      "rom": "cgb_sound/rom_singles/06-overflow on trigger.gb",
+      "status": "PASS",
+      "seconds": 0.123,
+      "output": "06-overflow on trigger\n\n0555 0666 071C 0787 07C1 07E0 07F0 \n0556 0667 071D 0788 07C2 07E1 07F1 \nPassed\n\n\nframes=56 PC=$C93E LY=5 ROM= MODEL=CGB SPEED=1\nRESULT: PASS\n",
+      "rom_sha256": "5701414d13ba55d25b59d13076e2e9cb59a9da6890595b41464f957605e317c0"
+    },
+    {
+      "suite": "Blargg CGB",
+      "rom": "cgb_sound/rom_singles/07-len sweep period sync.gb",
+      "status": "PASS",
+      "seconds": 0.157,
+      "output": "07-len sweep period sync\n\n\nPassed\n\n\nframes=36 PC=$CAB8 LY=5 ROM= MODEL=CGB SPEED=1\nRESULT: PASS\n",
+      "rom_sha256": "47d57ba87c3a93050ee340cf49b9d276e62e9573542b92b1de5fa2f17e3716c1"
+    },
+    {
+      "suite": "Blargg CGB",
+      "rom": "cgb_sound/rom_singles/08-len ctr during power.gb",
+      "status": "PASS",
+      "seconds": 0.422,
+      "output": "08-len ctr during power\n\n40 00 40 40 \nPassed\n\n\nframes=148 PC=$C995 LY=5 ROM= MODEL=CGB SPEED=1\nRESULT: PASS\n",
+      "rom_sha256": "be7948c70946e0b81c178b8778ef1907231e734650062f8fa8cdb1ceb5ac8c65"
+    },
+    {
+      "suite": "Blargg CGB",
+      "rom": "cgb_sound/rom_singles/09-wave read while on.gb",
+      "status": "PASS",
+      "seconds": 0.151,
+      "output": "09-wave read while on\n\n00 00 00 00 11 11 11 11 22 22 22 22 33 33 33 33 44 44 44 44 55 55 55 55 66 66 66 66 77 77 77 77 88 88 88 88 99 99 99 99 AA AA AA AA BB BB BB BB CC CC CC CC DD DD DD DD EE EE EE EE FF FF FF FF 00 00 00 00 11 \nPassed\n\n\nframes=37 PC=$C927 LY=5 ROM= MODEL=CGB SPEED=1\nRESULT: PASS\n",
+      "rom_sha256": "9b101c68b2de1930df74c19aaf22cce74d37dd5aade93855c805ecb2e1e83fd3"
+    },
+    {
+      "suite": "Blargg CGB",
+      "rom": "cgb_sound/rom_singles/10-wave trigger while on.gb",
+      "status": "PASS",
+      "seconds": 0.736,
+      "output": "10-wave trigger while on\n\n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n\nPassed\n\n\nframes=235 PC=$C93E LY=5 ROM= MODEL=CGB SPEED=1\nRESULT: PASS\n",
+      "rom_sha256": "cbea1771a5384f4d8f8a249056224a750ad5ee4671297836e4ba87e689af2a23"
+    },
+    {
+      "suite": "Blargg CGB",
+      "rom": "cgb_sound/rom_singles/11-regs after power.gb",
+      "status": "PASS",
+      "seconds": 0.261,
+      "output": "11-regs after power\n\n\nPassed\n\n\nframes=55 PC=$C9E7 LY=5 ROM= MODEL=CGB SPEED=1\nRESULT: PASS\n",
+      "rom_sha256": "d347dd195a78c2d0f665b94da493a857218f032b014654b84ddb01f7b8e9befc"
+    },
+    {
+      "suite": "Blargg CGB",
+      "rom": "cgb_sound/rom_singles/12-wave.gb",
+      "status": "PASS",
+      "seconds": 0.051,
+      "output": "12-wave\n\n\nPassed\n\n\nframes=27 PC=$CAF9 LY=5 ROM= MODEL=CGB SPEED=1\nRESULT: PASS\n",
+      "rom_sha256": "7bbd2e78e159de4297f567fec7851f9b90c3076d18d1043af5f30e14bd66cd0a"
+    },
+    {
+      "suite": "Blargg CGB",
+      "rom": "cgb_sound/cgb_sound.gb",
+      "status": "PASS",
+      "seconds": 8.293,
+      "output": "cgb_sound\n\n01:ok  02:ok  03:ok  04:ok  05:ok  06:ok  07:ok  08:ok  09:ok  10:ok  11:ok  12:ok  \n\nPassed\n\n\nframes=2184 PC=$2BD4 LY=5 ROM=CGB_SOUND MODEL=CGB SPEED=1\nRESULT: PASS\n",
+      "rom_sha256": "de2101eb718a2bf5f778df76e73a63f4598d9b471559f9a85adc26efa692053b"
+    },
+    {
+      "suite": "CGB PPU image",
+      "rom": "cgb-acid2 v1.1",
+      "status": "PASS",
+      "different_pixels": 0,
+      "rom_sha256": "197fb0bcec544f0400527fc707e0a94f55435974986e6986b424ace5de81720e"
+    },
+    {
+      "suite": "CGB PPU image",
+      "rom": "original CGB demo",
+      "status": "PASS",
+      "different_pixels": 0,
+      "rom_sha256": "04a67a1033e0094e46988be999e388a59c80ba543f81a842869b8a26e0c51f5a"
+    }
+  ]
+}

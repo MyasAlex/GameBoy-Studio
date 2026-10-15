@@ -1,0 +1,50 @@
+[
+  {
+    "model": "dmg",
+    "old_abi": [
+      3,
+      200
+    ],
+    "new_abi": [
+      3,
+      200
+    ],
+    "old_core_version": 16,
+    "new_core_version": 17,
+    "old_v16_bess_load_ok": true,
+    "wram_marker_preserved": true,
+    "old_v16_without_bess_rejected": true
+  },
+  {
+    "model": "cgb-c",
+    "old_abi": [
+      3,
+      200
+    ],
+    "new_abi": [
+      3,
+      200
+    ],
+    "old_core_version": 16,
+    "new_core_version": 17,
+    "old_v16_bess_load_ok": true,
+    "wram_marker_preserved": true,
+    "old_v16_without_bess_rejected": true
+  },
+  {
+    "model": "cgb-d",
+    "old_abi": [
+      3,
+      200
+    ],
+    "new_abi": [
+      3,
+      200
+    ],
+    "old_core_version": 16,
+    "new_core_version": 17,
+    "old_v16_bess_load_ok": true,
+    "wram_marker_preserved": true,
+    "old_v16_without_bess_rejected": true
+  }
+]

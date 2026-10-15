@@ -1,0 +1,79 @@
+{
+  "schema_version": 2,
+  "date": "2026-10-15T14:52:33.8756232+08:00",
+  "platform": "Microsoft Windows NT 10.0.19045.0",
+  "binary_sha256": {
+    "gb_pixel_filters.exe": "D311F4A97FDA89359E2CD382F37F5B1D2E4858AE929B36C199D307F02BA9D725",
+    "tools\\gb_headless.exe": "CBED5199C6263DE66A1A57FC05A071E4A347DCBEF53DC68A5CB766484A5C4750",
+    "gb_accuracy.dll": "C3C82B7AF2099A49407ED02CA06D627E0863BCB7C884785C01B8F2D1D631C210",
+    "GBStudio.exe": "F2EBD88C24037246A60BD7EA80929B6C776B676125EDDF54AC49D7D38F5DE6C0"
+  },
+  "frames": 600,
+  "tests": [
+    {
+      "name": "Win32 CPU rendering self-test",
+      "check_type": "cpu_rendering_self_test",
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 0.7301939,
+      "stdout": "",
+      "stderr": "",
+      "stdout_file": "stage3-qa/0.stdout.txt",
+      "stderr_file": "stage3-qa/0.stderr.txt",
+      "capture_complete": true,
+      "screenshot": null
+    },
+    {
+      "name": "demo.gb",
+      "check_type": "demo_execution_and_frame",
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 1.3596039,
+      "stdout": "\r\nframes=600 PC=$01A2 LY=132 ROM=GB STUDIO DEMO MODEL=DMG SPEED=1\r\n",
+      "stderr": "",
+      "stdout_file": "stage3-qa/1.stdout.txt",
+      "stderr_file": "stage3-qa/1.stderr.txt",
+      "capture_complete": true,
+      "screenshot": {
+        "path": "stage3-qa/demo.gb.ppm",
+        "status": "PASS",
+        "width": 160,
+        "height": 144,
+        "unique_colors": 4,
+        "nonblank_required": true,
+        "message": "Original-size screenshot contains visible graphics."
+      }
+    },
+    {
+      "name": "demo.gbc",
+      "check_type": "demo_execution_and_frame",
+      "status": "PASS",
+      "exit_code": 0,
+      "seconds": 1.5524193,
+      "stdout": "\r\nframes=600 PC=$01ED LY=7 ROM=STUDIOCOLOR MODEL=CGB SPEED=1\r\n",
+      "stderr": "",
+      "stdout_file": "stage3-qa/2.stdout.txt",
+      "stderr_file": "stage3-qa/2.stderr.txt",
+      "capture_complete": true,
+      "screenshot": {
+        "path": "stage3-qa/demo.gbc.ppm",
+        "status": "PASS",
+        "width": 160,
+        "height": 144,
+        "unique_colors": 27,
+        "nonblank_required": true,
+        "message": "Original-size screenshot contains visible graphics."
+      }
+    }
+  ],
+  "scope": "PASS means only that this automated check succeeded. GUI self-test checks CPU rendering only. Demo checks export original 160x144 frames and require nonuniform graphics at 60 or more frames. Real-ROM runs test startup/continued headless execution without automated gameplay; they do not establish game compatibility. This does not validate audible/device latency, GPU, actual gamepad/webcam/printer/IR behavior, WAN or Pokemon trades.",
+  "manual_checks": [
+    "Direct3D + CRT/HQ2x/Scale2x/3x/xBRZ; device loss and resize",
+    "48/96 kHz audible quality, latency and long-session underruns",
+    "Two physical gamepads, tilt, rumble and virtual controls",
+    "Webcam capture, Printer and infrared",
+    "Pokemon trade/save continuity and long real-game play",
+    "RetroAchievements real account and server-approved Hardcore",
+    "Cross-emulator BESS exchange and trusted code signature"
+  ]
+}

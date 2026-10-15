@@ -1,0 +1,138 @@
+﻿{
+    "runner":  "Diagnostics.Process via RUN_WINDOWS_QA.ps1",
+    "configuration":  "RelWithDebInfo",
+    "compiler":  "MSVC 19.51",
+    "platform":  "Microsoft Windows NT 10.0.19045.0",
+    "date":  "2026-10-14T21:28:24.0393639+08:00",
+    "tests":  [
+                  {
+                      "name":  "accuracy_fuzz",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  2.243124,
+                      "stdout":  "Accurate loader fuzz: 131 accepted, 381 rejected atomically; truncation PASS\r\n",
+                      "stderr":  ""
+                  },
+                  {
+                      "name":  "integration_pack",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  1.2308765,
+                      "stdout":  "Mid-transfer paired restore and corrupt-pair atomic rejection PASS\r\nMotion movie exact continuation PASS\r\nCamera movie exact continuation PASS\r\nPhysical bank cheats and isolated concurrent plugins PASS\r\nNative HuC1 IR and MBC5 rumble output / state restore PASS\r\n",
+                      "stderr":  ""
+                  },
+                  {
+                      "name":  "achievements",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  0.4040506,
+                      "stdout":  "Offline rc_client login, ROM identity, native memory trigger, unlock request, state progress and Hardcore reset PASS\r\n",
+                      "stderr":  ""
+                  },
+                  {
+                      "name":  "accuracy",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  8.8759585999999988,
+                      "stdout":  "Model 1 exact state/BESS continuation PASS\r\nModel 3 exact state/BESS continuation PASS\r\nModel 4 exact state/BESS continuation PASS\r\nModel 5 exact state/BESS continuation PASS\r\nModel 6 exact state/BESS continuation PASS\r\nModel 7 exact state/BESS continuation PASS\r\nModel 8 exact state/BESS continuation PASS\r\nModel 9 exact state/BESS continuation PASS\r\nModel 10 exact state/BESS continuation PASS\r\nModel 11 exact state/BESS continuation PASS\r\nModel 12 exact state/BESS continuation PASS\r\nModel 13 exact state/BESS continuation PASS\r\nModel 14 exact state/BESS continuation PASS\r\nAccurate serial and rollback replay PASS\r\nBackend debugger, RAM cheats and executed ROM substitution PASS\r\nActual PPU VRAM bus watch and native FIFO/APU inspection PASS\r\nAccurate TCP state synchronization, late input convergence and automatic host reconnect PASS\r\nMBC6 dual ROM/RAM windows, JEDEC ID, flash program/erase/battery/BESS PASS\r\n",
+                      "stderr":  ""
+                  },
+                  {
+                      "name":  "core",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  1.040043,
+                      "stdout":  "ALL CORE TESTS PASSED\r\n",
+                      "stderr":  ""
+                  },
+                  {
+                      "name":  "cgb_memory",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  0.2821603,
+                      "stdout":  "ALL CGB MEMORY TESTS PASSED\r\n",
+                      "stderr":  ""
+                  },
+                  {
+                      "name":  "cgb_ppu",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  0.0292561,
+                      "stdout":  "CGB PPU tests passed\r\n",
+                      "stderr":  ""
+                  },
+                  {
+                      "name":  "cgb_apu",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  0.0340062,
+                      "stdout":  "ALL CGB APU TESTS PASSED\r\n",
+                      "stderr":  ""
+                  },
+                  {
+                      "name":  "cgb_integration",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  0.80939109999999992,
+                      "stdout":  "ALL CGB INTEGRATION TESTS PASSED\r\n",
+                      "stderr":  ""
+                  },
+                  {
+                      "name":  "core_extension",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  0.58254489999999992,
+                      "stdout":  "ALL CORE EXTENSION TESTS PASSED\r\n",
+                      "stderr":  ""
+                  },
+                  {
+                      "name":  "session",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  0.9327989,
+                      "stdout":  "Session tests PASS: bounded RLE rewind, exact input movie replay, corruption rejection\r\n",
+                      "stderr":  ""
+                  },
+                  {
+                      "name":  "studio_tools",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  0.0332029,
+                      "stdout":  "Studio tools tests passed\r\n",
+                      "stderr":  ""
+                  },
+                  {
+                      "name":  "audio_buffer",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  0.1738761,
+                      "stdout":  "Audio buffer/WAV tests passed\r\n",
+                      "stderr":  ""
+                  },
+                  {
+                      "name":  "cartridge_tools",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  0.0338233,
+                      "stdout":  "ALL CARTRIDGE TOOL TESTS PASSED\r\n",
+                      "stderr":  ""
+                  },
+                  {
+                      "name":  "feature_pack",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  1.4884674999999998,
+                      "stdout":  "Portable/BESS exact replay and foreign import PASS\r\nLink serial, mid-byte states, disconnected cable, IR PASS\r\nWorking cheats, RAM search, read/same-value write watchpoints PASS\r\nMBC7 accelerometer and EEPROM command sequence PASS\r\nPrinter packet/checksum, tiles and BMP output PASS\r\n44.1/48/96 kHz clocking and WAV/FLAC encoding PASS (independent decode required)\r\nCamera banking, thresholds/2bpp, busy timing, pause/resume and capture states PASS\r\nTCP synchronization, predicted inputs and exact rollback convergence PASS\r\nLua frame hook, bounded execution and restricted libraries PASS\r\nALL FEATURE PACK TESTS PASSED: \"C:\\\\Users\\\\Alex\\\\AppData\\\\Local\\\\Temp\\\\gbstudio-feature-475013667813800\"\r\n",
+                      "stderr":  ""
+                  },
+                  {
+                      "name":  "loader_fuzz",
+                      "status":  "PASS",
+                      "exit_code":  0,
+                      "seconds":  2.9877328,
+                      "stdout":  "Loader fuzz PASS: 800 state mutations (3 valid, 797 rejected atomically), 250 ROM/archive mutations, valid/truncated ZIP\r\n",
+                      "stderr":  ""
+                  }
+              ],
+    "note":  "CTest inventory supplies the unchanged 16 test commands. CTest process collection stalled for accuracy on this host, so a bounded native process runner executes and captures each test directly."
+}

@@ -1,0 +1,162 @@
+{
+  "created_utc": "2026-10-14T13:48:40.465560+00:00",
+  "emulator": "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+  "emulator_sha256": "cbed5199c6263de66a1a57fc05a071e4a347dcbef53dc68a5cb766484a5c4750",
+  "accuracy_dll_sha256": "c3c82b7af2099a49407ed02ca06d627e0863bcb7c884785c01b8f2d1d631c210",
+  "source_release": "https://github.com/c-sp/game-boy-test-roms/releases/tag/v7.0",
+  "capture_policy": "Fresh capture; exact RESULT: PASS line; 160x144 dimensions; exact RGB equality.",
+  "limitations": "Bundled replacement firmware; no original Boot ROM or physical hardware.",
+  "summary": {
+    "PASS": 4,
+    "FAIL": 0,
+    "ERROR": 0
+  },
+  "tests": [
+    {
+      "suite": "mealybug-neighbor",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change.gb",
+      "model": "dmg",
+      "rom_sha256": "1060fbf592ccf28b19c5e8af310f4441c74ca2310faf7f6b024a62a1888d6d2e",
+      "status": "PASS",
+      "expected": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_dmg_blob.png",
+      "expected_sha256": "3baa299b931912bd5b7869d83eba02de8d1c996e6fa76793c66fa787748384f9",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\mealybug-tearoom-tests\\ppu\\m3_lcdc_obj_size_change.gb",
+        "--model",
+        "dmg",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-neighbors-screens\\mealybug-neighbor-dmg-m3_lcdc_obj_size_change.ppm",
+        "--grey"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=11 PC=$063C LY=144 ROM= MODEL=DMG SPEED=1 steps=155129 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "f2d468639d41b18eeb7f5cb3cb76f57698acf0332df9547366c41a0d2478b860",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.234
+    },
+    {
+      "suite": "mealybug-neighbor",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change.gb",
+      "model": "cgbc",
+      "rom_sha256": "1060fbf592ccf28b19c5e8af310f4441c74ca2310faf7f6b024a62a1888d6d2e",
+      "status": "PASS",
+      "expected": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_cgb_c.png",
+      "expected_sha256": "f315219ce38c0cd206577f9e948225944aacbb38a14ca4c01f047b898d2baabd",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\mealybug-tearoom-tests\\ppu\\m3_lcdc_obj_size_change.gb",
+        "--model",
+        "cgbc",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-neighbors-screens\\mealybug-neighbor-cgbc-m3_lcdc_obj_size_change.ppm"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=12 PC=$063C LY=144 ROM= MODEL=DMG SPEED=1 steps=161561 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "b2ea1b2d5688687b6313ad45f01072d6b83b5c17d125c944c83bda639642109a",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.375
+    },
+    {
+      "suite": "mealybug-neighbor",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change.gb",
+      "model": "cgbd",
+      "rom_sha256": "1060fbf592ccf28b19c5e8af310f4441c74ca2310faf7f6b024a62a1888d6d2e",
+      "status": "PASS",
+      "expected": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_cgb_d.png",
+      "expected_sha256": "6b8ac0eb0a348188e1e47712cb59ac9a4e307d22e4e0daf6ffffae336be124dd",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\mealybug-tearoom-tests\\ppu\\m3_lcdc_obj_size_change.gb",
+        "--model",
+        "cgbd",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-neighbors-screens\\mealybug-neighbor-cgbd-m3_lcdc_obj_size_change.ppm"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=12 PC=$063C LY=144 ROM= MODEL=DMG SPEED=1 steps=161561 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "b2ea1b2d5688687b6313ad45f01072d6b83b5c17d125c944c83bda639642109a",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.375
+    },
+    {
+      "suite": "mealybug-neighbor",
+      "rom": "mealybug-tearoom-tests/ppu/m3_wx_4_change.gb",
+      "model": "dmg",
+      "rom_sha256": "eadfe4369b85994b4401e7e5119272626c6339ecec282848013decf0cb5ea81c",
+      "status": "PASS",
+      "expected": "mealybug-tearoom-tests/ppu/m3_wx_4_change_dmg_blob.png",
+      "expected_sha256": "dc777d9d941414cdf572c4bf765e055b55602a2968969fdd9cc28e706bb67ad5",
+      "capture_completed": true,
+      "differing_pixels": 0,
+      "differences": [],
+      "command": [
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-build\\gb_headless.exe",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\mealybug-audit\\suite\\mealybug-tearoom-tests\\ppu\\m3_wx_4_change.gb",
+        "--model",
+        "dmg",
+        "--ppu-test",
+        "--frames",
+        "120",
+        "--output",
+        "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage2-validation\\combined-neighbors-screens\\mealybug-neighbor-dmg-m3_wx_4_change.ppm",
+        "--grey"
+      ],
+      "returncode": 0,
+      "protocol_completed": true,
+      "output": "\nframes=12 PC=$0651 LY=144 ROM= MODEL=DMG SPEED=1 steps=157535 stop=budget\nRESULT: PASS\n",
+      "capture_sha256": "88c11e09ee706c9ec4bd865a525d857c7fe135ce0b91fbe992f564ace40ac060",
+      "actual_dimensions": [
+        160,
+        144
+      ],
+      "expected_dimensions": [
+        160,
+        144
+      ],
+      "seconds": 0.219
+    }
+  ]
+}

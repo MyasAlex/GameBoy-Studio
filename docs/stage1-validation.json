@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-14T21:26:28.2222952+08:00",
+  "input_archive": "GameBoy-Studio-1.0-preview.zip",
+  "input_archive_sha256": "a9d791ed4f221a59964f9469b0d9ebb79b74205f04ddb6f5cc0371cef9d6d85b",
+  "build": {
+    "platform": "Microsoft Windows NT 10.0.19045.0",
+    "compiler": "MSVC 19.51",
+    "configuration": "RelWithDebInfo",
+    "status": "PASS"
+  },
+  "binary_sha256": {
+    "GBStudio.exe": "2ef022d35ad843b54cc9c3371721fe112fca7d95797784cf38e77161223f4cdd",
+    "gb_accuracy.dll": "458a5e498b9a5fc6bc0247f243467c6099a568f0d0f8d25224430706c2b7577d",
+    "gb_pixel_filters.exe": "d311f4a97fda89359e2cd382f37f5b1d2e4858ae929b36c199d307f02ba9d725",
+    "tools/gb_headless.exe": "cbed5199c6263de66a1a57fc05a071e4a347dcbef53dc68a5cb766484a5c4750"
+  },
+  "native_checks": {
+    "PASS": 16,
+    "FAIL": 0,
+    "runner": "Diagnostics.Process via RUN_WINDOWS_QA.ps1",
+    "report": "stage1-native-tests.json"
+  },
+  "python_checks": {
+    "headless_protocols": 4,
+    "extended_harness": 8,
+    "boot_firmware_runner": 3,
+    "status": "PASS"
+  },
+  "windows_qa_process_regressions": "PASS on PowerShell 5.1",
+  "windows_qa": {
+    "PASS": 3,
+    "frames_per_demo": 600,
+    "report": "stage1-windows-qa.json"
+  },
+  "extended_summary": {
+    "same-suite": {
+      "PASS": 78,
+      "FAIL": 0,
+      "ERROR": 0
+    },
+    "mealybug-dmg": {
+      "PASS": 23,
+      "FAIL": 1,
+      "ERROR": 0
+    },
+    "mealybug-cgb-c": {
+      "PASS": 21,
+      "FAIL": 6,
+      "ERROR": 0
+    },
+    "mealybug-cgb-d": {
+      "PASS": 16,
+      "FAIL": 4,
+      "ERROR": 0
+    }
+  },
+  "mealybug_capture_completion": "71/71",
+  "new_extended_regressions": [],
+  "boot_failures": {
+    "count": 3,
+    "source": "original preview report; not a new original-firmware run",
+    "names": [
+      "boot_div",
+      "boot_hwio",
+      "boot_sclk_align"
+    ]
+  },
+  "limitations": [
+    "CTest result collection stalled for accuracy on this host. The same 16 test commands all passed via the bounded native process runner; direct accuracy also exited 0 in 8.83 seconds.",
+    "Windows GUI window startup was observed via window metadata; screenshot capture returned FrameArrived/window capture timeout. Full menu, GPU and interactive input validation remain open.",
+    "Original Boot ROMs, commercial games, physical devices, real LAN/WAN, server Hardcore and trusted signature remain unverified.",
+    "Linux sanitizers were not rerun in this Windows stage; prior 1.0 reports remain historical."
+  ],
+  "test_suite_archive_sha256": "b9a9d7a1075aa35a3d07c07c34974048672d8520dca9e07a50178f5860c3832c"
+}

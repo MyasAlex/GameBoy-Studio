@@ -1,0 +1,41 @@
+{
+  "version": "0.9 beta",
+  "date_user_timezone": "2026-10-13",
+  "native_ctest": {
+    "passed": 12,
+    "failed": 0
+  },
+  "sanitizers": {
+    "address_undefined": "12/12 passed",
+    "leak_detection": "Not verified: LeakSanitizer cannot inspect /proc/task in this environment."
+  },
+  "hardware_dmg": {
+    "passed": 130,
+    "failed": 0
+  },
+  "hardware_cgb": {
+    "passed": 15,
+    "failed": 0
+  },
+  "samesuite": {
+    "passed": 20,
+    "failed": 58,
+    "scope": "mixed CGB revisions"
+  },
+  "mealybug": {
+    "passed": 1,
+    "failed": 23,
+    "scope": "DMG blob image references"
+  },
+  "network": "Two loopback sessions with differing per-frame input, state transfer and exact rollback convergence passed.",
+  "loaders": "800 state mutations, 250 ROM/archive mutations, valid and truncated ZIP, valid and CRC-corrupt GZIP passed.",
+  "audio": "44.1/48/96 kHz count checks passed; independently decoded FLAC PCM exactly matches source; device listening/latency unverified.",
+  "video": "ffprobe: uncompressed rawvideo, 160x144, 10 frames, 262144/4389 fps; no audio.",
+  "windows_build": "MinGW x64 compiled/linked. Imports are system DLLs. Native GUI/GPU/audio/webcam/gamepads/install/signing not run.",
+  "real_games_boot_roms": "Not supplied or tested; no full game/Pokemon/boot ROM compatibility guarantee.",
+  "signing": "Unsigned; signing script requires an owned certificate.",
+  "exe_sha256": "ef4d783fbc9c849dad33fe6d2c77884d09805e91924b5cad951ccf145c6e307d",
+  "headless_sha256": "ccd5614f46f896cb64a974f0ca5c84dfebcc2d231c9d6dbee454ece5321223cf",
+  "ctest_log_tail": "e\n 1/12 Test  #1: core .............................   Passed    0.39 sec\n      Start  7: session\n 2/12 Test  #7: session ..........................   Passed    0.44 sec\n      Start  5: cgb_integration\n 3/12 Test #11: feature_pack .....................   Passed    0.97 sec\n      Start 10: cartridge_tools\n 4/12 Test #10: cartridge_tools ..................   Passed    0.02 sec\n      Start  6: core_extension\n 5/12 Test  #5: cgb_integration ..................   Passed    0.19 sec\n      Start  2: cgb_memory\n 6/12 Test  #6: core_extension ...................   Passed    0.07 sec\n      Start  3: cgb_ppu\n 7/12 Test  #2: cgb_memory .......................   Passed    0.04 sec\n      Start  9: audio_buffer\n 8/12 Test  #3: cgb_ppu ..........................   Passed    0.01 sec\n      Start  4: cgb_apu\n 9/12 Test  #9: audio_buffer .....................   Passed    0.01 sec\n      Start  8: studio_tools\n10/12 Test  #4: cgb_apu ..........................   Passed    0.01 sec\n11/12 Test  #8: studio_tools .....................   Passed    0.01 sec\n12/12 Test #12: loader_fuzz ......................   Passed    1.58 sec\n\n100% tests passed, 0 tests failed out of 12\n\nTotal Test time (real) =   1.58 sec\n",
+  "sanitizer_log_tail": "ture_pack .....................   Passed   19.94 sec\n      Start  7: session\n 2/12 Test #12: loader_fuzz ......................   Passed   31.15 sec\n      Start  1: core\n 3/12 Test  #7: session ..........................   Passed   12.08 sec\n      Start  5: cgb_integration\n 4/12 Test  #5: cgb_integration ..................   Passed   11.92 sec\n      Start  6: core_extension\n 5/12 Test  #6: core_extension ...................   Passed    2.29 sec\n      Start  2: cgb_memory\n 6/12 Test  #2: cgb_memory .......................   Passed    1.17 sec\n      Start  8: studio_tools\n 7/12 Test  #8: studio_tools .....................   Passed    0.28 sec\n      Start  9: audio_buffer\n 8/12 Test  #9: audio_buffer .....................   Passed    0.14 sec\n      Start  4: cgb_apu\n 9/12 Test  #4: cgb_apu ..........................   Passed    0.20 sec\n      Start 10: cartridge_tools\n10/12 Test #10: cartridge_tools ..................   Passed    0.17 sec\n      Start  3: cgb_ppu\n11/12 Test  #3: cgb_ppu ..........................   Passed    0.17 sec\n12/12 Test  #1: core .............................   Passed   17.24 sec\n\n100% tests passed, 0 tests failed out of 12\n\nTotal Test time (real) =  48.40 sec\n"
+}

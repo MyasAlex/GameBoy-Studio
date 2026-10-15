@@ -1,0 +1,16 @@
+{
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "rom": "demo.gbc",
+  "frames_per_run": 1800,
+  "seconds": [
+    4.4568640379998214,
+    8.667519997,
+    5.400703406000048,
+    4.6262132059996475,
+    4.183175255000151
+  ],
+  "median_frames_per_second": 389.0871258734064,
+  "median_speed_multiple": 6.514371473153614,
+  "scope": "Headless core only; no claims about weak PCs or host-device latency."
+}

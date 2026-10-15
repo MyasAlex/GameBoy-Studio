@@ -1,0 +1,43 @@
+{
+  "fixture_folder": "C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage3-speed\\report-path-check-apa8mrnu",
+  "runner_sha256": "4bba3ffa57b9b83aaf47718b11bf56acb255db683c1f059f9e677360767350f1",
+  "tests": [
+    {
+      "name": "report_equals_executable",
+      "status": "PASS",
+      "returncode": 2,
+      "input_sha256_before": "109fd7c059c108534c79c393c9202f44f7ff1312053c703072c1ebae5ab99d48",
+      "input_sha256_after": "109fd7c059c108534c79c393c9202f44f7ff1312053c703072c1ebae5ab99d48",
+      "output_created": false,
+      "files_before": [],
+      "files_after": [],
+      "stderr": "usage: run_timing_tests.py [-h] --emulator EMULATOR --output OUTPUT --report\n                           REPORT [--seconds SECONDS] [--audio]\nrun_timing_tests.py: error: --report must not overwrite the emulator executable: C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage3-speed\\report-path-check-apa8mrnu\\GBStudio.exe\n"
+    },
+    {
+      "name": "report_equals_generated_capture",
+      "status": "PASS",
+      "returncode": 2,
+      "input_sha256_before": "1a3420ecaa633124ee04da8eca96ef60054d9356d3feaaac6b11ffba626bb09a",
+      "input_sha256_after": "1a3420ecaa633124ee04da8eca96ef60054d9356d3feaaac6b11ffba626bb09a",
+      "output_created": false,
+      "files_before": [
+        "dmg-normal.timing.json"
+      ],
+      "files_after": [
+        "dmg-normal.timing.json"
+      ],
+      "stderr": "usage: run_timing_tests.py [-h] --emulator EMULATOR --output OUTPUT --report\n                           REPORT [--seconds SECONDS] [--audio]\nrun_timing_tests.py: error: --report must not overwrite the dmg-normal capture: C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage3-speed\\report-path-check-apa8mrnu\\existing-capture-case\\dmg-normal.timing.json\n"
+    },
+    {
+      "name": "report_is_executable_hardlink",
+      "status": "PASS",
+      "returncode": 2,
+      "input_sha256_before": "109fd7c059c108534c79c393c9202f44f7ff1312053c703072c1ebae5ab99d48",
+      "input_sha256_after": "109fd7c059c108534c79c393c9202f44f7ff1312053c703072c1ebae5ab99d48",
+      "output_created": false,
+      "files_before": [],
+      "files_after": [],
+      "stderr": "usage: run_timing_tests.py [-h] --emulator EMULATOR --output OUTPUT --report\n                           REPORT [--seconds SECONDS] [--audio]\nrun_timing_tests.py: error: --report must not overwrite the emulator executable: C:\\Users\\Alex\\Documents\\Codex\\2026-10-14\\11-mealybug-3-boot-windows-gui\\work\\stage3-speed\\report-path-check-apa8mrnu\\GBStudio.exe\n"
+    }
+  ]
+}

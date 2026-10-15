@@ -1,0 +1,55 @@
+{
+  "GBStudio.exe": {
+    "sha256": "654c2dc84eb685437cde75089d65dfc576889212359250688db8a6c54153d450",
+    "size": 4765831,
+    "imports": [
+      "AVICAP32.dll",
+      "AVRT.dll",
+      "comdlg32.dll",
+      "d3d11.dll",
+      "D3DCOMPILER_47.dll",
+      "GDI32.dll",
+      "KERNEL32.dll",
+      "msvcrt.dll",
+      "ole32.dll",
+      "SHELL32.dll",
+      "USER32.dll",
+      "WINHTTP.dll",
+      "WINMM.dll",
+      "WS2_32.dll"
+    ],
+    "format": "PE32+ x86-64",
+    "signature": "unsigned"
+  },
+  "gb_accuracy.dll": {
+    "sha256": "458a5e498b9a5fc6bc0247f243467c6099a568f0d0f8d25224430706c2b7577d",
+    "size": 535719,
+    "imports": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "format": "PE32+ x86-64",
+    "signature": "unsigned"
+  },
+  "gb_pixel_filters.exe": {
+    "sha256": "659469f7ce4840a70afacf167b1c731dc26951dffe29dcccefa9967fffc1f277",
+    "size": 2677459,
+    "imports": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "format": "PE32+ x86-64",
+    "signature": "unsigned"
+  },
+  "tools/gb_headless.exe": {
+    "sha256": "6316e92a692d90c015faf566ce0cb99163b8aeabd2243bf2a230b90cbee5e873",
+    "size": 3236298,
+    "imports": [
+      "KERNEL32.dll",
+      "msvcrt.dll",
+      "SHELL32.dll"
+    ],
+    "format": "PE32+ x86-64",
+    "signature": "unsigned"
+  }
+}
