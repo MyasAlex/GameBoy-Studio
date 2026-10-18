@@ -85,7 +85,7 @@ static void frameCompleted(){if(!network.active())cheatEngine.applyRAM();if(lua.
     if(achievementClient.signedIn()&&!link.connected())achievementClient.frame();
     if(!selfTest)library.played(gb.romHash(),GB_FRAME);if(inspectorWindow)InvalidateRect(inspectorWindow,nullptr,FALSE);
     if(link.connected()){gbSecond.apu.clearQueue();if(linkWindow)InvalidateRect(linkWindow,nullptr,FALSE);}
-    if(sendRumble){XINPUT_VIBRATION vibration{};if(!paused&&gb.mem.rumbleActive)vibration.wLeftMotorSpeed=vibration.wRightMotorSpeed=30000;sendRumble(primaryPadIndex,&vibration);}
+    if(sendRumble){XINPUT_VIBRATION vibration{};if(!paused&&GetForegroundWindow()==hwnd&&gb.mem.rumbleActive)vibration.wLeftMotorSpeed=vibration.wRightMotorSpeed=30000;sendRumble(primaryPadIndex,&vibration);}
 }
 static bool extraKey(WPARAM key,bool down){
     if(!down){if((hotkeys[9]&255)==(int)key&&(heldTurbo||turbo)){heldTurbo=false;turbo=false;resetPacing();audio.flush(gb.apu);}if((hotkeys[10]&255)==(int)key)heldRewind=false;return false;}

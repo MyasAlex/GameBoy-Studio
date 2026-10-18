@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-18T08:11:58.020182+00:00",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "runtime": "Wine 10.0 (Debian 10.0~repack-6), Xvfb :99; Windows x64 cross-build with MinGW GCC 14",
+  "binary_sha256": {
+    "GBStudio.exe": "70adf2b17862bb339aa15da1a80a73737b9867130a64e4e8ba992060d6bf3c24",
+    "gb_accuracy.dll": "eea76c46f02b1f92826d9fe0e073a646e93c890b5c2e858b5df81c26598e6db1",
+    "gb_headless.exe": "ffa368eb873766b2b1302bb4728761df57c97ebd1943fc3953081b771e8c279e",
+    "gb_pixel_filters.exe": "b8732a998c0269db14ce61887cb9f029c043f04ab70b3eae974fd069f69ff3d2"
+  },
+  "checks": [
+    {
+      "name": "Visible Win32 UI regression",
+      "status": "PASS",
+      "exit_code": 0,
+      "passed": 20,
+      "total": 20,
+      "report": "stage4-win32-ui-regression.json"
+    },
+    {
+      "name": "CPU/GDI rendering self-test",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": "GBStudio.exe --self-test demo.gbc",
+      "stdout": "stage4-wine-qa/gdi.stdout.txt",
+      "stderr": "stage4-wine-qa/gdi.stderr.txt"
+    },
+    {
+      "name": "Windows headless demo.gb, 600 frames",
+      "status": "PASS",
+      "exit_code": 0,
+      "width": 160,
+      "height": 144,
+      "unique_colors": 4,
+      "screenshot": "stage4-wine-qa/demo.gb.ppm",
+      "stdout": "stage4-wine-qa/demo.gb.stdout.txt",
+      "stderr": "stage4-wine-qa/demo.gb.stderr.txt",
+      "scope": "Continued execution and exported framebuffer; no gameplay compatibility or physical-device claim."
+    },
+    {
+      "name": "Windows headless demo.gbc, 600 frames",
+      "status": "PASS",
+      "exit_code": 0,
+      "width": 160,
+      "height": 144,
+      "unique_colors": 27,
+      "screenshot": "stage4-wine-qa/demo.gbc.ppm",
+      "stdout": "stage4-wine-qa/demo.gbc.stdout.txt",
+      "stderr": "stage4-wine-qa/demo.gbc.stderr.txt",
+      "scope": "Continued execution and exported framebuffer; no gameplay compatibility or physical-device claim."
+    },
+    {
+      "name": "Actual GUI with bundled CGB demo",
+      "status": "PASS",
+      "evidence": "stage4-wine-gui.png",
+      "scope": "Screenshot captured from Xvfb while normal GBStudio.exe displayed CGB demo via GDI. No native Windows GPU, native performance or audible verification.",
+      "observed_status_bar": "50 FPS; 1x (83%) in the captured Wine/Xvfb session on the shared host. This is not a native Windows performance result."
+    },
+    {
+      "name": "PowerShell parsing of RUN_WINDOWS_QA.ps1 and RUN_WINDOWS_MANUAL_QA.ps1",
+      "status": "PASS",
+      "runtime": "PowerShell 7.4.6 on Linux"
+    },
+    {
+      "name": "Manual checklist generation preserves unfinished status",
+      "status": "PASS",
+      "exit_code": 2,
+      "cases": 18,
+      "all_case_status": "NOT_RUN",
+      "report": "stage4-windows-manual-qa.json"
+    }
+  ],
+  "native_windows_manual_status": "NOT_RUN",
+  "physical_devices_status": "NOT_RUN",
+  "audible_audio_status": "NOT_RUN",
+  "scope": "Fresh runs after workspace recovery on 2026-10-18. Automated Windows binary execution under Wine and deterministic input-read doubles. Native Windows manual GUI review, audible output, Direct3D driver/device loss, real controllers, tilt hardware, webcam, physical peripherals and long gameplay remain open. No previous-run result JSON was reconstructed."
+}

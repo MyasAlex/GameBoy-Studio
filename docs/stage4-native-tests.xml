@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Linux-c++"
+	tests="19"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="4909096067eb"
+	time="29"
+	timestamp="2026-10-18T08:13:34"
+	>
+	<testcase name="frame_pacing" classname="frame_pacing" time="0.00778801" status="run">
+		<properties/>
+		<system-out>PASS: 10-second refresh-independent pacing at 60/144/240 Hz, explicit rates, catchup bounds, transitions and invalid clocks
+</system-out>
+	</testcase>
+	<testcase name="boot_handoff" classname="boot_handoff" time="1.49809" status="run">
+		<properties/>
+		<system-out>PASS model=2 replacement handoff, reset and serial snapshot continuation
+PASS model=100 replacement handoff, reset and serial snapshot continuation
+PASS supplied firmware retains its own DIV/LCD handoff
+PASS model=2 replacement handoff, reset and serial snapshot continuation
+PASS supplied firmware retains its own DIV/LCD handoff
+PASS MBC6 respects default, DMG and two-segment CGB boot overlays
+</system-out>
+	</testcase>
+	<testcase name="ppu_latch_state" classname="ppu_latch_state" time="0.0934431" status="run">
+		<properties/>
+		<system-out>PASS model=203 restored_at=44 low=a5 high=3c native_continuation_equal=yes
+PASS model=203 restored_at=20 low=a5 high=3c native_continuation_equal=yes
+PASS model=203 synthetic_v16_tag BESS_fallback=yes no_BESS_rejected=yes
+PASS model=203 synthetic_v17_tag BESS_fallback=yes no_BESS_rejected=yes
+PASS model=203 glitched_high_checkpoint raw=33 output=aa continuation_equal=yes
+PASS model=203 batched_vs_stepped_bus_and_pixels SCX=0..7 horizontal_flip=0..1
+PASS model=204 restored_at=44 low=a5 high=3c native_continuation_equal=yes
+PASS model=204 restored_at=20 low=a5 high=3c native_continuation_equal=yes
+PASS model=204 synthetic_v16_tag BESS_fallback=yes no_BESS_rejected=yes
+PASS model=204 synthetic_v17_tag BESS_fallback=yes no_BESS_rejected=yes
+PASS model=204 glitched_high_checkpoint raw=33 output=aa continuation_equal=yes
+PASS model=204 batched_vs_stepped_bus_and_pixels SCX=0..7 horizontal_flip=0..1
+PASS model=2 restored_at=44 low=5a high=3c native_continuation_equal=yes
+PASS model=2 restored_at=20 low=5a high=3c na...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="accuracy_fuzz" classname="accuracy_fuzz" time="4.42433" status="run">
+		<properties/>
+		<system-out>Accurate loader fuzz: 136 accepted, 376 rejected atomically; truncation PASS
+</system-out>
+	</testcase>
+	<testcase name="integration_pack" classname="integration_pack" time="2.48447" status="run">
+		<properties/>
+		<system-out>Mid-transfer paired restore and corrupt-pair atomic rejection PASS
+Motion movie exact continuation PASS
+Camera movie exact continuation PASS
+Physical bank cheats and isolated concurrent plugins PASS
+Native HuC1 IR and MBC5 rumble output / state restore PASS
+</system-out>
+	</testcase>
+	<testcase name="achievements" classname="achievements" time="0.691739" status="run">
+		<properties/>
+		<system-out>Offline rc_client login, ROM identity, native memory trigger, unlock request, state progress and Hardcore reset PASS
+</system-out>
+	</testcase>
+	<testcase name="accuracy" classname="accuracy" time="15.8197" status="run">
+		<properties/>
+		<system-out>Model 1 exact state/BESS continuation PASS
+Model 3 exact state/BESS continuation PASS
+Model 4 exact state/BESS continuation PASS
+Model 5 exact state/BESS continuation PASS
+Model 6 exact state/BESS continuation PASS
+Model 7 exact state/BESS continuation PASS
+Model 8 exact state/BESS continuation PASS
+Model 9 exact state/BESS continuation PASS
+Model 10 exact state/BESS continuation PASS
+Model 11 exact state/BESS continuation PASS
+Model 12 exact state/BESS continuation PASS
+Model 13 exact state/BESS continuation PASS
+Model 14 exact state/BESS continuation PASS
+Accurate serial and rollback replay PASS
+Backend debugger, RAM cheats and executed ROM substitution PASS
+Actual PPU VRAM bus watch and native FIFO/APU inspection PASS
+Accurate TCP state synchronization, late input convergence and automatic host reconnect PASS
+MBC6 dual ROM/RAM windows, JEDEC ID, flash program/erase/battery/BESS PASS
+</system-out>
+	</testcase>
+	<testcase name="core" classname="core" time="0.493299" status="run">
+		<properties/>
+		<system-out>ALL CORE TESTS PASSED
+</system-out>
+	</testcase>
+	<testcase name="cgb_memory" classname="cgb_memory" time="0.0273875" status="run">
+		<properties/>
+		<system-out>ALL CGB MEMORY TESTS PASSED
+</system-out>
+	</testcase>
+	<testcase name="cgb_ppu" classname="cgb_ppu" time="0.00498488" status="run">
+		<properties/>
+		<system-out>CGB PPU tests passed
+</system-out>
+	</testcase>
+	<testcase name="cgb_apu" classname="cgb_apu" time="0.0414066" status="run">
+		<properties/>
+		<system-out>ALL CGB APU TESTS PASSED
+</system-out>
+	</testcase>
+	<testcase name="cgb_integration" classname="cgb_integration" time="0.232556" status="run">
+		<properties/>
+		<system-out>ALL CGB INTEGRATION TESTS PASSED
+</system-out>
+	</testcase>
+	<testcase name="core_extension" classname="core_extension" time="0.0744177" status="run">
+		<properties/>
+		<system-out>ALL CORE EXTENSION TESTS PASSED
+</system-out>
+	</testcase>
+	<testcase name="session" classname="session" time="0.503887" status="run">
+		<properties/>
+		<system-out>Session tests PASS: bounded RLE rewind, exact input movie replay, corruption rejection
+</system-out>
+	</testcase>
+	<testcase name="studio_tools" classname="studio_tools" time="0.00546318" status="run">
+		<properties/>
+		<system-out>Studio tools tests passed
+</system-out>
+	</testcase>
+	<testcase name="audio_buffer" classname="audio_buffer" time="0.0047826" status="run">
+		<properties/>
+		<system-out>Audio buffer/WAV tests passed
+</system-out>
+	</testcase>
+	<testcase name="cartridge_tools" classname="cartridge_tools" time="0.0106031" status="run">
+		<properties/>
+		<system-out>ALL CARTRIDGE TOOL TESTS PASSED
+</system-out>
+	</testcase>
+	<testcase name="feature_pack" classname="feature_pack" time="1.10187" status="run">
+		<properties/>
+		<system-out>Portable/BESS exact replay and foreign import PASS
+Link serial, mid-byte states, disconnected cable, IR PASS
+Working cheats, RAM search, read/same-value write watchpoints PASS
+MBC7 accelerometer and EEPROM command sequence PASS
+Printer packet/checksum, tiles and BMP output PASS
+44.1/48/96 kHz clocking and WAV/FLAC encoding PASS (independent decode required)
+Camera banking, thresholds/2bpp, busy timing, pause/resume and capture states PASS
+TCP synchronization, predicted inputs and exact rollback convergence PASS
+Lua frame hook, bounded execution and restricted libraries PASS
+ALL FEATURE PACK TESTS PASSED: "/tmp/gbstudio-feature-567428092843"
+</system-out>
+	</testcase>
+	<testcase name="loader_fuzz" classname="loader_fuzz" time="1.92644" status="run">
+		<properties/>
+		<system-out>Loader fuzz PASS: 800 state mutations (3 valid, 797 rejected atomically), 250 ROM/archive mutations, valid/truncated ZIP
+</system-out>
+	</testcase>
+</testsuite>

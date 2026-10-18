@@ -43,7 +43,7 @@ extern "C" {
 #include "random.h"
 
 #ifdef GB_INTERNAL
-#define STRUCT_VERSION 17
+#define STRUCT_VERSION 18
 #endif
 
 #define GB_REWIND_FRAMES_PER_KEY 255
@@ -629,6 +629,8 @@ struct GB_gameboy_internal_s {
         uint16_t last_tile_data_address;
         uint16_t last_tile_index_address;
         uint8_t data_for_sel_glitch;
+        /* Actual high-plane read, distinct from a glitched pixel value. */
+        uint8_t last_tile_data_bus;
         bool delayed_glitch_hblank_interrupt;
         uint32_t frame_repeat_countdown;
         bool disable_window_pixel_insertion_glitch;

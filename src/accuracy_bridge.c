@@ -23,7 +23,10 @@ static uint32_t rgb(GB_gameboy_t *gb,uint8_t r,uint8_t g,uint8_t b){(void)gb;ret
 static void log_message(GB_gameboy_t *gb,const char *message,GB_log_attributes_t attr){(void)gb;(void)message;(void)attr;}
 static uint8_t read_bus(GB_gameboy_t *gb,uint16_t addr,uint8_t data){
     Engine *e=engine(gb);
-    if(e->mbc6&&(addr<0x8000||(addr>=0xA000&&addr<0xC000)))data=mbc6_read(e->mbc6,gb->rom,gb->rom_size,addr);
+    /* The internal boot ROM has priority over the cartridge bus, including
+       MBC6's custom mapper. The CGB cartridge-header hole remains accessible. */
+    bool boot_mapped=!gb->boot_rom_finished&&(addr<0x100||(GB_is_cgb(gb)&&addr>=0x200&&addr<0x900));
+    if(e->mbc6&&!boot_mapped&&(addr<0x8000||(addr>=0xA000&&addr<0xC000)))data=mbc6_read(e->mbc6,gb->rom,gb->rom_size,addr);
     if(e->running&&!e->booting&&e->callbacks.read){
         uint8_t blocked=(addr>=0x8000&&addr<0xA000&&gb->vram_read_blocked)||(addr>=0xFE00&&addr<0xFEA0&&gb->oam_read_blocked);
         return e->callbacks.read(e->user,addr,data,blocked);
@@ -74,6 +77,29 @@ static const uint8_t *replacement(unsigned model,size_t *size){
     case GB_MODEL_AGB_A:case GB_MODEL_GBP_A:*size=sizeof(agb_boot);return agb_boot;
     default:return dmg_boot;}
 }
+/* The bundled firmware has its own animation length.  Its peripheral phase
+   must not become the machine's cartridge-entry phase.  DMG ABC and MGB hand
+   off at DIV=$ABCC and physical line 153, dot 396 (LY already reads zero).
+   See docs/BOOT_HANDOFF.md for hardware references and validation limits.
+   Use the running peripherals to reach that LCD phase so their state machines
+   and access blocking remain coherent; do not merely overwrite LY/STAT. */
+static int finish_replacement_boot(GB_gameboy_t *g){
+    if(g->model!=GB_MODEL_DMG_B&&g->model!=GB_MODEL_MGB)return 1;
+    GB_display_run(g,0,true);
+    unsigned elapsed=0;
+    /* display state 17 is the final 432-dot sleep of physical line 153.
+       Its counter uses 8 MHz units: -120 means 60 dots remain in the line. */
+    while(!(g->current_line==153&&g->display_state==17&&g->display_cycles==-120)){
+        if(elapsed>=70224)return 0;
+        GB_advance_cycles(g,4);GB_display_run(g,0,true);elapsed+=4;
+    }
+    GB_apu_run(g,true);
+    /* This installs an initial clock phase, not a CPU DIV write: do not clock
+       TIMA/APU or generate serial edges while applying the handoff profile. */
+    g->div_counter=0xABCC;
+    g->serial_master_clock=(g->div_counter&0x100)!=0;
+    return 1;
+}
 static int reset(void *ctx,unsigned model,const uint8_t *rom,size_t romsize,const uint8_t *boot,size_t bootsize,const uint8_t *battery,size_t batsize){
     Engine *e=ctx;if(!rom||romsize<0x150)return 0;
     if(rom[0x147]==0x20){if(!e->mbc6)e->mbc6=malloc(sizeof(*e->mbc6));if(!e->mbc6)return 0;mbc6_reset(e->mbc6);}else {free(e->mbc6);e->mbc6=NULL;}
@@ -82,7 +108,8 @@ static int reset(void *ctx,unsigned model,const uint8_t *rom,size_t romsize,cons
     if(boot&&bootsize)GB_load_boot_rom_from_buffer(&e->gb,boot,bootsize);
     else {boot=replacement(model,&bootsize);GB_load_boot_rom_from_buffer(&e->gb,boot,bootsize);e->booting=1;
         uint64_t cycles=0;while(!e->gb.boot_rom_finished&&cycles<4194304u*16u)cycles+=GB_run(&e->gb);
-        e->booting=0;if(!e->gb.boot_rom_finished)return 0;
+        int finished=e->gb.boot_rom_finished&&finish_replacement_boot(&e->gb);
+        e->booting=0;if(!finished)return 0;
     }
     if(e->mbc6&&battery&&batsize==8+32768+1048576+256&&!memcmp(battery,"M6BT1",5)){
         e->mbc6->protect_sector0=battery[5]&1;memcpy(e->mbc6->ram,battery+8,32768);memcpy(e->mbc6->flash,battery+8+32768,1048576);memcpy(e->mbc6->hidden_data,battery+8+32768+1048576,256);

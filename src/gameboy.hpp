@@ -170,8 +170,8 @@ public:
     bool loadROM(const std::filesystem::path& path) {
         auto data=loadBytes(path,8*1024*1024);
         loadError.clear();
-        if(data.size()<32768 || data.size()>8*1024*1024 || data.size()%16384) {
-            loadError="ROM must contain complete 16 KiB banks (32 KiB to 8 MiB).";return false;
+        if(data.size()<16384 || data.size()>8*1024*1024 || data.size()%16384) {
+            loadError="ROM must contain complete 16 KiB banks (16 KiB unbanked, otherwise 32 KiB to 8 MiB).";return false;
         }
         const u8 type=data[0x147];
         int controller=-1;
@@ -188,6 +188,9 @@ public:
                 if(extendedControllers&&(type==0x0B||type==0x0C||type==0x0D||type==0x20||type==0xFE))controller=type==0x20?6:type==0xFE?103:100;
                 else {loadError="Unsupported cartridge controller: "+std::to_string(type);return false;}break;
         }
+        // Released unbanked homebrew may contain only its used 16 KiB bank.
+        // A banked 16 KiB image is still treated as a truncated cartridge.
+        if(data.size()==16384&&controller!=0){loadError="Banked ROM must contain at least 32 KiB.";return false;}
         rom=std::move(data); romPath=path; mbc=controller;
         romBank=1; bankHigh=0; ramBank=0; mbcMode=0; ramEnabled=(mbc==0);
         latchWrite=0; rumble=type>=0x1C&&type<=0x1E;mbc1Multicart=false;

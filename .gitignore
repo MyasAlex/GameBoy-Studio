@@ -1,4 +1,5 @@
 build/
+build-*/
 dist/
 tests/roms/
 __pycache__/

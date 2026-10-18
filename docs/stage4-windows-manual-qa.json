@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-18T08:10:56.7995021+00:00",
+  "tester": "",
+  "host": {
+    "os": "Unix 6.18.55.0",
+    "powershell": "7.4.6",
+    "execution_environment": "Unverified",
+    "gpu": [],
+    "sound_devices": [],
+    "inventory_error": "The term 'Get-CimInstance' is not recognized as a name of a cmdlet, function, script file, or executable program.\nCheck the spelling of the name, or if a path was included, verify that the path is correct and try again."
+  },
+  "binary_sha256": {
+    "GBStudio.exe": "70ADF2B17862BB339AA15DA1A80A73737B9867130A64E4E8BA992060D6BF3C24",
+    "gb_accuracy.dll": "EEA76C46F02B1F92826D9FE0E073A646E93C890B5C2E858B5DF81C26598E6DB1",
+    "gb_pixel_filters.exe": "B8732A998C0269DB14CE61887CB9F029C043F04AB70B3EAE974FD069F69FF3D2"
+  },
+  "cases": [
+    {
+      "id": "WIN-01",
+      "area": "Installation and persistence",
+      "steps": "Install and launch as a standard user. Open a ROM in a Unicode path with spaces. Save battery/state, close, reopen. Repeat from a read-only application folder.",
+      "expected": "Application starts without missing DLLs. Settings use the LocalAppData fallback when needed. ROM, battery save and state survive without corruption.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-02",
+      "area": "Menus, language and DPI",
+      "steps": "Check English and Russian menus/help. Resize from minimum to maximized. Move between monitors at 100%, 150% and 200% scaling. Restart with a secondary monitor disconnected.",
+      "expected": "Text and controls remain usable; menus map to the indicated actions; the restored window remains visible.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-03",
+      "area": "Keyboard and focus",
+      "steps": "Use all eight buttons; remap two keys and cancel remapping. Hold A, Tab and Backspace while switching applications and opening a dialog. Return to the game.",
+      "expected": "No stuck input, turbo or rewind. Game auto-pauses/resumes when allowed. A manually paused game stays paused.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-04",
+      "area": "Virtual controls and mouse capture",
+      "steps": "Enable the virtual console. Press each button, drag outside and release. Switch applications while holding a button. Use a scrollbar or drag in another Studio window.",
+      "expected": "Each button releases on mouse-up, capture transfer and focus loss. Other windows retain their own mouse capture.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-05",
+      "area": "Two physical XInput controllers",
+      "steps": "Connect two physical pads. Test each button and stick in single-console and local Link modes. Assign device indexes, reconnect a pad and load/save profiles.",
+      "expected": "Players remain independent; mappings and deadzones persist; unplugging releases held buttons; reconnecting restores control.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-06",
+      "area": "Physical tilt and rumble",
+      "steps": "Use a tilt-capable game and a rumble cartridge/game. Check numpad/right stick, pause, focus loss, controller reconnect and exit, including a mode that continues running in the background.",
+      "expected": "Tilt follows only focused input and returns to neutral. Rumble responds to cartridge events and stops on pause, focus loss and exit.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-07",
+      "area": "CPU graphics and capture",
+      "steps": "Run DMG and CGB games. Check all palettes, LCD/CRT, ghosting, raw comparison, Scale2x/3x, HQ2x and xBRZ at several window sizes. Save a raw BMP.",
+      "expected": "No clipped or corrupted frames. Effects change only presentation. Raw capture is 160x144 and matches the unprocessed framebuffer.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-08",
+      "area": "Direct3D rendering and recovery",
+      "steps": "Repeat graphics checks with Direct3D enabled on the actual GPU. Toggle fullscreen repeatedly, minimize/restore, resize, move monitors and suspend/resume the computer.",
+      "expected": "Rendering recovers without stale frames or crashes. Device loss gives a usable CPU fallback. Record GPU/driver and hardware versus WARP.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-09",
+      "area": "Audible output at 44.1/48/96 kHz",
+      "steps": "Listen through actual speakers/headphones to pulse, wave and noise-heavy gameplay at all three rates and latency settings. Test volume/mute, channel mute and EQ.",
+      "expected": "Correct pitch/stereo, no persistent clicks, buzzing, clipping or desynchronization. Volume and mute controls take effect promptly.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-10",
+      "area": "Audio transitions and devices",
+      "steps": "While listening, pause/resume, rewind, use turbo, change speed, load a state and switch games. Unplug/reconnect the output device and change the Windows default endpoint.",
+      "expected": "No stale audio after transitions. Audio is muted at non-1x speeds. Device failure is visible and recovery behavior is recorded; no crash or hang.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-11",
+      "area": "Long session and A/V synchronization",
+      "steps": "Play for at least 60 minutes at 1x with actual audio output; include background/foreground changes. Record timing, underrun/overflow counters and a short end-of-run A/V recording.",
+      "expected": "No sustained speed drift, accumulating A/V offset, growing memory use, repeated underruns, freeze or crash.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-12",
+      "area": "Save, rewind and session continuity",
+      "steps": "Play, save battery data, use all quick slots, named states, rewind, reset and session restore. Try an incompatible state on a copy of the save.",
+      "expected": "Expected progress returns; incorrect states are rejected safely; original saves remain intact.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-13",
+      "area": "Game Boy Camera and webcam",
+      "steps": "Connect a physical webcam, grant/deny OS permission, capture into a camera game, then disconnect and reconnect the camera. Test image-file input separately.",
+      "expected": "Actual camera frames arrive with usable orientation/contrast. Denial/disconnect is handled without a freeze. Record the device model and permission behavior.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-14",
+      "area": "Printer and infrared",
+      "steps": "Use supported printer/IR games. Print and export an image. Exchange an IR signal between the supported endpoints. State explicitly whether endpoints are emulated or physical.",
+      "expected": "Printer image and exported file match the game output. IR events reach the intended peer. Physical-device claims require actual hardware evidence.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-15",
+      "area": "Local and network Link continuity",
+      "steps": "Use two independent saves. Complete a local Link exchange and a network exchange on two computers. For Pokemon, complete a trade, save, close and reopen both games.",
+      "expected": "Both peers remain synchronized. Traded data and progress survive restart. Record both build hashes, game hashes and network conditions.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-16",
+      "area": "Recording and external state exchange",
+      "steps": "Record and replay input; export WAV/FLAC/AVI and inspect them in independent players. Exchange a BESS state with a named external emulator in both directions.",
+      "expected": "Replay matches the same ROM; media plays correctly and remains synchronized; both BESS directions preserve the expected state.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-17",
+      "area": "RetroAchievements account integration",
+      "steps": "With a real test account, log in/out, unlock a test achievement, reconnect the network and verify Hardcore restrictions against the server response.",
+      "expected": "Credentials are not exposed in reports. Server confirms the expected account/unlock/Hardcore behavior; local UI alone is insufficient evidence.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    },
+    {
+      "id": "WIN-18",
+      "area": "Release package and signature",
+      "steps": "On clean Windows 10 and 11 machines, extract/install the final package, run automated QA, verify every EXE/DLL signature, then uninstall while keeping saves.",
+      "expected": "No build tools are required. Automated checks pass for these exact binaries. Signatures validate if a signed release is claimed. Uninstall preserves user data.",
+      "status": "NOT_RUN",
+      "observed": "",
+      "evidence": [],
+      "recorded_at": null
+    }
+  ],
+  "status": "NOT_RUN",
+  "native_manual_validation": false,
+  "scope": "Human observations only. NOT_RUN and BLOCKED are open work, never PASS. Wine is not native Windows validation. Physical-device and audible claims require a human using the named actual devices."
+}

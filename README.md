@@ -1,8 +1,10 @@
 # GameBoy Studio 1.0 preview
 
-Stage 3 addresses reported acceleration: discard Turbo timing debt, bound catch-up frames, add Ctrl+0 for normal speed and display the measured speed percentage. Six actual Windows timer-loop probes passed with audio off/on; sustained acceleration was not reproduced with the available test ROMs. See **docs/STAGE3_REPORT_RU.md** and **docs/STAGES_RU.md**. Custom hotkeys take priority over Ctrl+0; the speed menu also selects 1x.
+[Download Windows ZIP and EXE — v1.0.0-preview.4](https://github.com/MyasAlex/GameBoy-Studio/releases/tag/v1.0.0-preview.4). Extract the full Windows ZIP; the standalone EXE also needs the supplied DLL.
 
-The stage 2 core is unchanged: four Mealybug differences were fixed; seven and the three replacement-firmware Boot checks remain open. See **docs/STAGE2_REPORT_RU.md**. Native core snapshots use version 17; older version-16 snapshots import through BESS without preserving exact previous cycle phases.
+Stage 4 fixes the seven remaining Mealybug mismatches, three DMG/MGB boot checks, four Win32 focus/input defects, and loading of 16 KiB unbanked homebrew. Fresh runs cover all 71 Mealybug images, 20 published games across 28 DMG/CGB runs, and automated Win32 checks under Wine. See **docs/STAGE4_REPORT_RU.md** and **docs/stage4-validation.json** for evidence and limits.
+
+Native snapshots now use version **18**. A genuine version-17 fixture imports through BESS without exact old cycle phases. Preserve the prior build for old deterministic replays. Bit-exact output PCM after loading a state remains unverified.
 
 Windows x64 frontend and Studio tools, with the SameBoy 1.0.4 accuracy core and free replacement boot firmware. The original Studio core remains available with `gb_headless --core original`.
 
@@ -10,9 +12,9 @@ Extract the full archive and run **START_WINDOWS.bat** or **dist/GBStudio.exe**.
 
 New features include hardware revisions, CGB compatibility palettes, SGB borders, rare controllers, dual-console/TCP rollback and reconnect, BESS and paired snapshots, actual cheats/RAM search, RetroAchievements rc_client and local Hardcore restrictions, Direct3D/HQ2x/xBRZ, FLAC/PCM AVI, Lua plugins, native FIFO/APU inspectors, a TAS input grid, gamepad profiles and game-library tools.
 
-**The full roadmap is not complete.** Mealybug still has hardware discrepancies; original Nintendo firmware, commercial games/Pokémon trades, physical devices, full Windows GUI/GPU behavior, external BESS roundtrips and official RetroAchievements approval remain unverified. Native CPU rendering and bundled demo execution have been checked in stage 1. This release is unsigned.
+**The full roadmap is not complete.** Full native Windows manual acceptance and commercial-library coverage remain open. Original Nintendo firmware, commercial games/Pokémon trades, physical devices, full Windows GUI/GPU behavior, external BESS roundtrips and official RetroAchievements approval remain unverified. Fresh CPU/GDI and bundled-demo checks passed under Wine; they do not establish native Windows GPU, audible audio or physical-device acceptance. This release is unsigned.
 
-Read **README_RU.md**, **docs/FEATURE_STATUS_RU.md** and **docs/validation-1.0.json** for setup, verified results and precise limitations. Third-party licenses are included in **docs/THIRD_PARTY_NOTICES.md**. The xBRZ helper is a separate GPLv3 program with full source; the frontend and accuracy core use MIT/Expat licenses.
+Read **README_RU.md**, **docs/FEATURE_STATUS_RU.md** and **docs/stage4-validation.json** for setup, verified results and precise limitations. Third-party licenses are included in **docs/THIRD_PARTY_NOTICES.md**. The xBRZ helper is a separate GPLv3 program with full source; the frontend and accuracy core use MIT/Expat licenses.
 
 Build with CMake (C11/C++20). On Windows, **BUILD_WINDOWS.bat --no-launch** or **GBStudio.sln** runs the complete CMake build/test/install pipeline. MSVC uses the included GNU-C engine DLL; MinGW can rebuild it from source. No dependencies are downloaded during a normal build.
 

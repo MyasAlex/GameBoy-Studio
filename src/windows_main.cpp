@@ -72,7 +72,8 @@ static bool paused=false,turbo=false,sound=true,fullscreen=false,focusPaused=fal
 static bool russian=false,integerScaling=true,ghosting=false,resumeSession=true,debuggerRunning=false;
 static bool debuggerSkipBreakpoint=false;
 static bool lightTheme=false,compareDisplay=false;
-static bool highResolutionTimer=false,selfTest=false;
+static bool highResolutionTimer=false,selfTest=false,uiSelfTest=false;
+static std::filesystem::path uiTestReport;
 static bool timingTest=false,timingAudio=false,timingAudioOpened=false,timingFinished=false;
 static double timingDuration=5.0;
 static std::filesystem::path timingReport;
@@ -88,6 +89,8 @@ static u8 desiredJoypad=0;
 static int captureKey=-1;
 using XInputGetStateFn=DWORD (WINAPI*)(DWORD,XINPUT_STATE*);
 static XInputGetStateFn readGamepad=nullptr;
+using AsyncKeyStateFn=SHORT (WINAPI*)(int);
+static AsyncKeyStateFn readAsyncKey=GetAsyncKeyState;
 static HMODULE gamepadLibrary=nullptr;
 static std::wstring notification;
 static ULONGLONG messageUntil=0,lastBatterySave=0,lastRewind=0,lastStatus=0;
@@ -336,10 +339,10 @@ static bool screenshot(){
     info.biSize=sizeof(info);info.biWidth=GB_W;info.biHeight=-GB_H;info.biPlanes=1;info.biBitCount=32;info.biCompression=BI_RGB;info.biSizeImage=(DWORD)gb.ppu.pixels.size()*4;
     f.write((const char*)&file,sizeof(file));f.write((const char*)&info,sizeof(info));f.write((const char*)gb.ppu.pixels.data(),(std::streamsize)gb.ppu.pixels.size()*4);return (bool)f;
 }
-static void pollInput(){
+static void pollInput(bool forceGamepadPoll=false){
     if(movie.mode()==InputMovie::Mode::Playback)return;
     static XINPUT_STATE input{};static bool connected=false;static ULONGLONG lastPoll=0;const auto now=GetTickCount64();
-    if(readGamepad&&now-lastPoll>=(connected?8:250)){lastPoll=now;input={};connected=false;for(DWORD i=0;i<4;++i)if((padProfiles[0].device<0||(int)i==padProfiles[0].device)&&readGamepad(i,&input)==ERROR_SUCCESS){connected=true;primaryPadIndex=i;break;}}
+    if(readGamepad&&(forceGamepadPoll||now-lastPoll>=(connected?8:250))){lastPoll=now;input={};connected=false;for(DWORD i=0;i<4;++i)if((padProfiles[0].device<0||(int)i==padProfiles[0].device)&&readGamepad(i,&input)==ERROR_SUCCESS){connected=true;primaryPadIndex=i;break;}}
     const u32 buttons=connected?(u32)input.Gamepad.wButtons|(input.Gamepad.bLeftTrigger>127?0x10000:0)|(input.Gamepad.bRightTrigger>127?0x20000:0):0;const bool focused=GetForegroundWindow()==hwnd;
     auto pressed=[&](int action,WORD){return focused&&(keyboard[(std::size_t)inputKeys[action]]||(buttons&padProfiles[0].buttons[(std::size_t)action])||(virtualInput&(1<<action)));};
     const std::array<bool,8> inputMask={
@@ -350,13 +353,13 @@ static void pollInput(){
         pressed(4,XINPUT_GAMEPAD_A),pressed(5,XINPUT_GAMEPAD_B),pressed(6,XINPUT_GAMEPAD_BACK),pressed(7,XINPUT_GAMEPAD_START)};
     desiredJoypad=0;for(int i=0;i<8;++i)if(inputMask[i])desiredJoypad|=(u8)(1u<<i);
     if(link.connected()){
-        static constexpr int keys2[]={'D','A','W','S','G','H','T','Y'};u8 second=0;for(int i=0;i<8;++i)if(focused&&(GetAsyncKeyState(keys2[i])&0x8000))second|=(u8)(1u<<i);
+        static constexpr int keys2[]={'D','A','W','S','G','H','T','Y'};u8 second=0;for(int i=0;i<8;++i)if(focused&&(readAsyncKey(keys2[i])&0x8000))second|=(u8)(1u<<i);
         if(readGamepad){XINPUT_STATE pad{};for(DWORD i=0;i<4;++i)if((padProfiles[1].device<0?(i!=primaryPadIndex||( !connected)):(int)i==padProfiles[1].device)&&readGamepad(i,&pad)==ERROR_SUCCESS){
             const u32 buttons=(u32)pad.Gamepad.wButtons|(pad.Gamepad.bLeftTrigger>127?0x10000:0)|(pad.Gamepad.bRightTrigger>127?0x20000:0);for(int bit=0;bit<8;++bit)if(focused&&(buttons&padProfiles[1].buttons[bit]))second|=(u8)(1<<bit);break;}}
         InputMovie::setJoypad(gbSecond.mem,second);
     }
-    gb.mem.motion.tiltX=(std::int16_t)((GetAsyncKeyState(VK_NUMPAD4)&0x8000?112:0)-(GetAsyncKeyState(VK_NUMPAD6)&0x8000?112:0));
-    gb.mem.motion.tiltY=(std::int16_t)((GetAsyncKeyState(VK_NUMPAD8)&0x8000?112:0)-(GetAsyncKeyState(VK_NUMPAD2)&0x8000?112:0));
+    gb.mem.motion.tiltX=focused?(std::int16_t)((readAsyncKey(VK_NUMPAD4)&0x8000?112:0)-(readAsyncKey(VK_NUMPAD6)&0x8000?112:0)):0;
+    gb.mem.motion.tiltY=focused?(std::int16_t)((readAsyncKey(VK_NUMPAD8)&0x8000?112:0)-(readAsyncKey(VK_NUMPAD2)&0x8000?112:0)):0;
     if(connected&&focused&&padProfiles[0].tiltStick){gb.mem.motion.tiltX+=(std::int16_t)(input.Gamepad.sThumbRX*112/32768);gb.mem.motion.tiltY+=(std::int16_t)(input.Gamepad.sThumbRY*112/32768);}
 
     // Movies sample input once per frame. Updating JOYP/IF between samples
@@ -688,7 +691,10 @@ static LRESULT CALLBACK wndProc(HWND w,UINT msg,WPARAM wp,LPARAM lp){
         case WM_PAINT:{PAINTSTRUCT ps{};HDC dc=BeginPaint(w,&ps);render(w,dc);EndPaint(w,&ps);return 0;}case WM_ERASEBKGND:return 1;
         case WM_GETMINMAXINFO:{auto info=(MINMAXINFO*)lp;info->ptMinTrackSize={240,260};return 0;}
         case WM_LBUTTONDOWN:{if(virtualCase){POINT point{GET_X_LPARAM(lp),GET_Y_LPARAM(lp)};for(unsigned i=0;i<8;++i)if(PtInRect(&virtualButtons[i],point)){virtualInput|=(u8)(1<<i);SetCapture(w);pollInput();InvalidateRect(w,nullptr,FALSE);break;}}return 0;}
-        case WM_LBUTTONUP:case WM_CAPTURECHANGED:virtualInput=0;ReleaseCapture();pollInput();return 0;
+        case WM_LBUTTONUP:virtualInput=0;if(GetCapture()==w)ReleaseCapture();pollInput();InvalidateRect(w,nullptr,FALSE);return 0;
+        // Capture may already belong to another window in this thread. Releasing
+        // it here would cancel that window's drag or other mouse interaction.
+        case WM_CAPTURECHANGED:virtualInput=0;pollInput();InvalidateRect(w,nullptr,FALSE);return 0;
         case WM_SIZE:if(wp==SIZE_MINIMIZED)audio.flush(gb.apu);updateTimer();InvalidateRect(w,nullptr,FALSE);return 0;
         case WM_SYSKEYDOWN:if(wp!=VK_F11&&captureKey<0)return DefWindowProcW(w,msg,wp,lp);[[fallthrough]];
         case WM_KEYDOWN:{
@@ -697,8 +703,9 @@ static LRESULT CALLBACK wndProc(HWND w,UINT msg,WPARAM wp,LPARAM lp){
             if(!(lp&(1LL<<30))||wp==VK_TAB)handleKey(wp,true);return 0;
         }
         case WM_KEYUP:extraKey(wp,false);handleKey(wp,false);return 0;case WM_SYSKEYUP:if(wp==VK_F11){handleKey(wp,false);return 0;}return DefWindowProcW(w,msg,wp,lp);
-        case WM_KILLFOCUS:{if(selfTest)return 0;keyboard.fill(false);pollInput();turbo=heldTurbo=heldRewind=false;captureKey=captureHotkey=-1;if(debuggerRunning&&studioWindow&&(HWND)wp==studioWindow)return 0;
-            if(sendRumble){XINPUT_VIBRATION silent{};sendRumble(primaryPadIndex,&silent);}if(achievementClient.canPause()){focusPaused=!paused;paused=true;}resetPacing();audio.flush(gb.apu);updateTimer();updateTitle();return 0;}
+        case WM_KILLFOCUS:{if(selfTest&&!uiSelfTest)return 0;keyboard.fill(false);virtualInput=0;if(GetCapture()==w)ReleaseCapture();pollInput();turbo=heldTurbo=heldRewind=false;captureKey=captureHotkey=-1;
+            if(sendRumble){XINPUT_VIBRATION silent{};sendRumble(primaryPadIndex,&silent);}if(debuggerRunning&&studioWindow&&(HWND)wp==studioWindow)return 0;
+            if(achievementClient.canPause()){focusPaused=!paused;paused=true;}resetPacing();audio.flush(gb.apu);updateTimer();updateTitle();return 0;}
         case WM_SETFOCUS:if(focusPaused){paused=false;focusPaused=false;resetPacing();updateTimer();updateTitle();}return 0;
         case WM_DROPFILES:{HDROP files=(HDROP)wp;wchar_t path[32768]{};if(DragQueryFileW(files,0,path,32768))openROM(path);DragFinish(files);return 0;}
         case WM_COMMAND:command(LOWORD(wp));return 0;case WM_CLOSE:saveConfig();DestroyWindow(w);return 0;
@@ -708,6 +715,7 @@ static LRESULT CALLBACK wndProc(HWND w,UINT msg,WPARAM wp,LPARAM lp){
     }
     return DefWindowProcW(w,msg,wp,lp);
 }
+#include "windows_qa.hpp"
 int WINAPI wWinMain(HINSTANCE instance,HINSTANCE,LPWSTR,int show){
     if(!accurate::enable(gb)||!accurate::enable(gbSecond)){MessageBoxW(nullptr,L"gb_accuracy.dll is missing or incompatible. Restore it from the distribution.",L"GameBoy Studio",MB_OK|MB_ICONERROR);return 1;}
     gb.auxiliaryState=[](){return achievementClient.progress();};gb.auxiliaryRestore=[](std::span<const u8> data){return achievementClient.restore(data);};
@@ -715,12 +723,13 @@ int WINAPI wWinMain(HINSTANCE instance,HINSTANCE,LPWSTR,int show){
     appInstance=instance;gb.mem.cameraImage=[](){return webcam.image();};SetProcessDPIAware();int count=0;LPWSTR* args=CommandLineToArgvW(GetCommandLineW(),&count);std::filesystem::path requested;
     if(args)for(int i=1;i<count;++i){
         if(wcscmp(args[i],L"--self-test")==0)selfTest=true;
+        else if(wcscmp(args[i],L"--ui-self-test")==0){if(i+1>=count){LocalFree(args);return 2;}uiSelfTest=selfTest=true;uiTestReport=args[++i];}
         else if(wcscmp(args[i],L"--timing-test")==0){if(i+1>=count){LocalFree(args);return 2;}timingTest=selfTest=true;timingReport=args[++i];}
         else if(wcscmp(args[i],L"--timing-audio")==0)timingAudio=true;
         else if(wcscmp(args[i],L"--timing-seconds")==0){if(i+1>=count){LocalFree(args);return 2;}wchar_t* end=nullptr;timingDuration=std::wcstod(args[++i],&end);if(!end||*end||!std::isfinite(timingDuration)||timingDuration<2||timingDuration>30){LocalFree(args);return 2;}}
         else if(requested.empty())requested=args[i];
     }if(args)LocalFree(args);
-    if(timingTest&&(!requested.empty()&&sameFile(timingReport,requested)))return 2;
+    if((timingTest&&uiSelfTest)||(timingTest&&(!requested.empty()&&sameFile(timingReport,requested)))||(uiSelfTest&&(!requested.empty()&&sameFile(uiTestReport,requested))))return 2;
     if(selfTest){resumeSession=false;speedIndex=2;sound=timingTest&&timingAudio;rewindBuffer.configure(0);wchar_t executable[32768]{};GetModuleFileNameW(nullptr,executable,32768);configPath=std::filesystem::path(executable).parent_path()/L".self-test.ini";}
     else {loadConfig();extraLoadConfig();}gamepadLibrary=LoadLibraryExW(L"xinput1_4.dll",nullptr,LOAD_LIBRARY_SEARCH_SYSTEM32);
     if(!gamepadLibrary)gamepadLibrary=LoadLibraryExW(L"xinput9_1_0.dll",nullptr,LOAD_LIBRARY_SEARCH_SYSTEM32);
@@ -731,12 +740,13 @@ int WINAPI wWinMain(HINSTANCE instance,HINSTANCE,LPWSTR,int show){
     const int width=restoredWindow.right>=240?restoredWindow.right:r.right-r.left,height=restoredWindow.bottom>=260?restoredWindow.bottom:r.bottom-r.top;
     hwnd=CreateWindowExW(0,cls.lpszClassName,L"GameBoy Studio 1.0 preview",WS_OVERLAPPEDWINDOW,restoredWindow.left,restoredWindow.top,width,height,nullptr,appMenu,instance,nullptr);if(!hwnd)return 1;
     if(!selfTest||(timingTest&&timingAudio)){timingAudioOpened=audio.open(audioLatency,(unsigned)gb.apu.sampleRate);if(!timingAudioOpened&&!selfTest)alert(tr(L"Audio device unavailable",L"Звуковое устройство недоступно"));}audio.setVolume(volume);
-    ShowWindow(hwnd,selfTest?SW_HIDE:(restoredMaximized?SW_SHOWMAXIMIZED:show));UpdateWindow(hwnd);bool loaded=false;
+    ShowWindow(hwnd,selfTest&&!uiSelfTest?SW_HIDE:(restoredMaximized?SW_SHOWMAXIMIZED:show));UpdateWindow(hwnd);bool loaded=false;
     if(!requested.empty())loaded=openROM(requested);else if(!selfTest&&!recentROMs[0].empty()&&std::filesystem::exists(recentROMs[0]))loaded=openROM(recentROMs[0],true);
     if(!loaded&&requested.empty()){
         wchar_t executable[32768]{};GetModuleFileNameW(nullptr,executable,32768);const auto folder=std::filesystem::path(executable).parent_path();
         if(std::filesystem::exists(folder/L"demo.gbc"))loaded=openROM(folder/L"demo.gbc");else if(std::filesystem::exists(folder/L"demo.gb"))loaded=openROM(folder/L"demo.gb");}
     if(selfTest&&!loaded){DestroyWindow(hwnd);if(gamepadLibrary)FreeLibrary(gamepadLibrary);if(appMenu)DestroyMenu(appMenu);return 2;}
+    if(uiSelfTest){selfTestExitCode=sameFile(uiTestReport,gb.mem.romPath)?2:(runUiSelfTest(uiTestReport)?0:5);SendMessageW(hwnd,WM_CLOSE,0,0);}
     if(timingTest){timingStartCycles=gb.totalCycles;timingStartFrames=gb.ppu.frameNumber;timingStart=std::chrono::steady_clock::now();resetPacing();}
     updateTitle();updateTimer();lastStatus=GetTickCount64();MSG msg{};while(GetMessageW(&msg,nullptr,0,0)>0){TranslateMessage(&msg);DispatchMessageW(&msg);}
     if(gamepadLibrary)FreeLibrary(gamepadLibrary);if(appMenu)DestroyMenu(appMenu);return (int)msg.wParam;

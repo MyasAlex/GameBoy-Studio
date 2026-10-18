@@ -1,9 +1,15 @@
-# 1.0 preview
+# GameBoy Studio v1.0.0-preview.4 — Windows x64
 
-Stage 3 Windows timing update: discard Turbo time debt, cancel the Turbo override when selecting normal speed, bound catch-up batches, add Ctrl+0 and show measured speed. Six hidden Win32 timer-loop probes passed with sound off/on. Persistent acceleration in a user game remains unconfirmed. The stage 2 accuracy core is unchanged; see STAGE3_REPORT_RU.md for scope and measurements.
+Скачайте **GBStudio-Windows-x64.zip**, распакуйте весь архив и запустите `GBStudio.exe`. Установка Visual Studio или MinGW не требуется. Отдельный `GBStudio.exe` требует соседний `gb_accuracy.dll`; для xBRZ нужен также `gb_pixel_filters.exe`. Все они входят в Windows ZIP и доступны отдельными файлами.
 
-This is a major implementation update to 0.9. The default engine is now SameBoy 1.0.4, integrated through a versioned C ABI and patched for Studio. The original core is retained for legacy snapshots/testing.
+- Исправлены 7 оставшихся расхождений Mealybug: все 71 изображение совпадает с прежними эталонами, SameSuite 78/78. DMG 130/130 и CGB 15/15 проходят.
+- Исправлены 3 DMG/MGB Boot-проверки после встроенной свободной прошивки и перекрытие boot-области контроллером MBC6. Оригинальная Nintendo Boot ROM не использовалась.
+- Исправлены четыре ошибки управления Windows: фоновый наклон и вибрация, зависание виртуальных кнопок и потеря чужого захвата мыши. 20/20 автоматических UI-проверок прошли под Wine.
+- Исправлена загрузка 16 КиБ unbanked homebrew через ROM, ZIP и GZIP. Проверены 20 опубликованных свободных игр в 28 прогонах; внутреннее состояние восстанавливается точно в 28/28 случаях.
+- Формат native-состояний повышен до **18**. Версия 17 импортируется через BESS без точных прежних фаз; для старых детерминированных повторов сохраните прежнюю сборку.
 
-Added: hardware revisions and replacement boot palettes; SGB/SGB2/PAL frames and commands; MBC6/MMM01/HuC3; full native RTC/flash batteries; exact dual-console snapshots; TCP heartbeat/reconnect and rollback; official rc_client runtime with progress snapshots and Hardcore restrictions; HQ2x and separate xBRZ process; GPU scalers/color/ghosting; PCM audio in AVI; PNG/JPEG covers; independent Lua plugins; actual FIFO/APU state and PPU bus watches; TAS grid with Camera/motion recording; hardware comparison, branch graph, virtual controls, gamepad profiles, homebrew/compatibility windows, Discord and signing/uninstall tooling.
+Это предварительный выпуск без цифровой подписи. Полная ручная приёмка Windows 10/11, Direct3D, слышимого звука и физических устройств остаётся незавершённой. Корпус игр не подтверждает полные прохождения или коммерческую библиотеку. Звук после восстановления состояния не всегда совпадает побайтно; численные отличия сохранены в отчётах.
 
-All native test suites and sanitizer results are recorded in validation-1.0.json. Every ROM failure remains visible in 1.0-*-results.json. The full requested roadmap still has limits detailed in FEATURE_STATUS_RU.md: native Windows/device QA, real games/boot assets, fine PPU effects, external services and cross-emulator state checks. This is a preview, not a compatibility or signed-release guarantee.
+Локально прошли 19/19 внутренних наборов и 5/5 проверок ASan/UBSan. Подробные результаты, хеши и снимки: `docs/STAGE4_REPORT_RU.md`, `docs/stage4-validation.json`. GitHub Actions выполняет дополнительные сборки отдельно; его статус виден на странице Actions.
+
+`GameBoy-Studio-complete.zip` содержит исходники, отчёты и готовую сборку с `START_WINDOWS.bat`. `GameBoy-Studio-source.zip` содержит исходники точного release-коммита. `SHA256SUMS.txt` позволяет проверить скачанные файлы.

@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "verified_utc": "2026-10-18T08:18:11.807768+00:00",
+  "origin": {
+    "repository": "https://github.com/MyasAlex/GameBoy-Studio",
+    "commit": "be634cd53f80b56dae9d9db41cb9a5d28bd19ce4",
+    "note": "Exact original uploaded ZIP snapshot recovered from GitHub; all recorded stage4 runs performed afresh on 2026-10-18."
+  },
+  "host": "Linux-6.18.55-x86_64-with-glibc2.41",
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "windows_compiler": "MinGW GCC14-posix cross compiler",
+  "windows_runtime": "Wine10.0 Debian10.0~repack-6, Xvfb; no native Windows host",
+  "core_c_abi": 3,
+  "native_snapshot_version": 18,
+  "source_sha256": {
+    "src/accuracy_bridge.c": "747ec630b3425e244364293dd3c0cbc5b5888fd7c5f699901a2d686deefd93d3",
+    "src/gameboy.hpp": "d8dd46d7de50b3e156fa398d3a01173f73c24f838e9cc863fafb47d2c1a9e7d1",
+    "src/archive_loader.hpp": "6ec861b609b89c4af876f2253653a595f03667bfd3d1059ba7388b324e5a7dca",
+    "src/windows_main.cpp": "205d2efa5913282db700509e6382946fbbad64fc3228a7d667537d039cf688ed",
+    "src/studio_features_ui.hpp": "5859b72035a432f0f10fbdd526e2f2908fbf9b8b731b4bc74a742af36058f2d5",
+    "src/windows_qa.hpp": "20faf6e1273062e2c78ad7a6800d75fe5c37c7d5c3477676ec5d0b990b3624b2",
+    "third_party/sameboy/Core/display.c": "4729d5f6e7e9ad7feb4a59f1aa6175b2521c30371f4a934b8359be6d3cdd8672",
+    "third_party/sameboy/Core/gb.h": "6b58277bfe462acb32b9bbec6722ff26ce84500b4a82f3fccf2cbe58c3342068",
+    "third_party/sameboy/Core/sm83_cpu.c": "38b94d1350a0bff37a06857de20882a3bd0dfd25c8ca2daaaccb08916fab852f",
+    "tests/game_compatibility_runner.cpp": "e90973f93a33fbbd528dd4068a5a8dc854e278608c78d70aae6ad487bd656276",
+    "tests/run_game_compatibility.py": "517e6e567a5f008b9c4ef255642fdeb222788d5246235a959fd8cea49f5cef01",
+    "tests/game_corpus/manifest.json": "092ccc0e4cc91c03145939e3b3f4009f98a59c59419185fee2f6ed9af462c7ac",
+    "tests/boot_handoff_tests.c": "fcf8d47dc881e3e65c86ceb82a2654f2d35fc3d07103363c903b1c7686c0a169",
+    "tests/ppu_latch_state_tests.c": "47deae7dec0618843d873d685c0c53bb418b473066a69a7cfa54504b4e0b8caf",
+    "tests/fixtures/sameboy-v17-cgbc.state": "3b7b269b68dfd934708099cf8a1fd108d3e80d8e6a4455323993f6ef7afe6a2c",
+    "CMakeLists.txt": "607e8b492665b7a9e73ba6caf782107c709e2f7b72ba251b37a30d6d202af5ca",
+    ".github/workflows/build.yml": "ba038a8d28a602047fb98e8987f494d207ceec52594be0dc87a194781937b4b2"
+  },
+  "binary_sha256": {
+    "build/gb_headless": "cd43d491270cc529899ed51e86552073e85bd0f98e2224266b9fbcb4016fb3d4",
+    "build/gb_game_compatibility_runner": "e36197e885be7ec004e44a90dc6c548bd5a589f01b9f73cef46ce6dbb15fe7d9",
+    "build-win/GBStudio.exe": "70adf2b17862bb339aa15da1a80a73737b9867130a64e4e8ba992060d6bf3c24",
+    "build-win/gb_accuracy.dll": "eea76c46f02b1f92826d9fe0e073a646e93c890b5c2e858b5df81c26598e6db1",
+    "build-win/gb_headless.exe": "ffa368eb873766b2b1302bb4728761df57c97ebd1943fc3953081b771e8c279e",
+    "build-win/gb_pixel_filters.exe": "b8732a998c0269db14ce61887cb9f029c043f04ab70b3eae974fd069f69ff3d2",
+    "third_party/sameboy/prebuilt/gb_accuracy.dll": "eea76c46f02b1f92826d9fe0e073a646e93c890b5c2e858b5df81c26598e6db1"
+  },
+  "hardware_tests": {
+    "stage4-dmg-results.json": {
+      "PASS": 130
+    },
+    "stage4-cgb-results.json": {
+      "PASS": 15
+    },
+    "stage4-extended-results.json": {
+      "PASS": 149
+    },
+    "stage4-wine-extended-results.json": {
+      "PASS": 149
+    }
+  },
+  "native_ctest": {
+    "passed": 19,
+    "failed": 0,
+    "report": "stage4-native-tests.txt"
+  },
+  "asan_ubsan": {
+    "passed": 5,
+    "failed": 0,
+    "options": "ASAN_OPTIONS=detect_leaks=1; UBSAN_OPTIONS=halt_on_error=1",
+    "targets": [
+      "boot_handoff",
+      "ppu_latch_state",
+      "accuracy",
+      "core",
+      "loader_fuzz"
+    ],
+    "report": "stage4-sanitizer-tests.txt"
+  },
+  "python_protocols": {
+    "passed": 22,
+    "failed": 0,
+    "report": "stage4-python-tests.txt"
+  },
+  "boot_subset": {
+    "passed": 18,
+    "failed": 0,
+    "report": "stage4-boot-results.json"
+  },
+  "win32_ui": {
+    "passed": 20,
+    "failed": 0,
+    "runtime": "wine",
+    "native_manual_validation": false,
+    "report": "stage4-windows-validation.json"
+  },
+  "games": {
+    "titles": 20,
+    "runs": 28,
+    "frames_per_run": 2400,
+    "state_animation_exit_success": 28,
+    "exact_state_continuation": 28,
+    "input_changes_frame": 20,
+    "battery_applicable": 17,
+    "battery_ram_roundtrip_exact": 17,
+    "battery_ram_changed_since_load": 14,
+    "nonzero_pcm": 25,
+    "bit_exact_pcm_continuation": 0,
+    "report": "stage4-game-results.json"
+  },
+  "limitations": [
+    "Preview: native Windows manual GUI, GPU, audible audio and physical devices NOT_RUN.",
+    "Published-game smoke runs are not full-game completion or a commercial library compatibility claim.",
+    "Exact PCM output after state restore is not established; report keeps all differences.",
+    "Manufacturer boot ROM was not executed; replacement-firmware handoff profile is tested.",
+    "Wine extended run had one cold-start timeout; unchanged test passed retry and initial attempt remains visible.",
+    "Older native layout imports via BESS without exact old PPU/DMA/APU phase continuation.",
+    "Remote GitHub Actions was updated but not executed in this session."
+  ],
+  "game_supplement": {
+    "title": "Tobu Tobu Girl Deluxe",
+    "runs": 2,
+    "frames_per_run": 3000,
+    "models": [
+      "dmg",
+      "cgb"
+    ],
+    "state_animation_success": 2,
+    "dmg_frame_3000_colors": 4,
+    "cgb_frame_3000_colors": 17,
+    "scope": "Fresh separate runs; unchanged main corpus results. The DMG frame2400 was uniform, frame3000 again shows gameplay; no persistent freeze reproduced.",
+    "report": "stage4-tobu-followup-results.json"
+  },
+  "game_evidence_integrity_test": {
+    "passed": 1,
+    "failed": 0,
+    "report": "stage4-game-harness-test.txt"
+  },
+  "release": {
+    "tag": "v1.0.0-preview.4",
+    "prerelease": true,
+    "target_repository": "MyasAlex/GameBoy-Studio",
+    "note": "Publication workflow, download links and release notes updated after validation; all application binaries remain byte-identical to the tested local build."
+  }
+}

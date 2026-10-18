@@ -274,8 +274,13 @@ static void cycle_write(GB_gameboy_t *gb, uint16_t addr, uint8_t value)
             
         case GB_CONFLICT_LCDC_CGB: {
             uint8_t old = gb->io_registers[GB_IO_LCDC];
-            if ((~value & old) & GB_LCDC_TILE_SEL) {
+            if ((value ^ old) & GB_LCDC_TILE_SEL) {
                 GB_advance_cycles(gb, gb->pending_cycles);
+                /* Freeze the last real high-plane read on a falling edge.
+                   A previous glitched output can differ from that bus byte. */
+                if ((~value & old) & GB_LCDC_TILE_SEL) {
+                    gb->data_for_sel_glitch = gb->last_tile_data_bus;
+                }
                 GB_write_memory(gb, addr, value);
                 gb->tile_sel_glitch = true;
                 GB_advance_cycles(gb, 1);
@@ -293,6 +298,9 @@ static void cycle_write(GB_gameboy_t *gb, uint16_t addr, uint8_t value)
             uint8_t old = gb->io_registers[GB_IO_LCDC];
             // TODO: Verify for CGB ≤ C for BG_EN and OBJ_EN.
             GB_advance_cycles(gb, gb->pending_cycles - 2);
+            if ((~value & old) & GB_LCDC_TILE_SEL) {
+                gb->data_for_sel_glitch = gb->last_tile_data_bus;
+            }
             GB_write_memory(gb, addr, (value & ~(GB_LCDC_BG_EN | GB_LCDC_ENABLE)) | (old & (GB_LCDC_BG_EN | GB_LCDC_ENABLE)));
             // TODO: This condition is different from single speed mode. Why? What about odd modes?
             gb->tile_sel_glitch = ((value ^ old) & GB_LCDC_TILE_SEL);

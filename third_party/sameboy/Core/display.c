@@ -892,11 +892,9 @@ static uint8_t data_for_tile_sel_glitch(GB_gameboy_t *gb, bool *should_use, bool
         }
         *cgb_d_glitch = true;
         *should_use = false;
-        gb->last_tile_data_address &= ~0x1000;
-        if (gb->fetcher_state == GB_FETCHER_GET_TILE_DATA_LOWER_T2) {
-            *cgb_d_glitch = true;
-            return 0;
-        }
+        /* CGB-D observes the new signed tile area on the falling edge.
+           The shared $8800-$8fff area keeps the same address. */
+        if (!(gb->current_tile & 0x80)) gb->last_tile_data_address |= 0x1000;
         return 0;
     }
     return gb->data_for_sel_glitch;
@@ -925,7 +923,9 @@ static void advance_fetcher_state_machine(GB_gameboy_t *gb, unsigned *cycles)
             GB_update_wx_glitch(gb);
             uint16_t map = 0x1800;
             
-            if (!(gb->io_registers[GB_IO_LCDC] & GB_LCDC_WIN_ENABLE)) {
+            /* CGB samples window enable during the tile address stage; DMG
+               samples it with the tile-index VRAM read on the following dot. */
+            if (GB_is_cgb(gb) && !(gb->io_registers[GB_IO_LCDC] & GB_LCDC_WIN_ENABLE)) {
                 gb->wx_triggered = false;
             }
             
@@ -962,6 +962,9 @@ static void advance_fetcher_state_machine(GB_gameboy_t *gb, unsigned *cycles)
             }
             dma_sync(gb, cycles);
             if (!GB_is_cgb(gb)) {
+                if (!(gb->io_registers[GB_IO_LCDC] & GB_LCDC_WIN_ENABLE)) {
+                    gb->wx_triggered = false;
+                }
                 unsigned map_bit=gb->wx_triggered?GB_LCDC_WIN_MAP:GB_LCDC_BG_MAP;
                 gb->last_tile_index_address=0x1800+(gb->last_tile_index_address&31)+(fetcher_y(gb)/8)*32+((gb->io_registers[GB_IO_LCDC]&map_bit)?0x400:0);
             }
@@ -1020,10 +1023,7 @@ static void advance_fetcher_state_machine(GB_gameboy_t *gb, unsigned *cycles)
                 gb->current_tile_data[0] = vram_read(gb, gb->last_tile_data_address);
             }
             if (gb->last_tileset && gb->tile_sel_glitch) {
-                gb->data_for_sel_glitch = vram_read(gb, gb->last_tile_data_address);
-            }
-            else if (cgb_d_glitch) {
-                gb->data_for_sel_glitch = vram_read(gb, gb->last_tile_data_address & ~0x1000);
+                gb->data_for_sel_glitch = vram_read(gb, cgb_d_glitch? gb->last_tile_data_address & ~0x1000 : gb->last_tile_data_address);
             }
         }
         gb->fetcher_state++;
@@ -1077,16 +1077,18 @@ static void advance_fetcher_state_machine(GB_gameboy_t *gb, unsigned *cycles)
                     gb->last_tile_data_address--;
                 }
             }
+            /* A rising TILE_SEL edge substitutes the retained byte at the
+               pixel latch; the VRAM read still updates the physical bus.
+               Capture that raw byte separately for the next falling edge. */
+            gb->last_tile_data_bus = vram_read(gb, gb->last_tile_data_address);
             if (!use_glitched) {
-                gb->data_for_sel_glitch = gb->current_tile_data[1] =
-                    vram_read(gb, gb->last_tile_data_address);
+                gb->current_tile_data[1] = gb->last_tile_data_bus;
             }
             if (gb->last_tileset && gb->tile_sel_glitch) {
-                gb->data_for_sel_glitch = vram_read(gb, gb->last_tile_data_address);
-
-            }
-            else if (cgb_d_glitch) {
-                gb->data_for_sel_glitch = vram_read(gb, (gb->tile_sel_glitch & ~0x1000) + 1);
+                /* The retained bus comes from the unsigned high-plane
+                   address even when CGB-D routes the signed low plane to
+                   the pixel latch. */
+                gb->data_for_sel_glitch = vram_read(gb, cgb_d_glitch? (gb->last_tile_data_address & ~0x1000) + 1 : gb->last_tile_data_address);
             }
         }
         if (gb->wx_triggered) {
@@ -1337,6 +1339,9 @@ activate_window:
     
     gb->fetcher_state = (160 - pixels) & 7;
     get_tile_data(gb, tile_x, y, map, &attributes, &data0, &data1);
+    /* Preserve the last completed high-plane read before the pixels shift
+       its byte away. The bus precedes the horizontal-flip pixel wiring. */
+    gb->last_tile_data_bus = (attributes & 0x20)? flip(data1) : data1;
     while (pixels < 160) {
         if (check_window && gb->io_registers[GB_IO_WX] == pixels + 7) {
             goto activate_window;
@@ -1346,6 +1351,10 @@ activate_window:
     tile_x++;
 
     get_tile_data(gb, tile_x, y, map, &attributes, gb->current_tile_data, gb->current_tile_data + 1);
+    if (gb->fetcher_state == GB_FETCHER_GET_TILE_T1 ||
+        gb->fetcher_state >= GB_FETCHER_PUSH) {
+        gb->last_tile_data_bus = (attributes & 0x20)? flip(gb->current_tile_data[1]) : gb->current_tile_data[1];
+    }
 #undef DO_PIXEL
 }
 
@@ -1918,13 +1927,9 @@ void GB_display_run(GB_gameboy_t *gb, unsigned cycles, bool force)
                         }
                         else if (!GB_is_cgb(gb) && gb->io_registers[GB_IO_WX] == (uint8_t) (gb->position_in_line + 6) && !gb->wx_just_changed) {
                             should_activate_window = true;
-                            /* LCD-PPU horizontal desync! It only appears to happen on DMGs, but not all of them.
-                               This doesn't seem to be CPU revision dependent, but most revisions */
-                            if ((gb->model & GB_MODEL_FAMILY_MASK) == GB_MODEL_DMG_FAMILY && !GB_is_sgb(gb)) {
-                                if (gb->lcd_x > 0) {
-                                    gb->lcd_x--;
-                                }
-                            }
+                            /* Some DMG units also desynchronize LCD scanout here.
+                               Keep the profile for units without that unit-dependent
+                               behavior: late activation does not discard a screen pixel. */
                         }
                     }
                     

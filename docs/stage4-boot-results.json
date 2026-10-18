@@ -1,0 +1,546 @@
+{
+  "created_utc": "2026-10-18T08:09:53.155390+00:00",
+  "validation_provenance": "Fresh execution after recovery of the execution environment; no results reconstructed from prior runs.",
+  "source_release": "https://github.com/c-sp/game-boy-test-roms/releases/tag/v7.0",
+  "source_archive_sha256": "b9a9d7a1075aa35a3d07c07c34974048672d8520dca9e07a50178f5860c3832c",
+  "boot_firmware": {
+    "source": "bundled_sameboy_replacement",
+    "profile": "DMG ABC/MGB cartridge handoff phase",
+    "original_boot_rom_used": false
+  },
+  "limitations": "This validates a native initial handoff profile after SameBoy replacement firmware, not execution of manufacturer boot ROM. Pocket and Light use the same MGB electrical model. Other boot hardware revisions and full power-on audio/RAM state are not certified. See BOOT_HANDOFF.md. A fresh baseline executable was not built in this recovery run; historical failures remain in stage2-boot-results.json.",
+  "binaries": {
+    "recovered_final": {
+      "path": "build-ppu-tile/gb_headless",
+      "sha256": "40b12d456a9a40b18101762486b2782e3d093ad4b207255b95afc81041cf980f"
+    }
+  },
+  "sources": {
+    "src/accuracy_bridge.c": "747ec630b3425e244364293dd3c0cbc5b5888fd7c5f699901a2d686deefd93d3",
+    "tests/boot_handoff_tests.c": "fcf8d47dc881e3e65c86ceb82a2654f2d35fc3d07103363c903b1c7686c0a169",
+    "third_party/sameboy/Core/display.c": "4729d5f6e7e9ad7feb4a59f1aa6175b2521c30371f4a934b8359be6d3cdd8672",
+    "third_party/sameboy/Core/gb.h": "6b58277bfe462acb32b9bbec6722ff26ce84500b4a82f3fccf2cbe58c3342068",
+    "third_party/sameboy/Core/sm83_cpu.c": "38b94d1350a0bff37a06857de20882a3bd0dfd25c8ca2daaaccb08916fab852f"
+  },
+  "summary": {
+    "recovered_final": {
+      "PASS": 18,
+      "FAIL": 0
+    }
+  },
+  "native_regression": {
+    "target": "gb_boot_handoff_tests",
+    "returncode": 0,
+    "status": "PASS",
+    "output": "PASS model=2 replacement handoff, reset and serial snapshot continuation\nPASS model=100 replacement handoff, reset and serial snapshot continuation\nPASS supplied firmware retains its own DIV/LCD handoff\nPASS model=2 replacement handoff, reset and serial snapshot continuation\nPASS supplied firmware retains its own DIV/LCD handoff\nPASS MBC6 respects default, DMG and two-segment CGB boot overlays\n",
+    "stderr": "",
+    "binary_sha256": "ffef8eafbfcf2b90cd2941f5ced74e2c59cdf84f40e4d90faa1766be0244301e",
+    "binary_path": "build-boot/gb_boot_handoff_tests"
+  },
+  "results": [
+    {
+      "version": "recovered_final",
+      "group": "Boot handoff",
+      "rom": "acceptance/boot_div-dmgABCmgb.gb",
+      "rom_sha256": "77448f882c19da0f0a3296dbad6b147716a23428bc1a2a35f3c905dafef05fb3",
+      "model": "dmg",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/boot_div-dmgABCmgb.gb",
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94385 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.186
+    },
+    {
+      "version": "recovered_final",
+      "group": "Boot handoff",
+      "rom": "acceptance/boot_hwio-dmgABCmgb.gb",
+      "rom_sha256": "01aa82657e1b4cc8dfa8b2b45ad248de240eab1330a847389453a794c30b2591",
+      "model": "dmg",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/boot_hwio-dmgABCmgb.gb",
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\nframes=10 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=92972 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.149
+    },
+    {
+      "version": "recovered_final",
+      "group": "Boot handoff",
+      "rom": "acceptance/serial/boot_sclk_align-dmgABCmgb.gb",
+      "rom_sha256": "b727e0eae7cefb9d5f3bbc9d7eaca33d69c24f745a60c6d3d2eb2a9c2f038278",
+      "model": "dmg",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/serial/boot_sclk_align-dmgABCmgb.gb",
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\u0000\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94849 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.165
+    },
+    {
+      "version": "recovered_final",
+      "group": "Boot handoff",
+      "rom": "acceptance/boot_div-dmgABCmgb.gb",
+      "rom_sha256": "77448f882c19da0f0a3296dbad6b147716a23428bc1a2a35f3c905dafef05fb3",
+      "model": "pocket",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/boot_div-dmgABCmgb.gb",
+        "--model",
+        "pocket",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "pocket",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94385 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.171
+    },
+    {
+      "version": "recovered_final",
+      "group": "Boot handoff",
+      "rom": "acceptance/boot_hwio-dmgABCmgb.gb",
+      "rom_sha256": "01aa82657e1b4cc8dfa8b2b45ad248de240eab1330a847389453a794c30b2591",
+      "model": "pocket",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/boot_hwio-dmgABCmgb.gb",
+        "--model",
+        "pocket",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "pocket",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\nframes=10 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=92972 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.145
+    },
+    {
+      "version": "recovered_final",
+      "group": "Boot handoff",
+      "rom": "acceptance/serial/boot_sclk_align-dmgABCmgb.gb",
+      "rom_sha256": "b727e0eae7cefb9d5f3bbc9d7eaca33d69c24f745a60c6d3d2eb2a9c2f038278",
+      "model": "pocket",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/serial/boot_sclk_align-dmgABCmgb.gb",
+        "--model",
+        "pocket",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "pocket",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\u0000\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94849 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.167
+    },
+    {
+      "version": "recovered_final",
+      "group": "Boot handoff",
+      "rom": "acceptance/boot_div-dmgABCmgb.gb",
+      "rom_sha256": "77448f882c19da0f0a3296dbad6b147716a23428bc1a2a35f3c905dafef05fb3",
+      "model": "light",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/boot_div-dmgABCmgb.gb",
+        "--model",
+        "light",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "light",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94385 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.151
+    },
+    {
+      "version": "recovered_final",
+      "group": "Boot handoff",
+      "rom": "acceptance/boot_hwio-dmgABCmgb.gb",
+      "rom_sha256": "01aa82657e1b4cc8dfa8b2b45ad248de240eab1330a847389453a794c30b2591",
+      "model": "light",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/boot_hwio-dmgABCmgb.gb",
+        "--model",
+        "light",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "light",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\nframes=10 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=92972 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.177
+    },
+    {
+      "version": "recovered_final",
+      "group": "Boot handoff",
+      "rom": "acceptance/serial/boot_sclk_align-dmgABCmgb.gb",
+      "rom_sha256": "b727e0eae7cefb9d5f3bbc9d7eaca33d69c24f745a60c6d3d2eb2a9c2f038278",
+      "model": "light",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/serial/boot_sclk_align-dmgABCmgb.gb",
+        "--model",
+        "light",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "light",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\u0000\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94849 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.169
+    },
+    {
+      "version": "recovered_final",
+      "group": "Boot CPU registers",
+      "rom": "acceptance/boot_regs-dmgABC.gb",
+      "rom_sha256": "0c1800a5d4d978d11426e5e54e5bcc014b4d8d2c8a63f402d7ddf96c501f2a92",
+      "model": "dmg",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/boot_regs-dmgABC.gb",
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94239 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.207
+    },
+    {
+      "version": "recovered_final",
+      "group": "Boot CPU registers",
+      "rom": "acceptance/boot_regs-mgb.gb",
+      "rom_sha256": "6f2be96cb0fba205591b616fa5f413127f0e7fd1a8b8a0bf977fcbcbafe9619b",
+      "model": "pocket",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/boot_regs-mgb.gb",
+        "--model",
+        "pocket",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "pocket",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94241 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.138
+    },
+    {
+      "version": "recovered_final",
+      "group": "Boot CPU registers",
+      "rom": "acceptance/boot_regs-mgb.gb",
+      "rom_sha256": "6f2be96cb0fba205591b616fa5f413127f0e7fd1a8b8a0bf977fcbcbafe9619b",
+      "model": "light",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/boot_regs-mgb.gb",
+        "--model",
+        "light",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "light",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94241 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.183
+    },
+    {
+      "version": "recovered_final",
+      "group": "Timer neighbors",
+      "rom": "acceptance/div_timing.gb",
+      "rom_sha256": "26d6c1e66750b56b894131898bc896fc9fe56aa2a46199bcc6514e658cd996bd",
+      "model": "dmg",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/div_timing.gb",
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94259 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.169
+    },
+    {
+      "version": "recovered_final",
+      "group": "Timer neighbors",
+      "rom": "acceptance/timer/div_write.gb",
+      "rom_sha256": "b647f603c71d942a5c4ab92e6d2336af3fd9729e95a845b1561bd8e7c06163b5",
+      "model": "dmg",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/timer/div_write.gb",
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\nframes=51 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=485433 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.31
+    },
+    {
+      "version": "recovered_final",
+      "group": "Timer neighbors",
+      "rom": "acceptance/timer/tim00_div_trigger.gb",
+      "rom_sha256": "8dfe42b6bc78b64aaafe0e1eab10e8c4c487e25285d0419b1485b2e9e0094cc4",
+      "model": "dmg",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/timer/tim00_div_trigger.gb",
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94252 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.136
+    },
+    {
+      "version": "recovered_final",
+      "group": "Timer neighbors",
+      "rom": "acceptance/timer/tim01_div_trigger.gb",
+      "rom_sha256": "d65804dcaaaeb907002cd5cdec1ecbec3edc1e7e1d95323ae306ba9a5bacb7ce",
+      "model": "dmg",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/timer/tim01_div_trigger.gb",
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94101 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.175
+    },
+    {
+      "version": "recovered_final",
+      "group": "Timer neighbors",
+      "rom": "acceptance/timer/tim10_div_trigger.gb",
+      "rom_sha256": "f0d16cccfde31a51758d68c261c7b72529c0c1143e6ddb3423d50a0ba4c45de1",
+      "model": "dmg",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/timer/tim10_div_trigger.gb",
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94118 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.172
+    },
+    {
+      "version": "recovered_final",
+      "group": "Timer neighbors",
+      "rom": "acceptance/timer/tim11_div_trigger.gb",
+      "rom_sha256": "14982050eb7713c149841dfd91c6d733821e1dcfb3b1c7c6fbc14e17f692821b",
+      "model": "dmg",
+      "command": [
+        "/workspace/GameBoy-Studio-main/build-ppu-tile/gb_headless",
+        "/workspace/GameBoy-Studio-main/build/extended-suite/mooneye-test-suite/acceptance/timer/tim11_div_trigger.gb",
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "options": [
+        "--model",
+        "dmg",
+        "--mooneye",
+        "--frames",
+        "20000"
+      ],
+      "returncode": 0,
+      "status": "PASS",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94131 stop=budget\nRESULT: PASS\n",
+      "stderr": "",
+      "seconds": 0.14
+    }
+  ]
+}

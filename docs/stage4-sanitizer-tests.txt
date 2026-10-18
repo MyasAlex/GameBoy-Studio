@@ -1,0 +1,15 @@
+Test project /workspace/GameBoy-Studio-main/build-sanitize
+    Start  2: boot_handoff
+1/5 Test  #2: boot_handoff .....................   Passed   25.18 sec
+    Start  3: ppu_latch_state
+2/5 Test  #3: ppu_latch_state ..................   Passed    0.26 sec
+    Start  7: accuracy
+3/5 Test  #7: accuracy .........................   Passed  131.50 sec
+    Start  8: core
+4/5 Test  #8: core .............................   Passed    7.92 sec
+    Start 19: loader_fuzz
+5/5 Test #19: loader_fuzz ......................   Passed   11.60 sec
+
+100% tests passed out of 5
+
+Total Test time (real) = 176.46 sec

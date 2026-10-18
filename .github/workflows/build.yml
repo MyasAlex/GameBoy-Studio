@@ -19,17 +19,22 @@ jobs:
           python3 -m unittest discover -s tests -p test_extended_harness.py
           python3 -m unittest discover -s tests -p test_fetch_extended_suite.py
           python3 -m unittest discover -s tests -p test_rom_test_runner.py
+          python3 -m unittest discover -s tests -p test_game_corpus_harness.py
           python3 tests/test_headless_protocols.py --emulator build/gb_headless --demo demo.gb
       - run: |
-          python3 tests/run_rom_tests.py --emulator build/gb_headless --download --mooneye || true
+          python3 tests/run_rom_tests.py --emulator build/gb_headless --download --mooneye
           python3 tests/check_compatibility_regressions.py --current build/rom-tests.json --baseline docs/1.0-dmg-results.json
       - run: python3 tests/run_cgb_tests.py --emulator build/gb_headless --download
       - name: Verify PPU fixes and extended compatibility
         run: |
           python3 tests/fetch_extended_suite.py --output build/extended-suite
-          python3 tests/run_extended_tests.py --emulator build/gb_headless --suite build/extended-suite --rom m3_lcdc_obj_size_change_scx --rom m3_wx_4_change_sprites --rom m3_lcdc_obj_size_change --rom m3_wx_4_change --report build/ppu-regressions.json
-          python3 tests/run_extended_tests.py --emulator build/gb_headless --suite build/extended-suite --report build/extended-results.json || true
+          python3 tests/run_extended_tests.py --emulator build/gb_headless --suite build/extended-suite --rom m3_lcdc_obj_size_change_scx --rom m3_wx_4_change_sprites --rom m3_lcdc_obj_size_change --rom m3_wx_4_change --rom m3_lcdc_tile_sel_change --rom m3_lcdc_tile_sel_change2 --rom m3_lcdc_tile_sel_win_change --rom m3_lcdc_tile_sel_win_change2 --rom m3_lcdc_win_en_change_multiple_wx --report build/ppu-regressions.json
+          python3 tests/run_extended_tests.py --emulator build/gb_headless --suite build/extended-suite --report build/extended-results.json
           python3 tests/check_compatibility_regressions.py --current build/extended-results.json --baseline docs/stage2-extended-results.json
+      - name: Exercise pinned published games
+        run: |
+          python3 tests/fetch_game_corpus.py build/game-corpus
+          python3 tests/run_game_compatibility.py --executable build/gb_game_compatibility_runner --corpus build/game-corpus --output build/game-results --frames 2400 --jobs 2
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -39,6 +44,7 @@ jobs:
             build/cgb-rom-tests.json
             build/ppu-regressions.json
             build/extended-results.json
+            build/game-results
   sanitizers:
     runs-on: ubuntu-latest
     steps:
@@ -79,11 +85,14 @@ jobs:
           python -m unittest discover -s tests -p test_extended_harness.py
           python -m unittest discover -s tests -p test_fetch_extended_suite.py
           python -m unittest discover -s tests -p test_rom_test_runner.py
+          python -m unittest discover -s tests -p test_game_corpus_harness.py
           python tests/test_headless_protocols.py --emulator build/Release/gb_headless.exe --demo demo.gb
       - name: Verify PPU fixes on the packaged Windows core
         run: |
           python tests/fetch_extended_suite.py --output build/extended-suite
-          python tests/run_extended_tests.py --emulator build/Release/gb_headless.exe --suite build/extended-suite --rom m3_lcdc_obj_size_change_scx --rom m3_wx_4_change_sprites --rom m3_lcdc_obj_size_change --rom m3_wx_4_change --report build/ppu-regressions.json
+          python tests/run_extended_tests.py --emulator build/Release/gb_headless.exe --suite build/extended-suite --rom m3_lcdc_obj_size_change_scx --rom m3_wx_4_change_sprites --rom m3_lcdc_obj_size_change --rom m3_wx_4_change --rom m3_lcdc_tile_sel_change --rom m3_lcdc_tile_sel_change2 --rom m3_lcdc_tile_sel_win_change --rom m3_lcdc_tile_sel_win_change2 --rom m3_lcdc_win_en_change_multiple_wx --report build/ppu-regressions.json
+      - name: Verify DMG boot and hardware tests on the packaged core
+        run: python tests/run_rom_tests.py --emulator build/Release/gb_headless.exe --download --mooneye --report build/windows-dmg-results.json
       - run: cmake --install build --config Release --prefix dist
       - name: Run native CPU rendering and demo checks
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File RUN_WINDOWS_QA.ps1 -OutputFolder build/windows-qa
@@ -92,7 +101,9 @@ jobs:
         run: |
           Compress-Archive -Path dist/* -DestinationPath GBStudio-Windows-x64.zip
           git archive --format=zip --prefix=GameBoy-Studio/ -o GameBoy-Studio-source.zip HEAD
-          @('GBStudio-Windows-x64.zip','GameBoy-Studio-source.zip') | ForEach-Object {
+          Copy-Item dist/GBStudio.exe,dist/gb_accuracy.dll,dist/gb_pixel_filters.exe .
+          Copy-Item dist/tools/gb_headless.exe .
+          @('GBStudio-Windows-x64.zip','GameBoy-Studio-source.zip','GBStudio.exe','gb_accuracy.dll','gb_pixel_filters.exe','gb_headless.exe') | ForEach-Object {
             $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $_).Hash.ToLowerInvariant()
             "$hash  $_"
           } | Set-Content -Encoding ascii SHA256SUMS.txt
@@ -102,9 +113,14 @@ jobs:
           path: |
             GBStudio-Windows-x64.zip
             GameBoy-Studio-source.zip
+            GBStudio.exe
+            gb_accuracy.dll
+            gb_pixel_filters.exe
+            gb_headless.exe
             SHA256SUMS.txt
             build/windows-qa
             build/ppu-regressions.json
+            build/windows-dmg-results.json
   release:
     if: startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push'
     needs: [linux-tests, sanitizers, windows-build]
@@ -122,4 +138,18 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ github.ref_name }}
-        run: gh release create "$RELEASE_TAG" artifacts/* --verify-tag --title "GameBoy Studio $RELEASE_TAG" --notes-file docs/RELEASE_NOTES.md
+        shell: bash
+        run: |
+          # Keep the exact asset set of a release already published manually.
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Release already published; its verified assets are preserved."
+            exit 0
+          fi
+          flags=()
+          if [[ "$RELEASE_TAG" == *-* ]]; then flags+=(--prerelease); fi
+          gh release create "$RELEASE_TAG" \
+            artifacts/GBStudio-Windows-x64.zip artifacts/GameBoy-Studio-source.zip \
+            artifacts/GBStudio.exe artifacts/gb_accuracy.dll \
+            artifacts/gb_pixel_filters.exe artifacts/gb_headless.exe artifacts/SHA256SUMS.txt \
+            --verify-tag --title "GameBoy Studio $RELEASE_TAG" \
+            --notes-file docs/RELEASE_NOTES.md "${flags[@]}"

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "runtime": "wine",
+  "native_manual_validation": false,
+  "checks": [
+    {"name": "visible main window obtains foreground focus", "status": "PASS"},
+    {"name": "keyboard press reaches the emulated A button", "status": "PASS"},
+    {"name": "keyboard release clears the emulated A button", "status": "PASS"},
+    {"name": "repeated pause key does not toggle twice", "status": "PASS"},
+    {"name": "next distinct pause key resumes", "status": "PASS"},
+    {"name": "virtual A button captures mouse and presses A", "status": "PASS"},
+    {"name": "mouse release clears virtual A and capture", "status": "PASS"},
+    {"name": "capture transfer releases virtual input and preserves new owner", "status": "PASS"},
+    {"name": "foreground numpad tilt signal reaches cartridge", "status": "PASS"},
+    {"name": "focus transfer reaches a second top-level window", "status": "PASS"},
+    {"name": "focus loss releases keyboard, virtual buttons and capture", "status": "PASS"},
+    {"name": "focus loss clears held turbo and rewind", "status": "PASS"},
+    {"name": "focus loss pauses a running game", "status": "PASS"},
+    {"name": "background numpad tilt cannot change cartridge input", "status": "PASS"},
+    {"name": "background execution keeps rumble silent", "status": "PASS"},
+    {"name": "focus return resumes a game paused by focus loss", "status": "PASS"},
+    {"name": "foreground cartridge rumble reaches XInput callback", "status": "PASS"},
+    {"name": "normal-speed menu clears turbo and selects 1x", "status": "PASS"},
+    {"name": "quick-save slot menu selects slot nine", "status": "PASS"},
+    {"name": "fullscreen command and Escape restore window", "status": "PASS"}
+  ],
+  "scope": "Visible Win32 window messages, focus/capture transitions, menus and fullscreen. XInput and asynchronous tilt-key reads are deterministic test doubles. Physical controllers, GPU output, audible sound and human usability are outside this automated check."
+}

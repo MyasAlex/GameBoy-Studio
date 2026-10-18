@@ -1,0 +1,1 @@
+PASS: changed reference hash rejected; all unchanged stage2 ROM/reference hashes verified by stage4-extended-regression-comparison.json.

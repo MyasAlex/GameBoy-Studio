@@ -18,6 +18,10 @@ for key,row in old.items():
     result=new.get(key)
     if result is None:errors.append(('missing',key));continue
     if row.get('sha256')!=result.get('sha256'):errors.append(('input hash changed',key));continue
+    if row.get('expected_sha256')!=result.get('expected_sha256'):
+        errors.append(('reference image hash changed',key));continue
+    if row.get('model')!=result.get('model'):
+        errors.append(('hardware model changed',key));continue
     if result['status']!='PASS' and result['status']!=row['status']:errors.append(('status regression',key))
     if row['status']=='PASS' and result['status']!='PASS':errors.append(('new failure',key))
 for key,row in new.items():

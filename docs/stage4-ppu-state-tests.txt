@@ -1,0 +1,17 @@
+PASS model=203 restored_at=44 low=a5 high=3c native_continuation_equal=yes
+PASS model=203 restored_at=20 low=a5 high=3c native_continuation_equal=yes
+PASS model=203 synthetic_v16_tag BESS_fallback=yes no_BESS_rejected=yes
+PASS model=203 synthetic_v17_tag BESS_fallback=yes no_BESS_rejected=yes
+PASS model=203 glitched_high_checkpoint raw=33 output=aa continuation_equal=yes
+PASS model=203 batched_vs_stepped_bus_and_pixels SCX=0..7 horizontal_flip=0..1
+PASS model=204 restored_at=44 low=a5 high=3c native_continuation_equal=yes
+PASS model=204 restored_at=20 low=a5 high=3c native_continuation_equal=yes
+PASS model=204 synthetic_v16_tag BESS_fallback=yes no_BESS_rejected=yes
+PASS model=204 synthetic_v17_tag BESS_fallback=yes no_BESS_rejected=yes
+PASS model=204 glitched_high_checkpoint raw=33 output=aa continuation_equal=yes
+PASS model=204 batched_vs_stepped_bus_and_pixels SCX=0..7 horizontal_flip=0..1
+PASS model=2 restored_at=44 low=5a high=3c native_continuation_equal=yes
+PASS model=2 restored_at=20 low=5a high=3c native_continuation_equal=yes
+PASS model=2 synthetic_v16_tag BESS_fallback=yes no_BESS_rejected=yes
+PASS model=2 synthetic_v17_tag BESS_fallback=yes no_BESS_rejected=yes
+PASS genuine_v17_layout BESS_fallback=yes WRAM_marker=94 no_BESS_rejected=yes

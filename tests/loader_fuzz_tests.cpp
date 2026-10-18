@@ -28,5 +28,23 @@ int main(int argc,char** argv){CHECK(argc>=2);const auto folder=std::filesystem:
     std::vector<u8> gzip={0x1F,0x8B,8,0,0,0,0,0,0,255};gzip.insert(gzip.end(),deflate.begin()+2,deflate.begin()+compressed-4);
     saves::put32(gzip,(u32)mz_crc32(0,rom.data(),rom.size()));saves::put32(gzip,(u32)rom.size());CHECK(Memory::writeAtomic(path,{(char*)gzip.data(),gzip.size()}));CHECK(archives::read(path).rom==rom);
     gzip[gzip.size()-8]^=1;CHECK(Memory::writeAtomic(path,{(char*)gzip.data(),gzip.size()}));CHECK(!archives::read(path));
+    // Released single-bank homebrew must work through both archive routes.
+    // Banked 16 KiB images remain rejected as truncated cartridges.
+    auto single=std::vector<u8>(rom.begin(),rom.begin()+16384);
+    for(u8 type:{u8(0),u8(1)}){
+        single[0x147]=type;
+        mz_zip_archive smallZip{};CHECK(mz_zip_writer_init_heap(&smallZip,0,0));
+        CHECK(mz_zip_writer_add_mem(&smallZip,"single.gb",single.data(),single.size(),MZ_BEST_COMPRESSION));
+        void* packed=nullptr;size_t packedSize=0;CHECK(mz_zip_writer_finalize_heap_archive(&smallZip,&packed,&packedSize));
+        CHECK(Memory::writeAtomic(path,{(char*)packed,packedSize}));mz_free(packed);mz_zip_writer_end(&smallZip);
+        const auto zipResult=archives::read(path);CHECK(type?!zipResult:zipResult.rom==single);
+        mz_ulong bound=mz_compressBound((mz_ulong)single.size());std::vector<u8> compressedSingle(bound);
+        CHECK(mz_compress2(compressedSingle.data(),&bound,single.data(),(mz_ulong)single.size(),9)==MZ_OK);
+        std::vector<u8> smallGzip={0x1F,0x8B,8,0,0,0,0,0,0,255};
+        smallGzip.insert(smallGzip.end(),compressedSingle.begin()+2,compressedSingle.begin()+bound-4);
+        saves::put32(smallGzip,(u32)mz_crc32(0,single.data(),single.size()));saves::put32(smallGzip,(u32)single.size());
+        CHECK(Memory::writeAtomic(path,{(char*)smallGzip.data(),smallGzip.size()}));
+        const auto gzipResult=archives::read(path);CHECK(type?!gzipResult:gzipResult.rom==single);
+    }
     std::cout<<"Loader fuzz PASS: 800 state mutations ("<<accepted<<" valid, "<<rejected<<" rejected atomically), 250 ROM/archive mutations, valid/truncated ZIP\n";
 }

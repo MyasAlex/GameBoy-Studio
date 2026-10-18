@@ -1,5 +1,13 @@
 # 1.0 preview — 2026-10-13
 
+## Stage 4 — 2026-10-18
+
+- Corrected CGB TILE_SEL bus retention/addressing and DMG window sampling against unchanged Mealybug references; snapshot layout is now 18 with verified BESS import for layout 17.
+- Installed the documented DMG/MGB cartridge-entry peripheral phase after replacement firmware and preserved MBC6 boot overlays.
+- Fixed four Win32 focus/capture/tilt/rumble defects; added visible-window regression checks and a manual acceptance script.
+- Added a pinned published-game corpus and input/frame/audio/save smoke tooling; fixed loading of 16 KiB unbanked homebrew in raw, ZIP and GZIP form. Native Windows hardware acceptance remains open; see STAGE4_REPORT_RU.md.
+
+
 Default SameBoy core, revisions/SGB/rare controllers, exact linked states and reconnect, achievements, GPU filters/media, expanded Studio/TAS/library/Windows tools. See FEATURE_STATUS_RU.md and RELEASE_NOTES.md for verified results and remaining work.
 
 # 0.9 beta

@@ -358,7 +358,7 @@ inline RomReport headerReport(std::span<const u8> rom) {
     if(!report.declaredRomBytes)report.warnings.push_back("Unknown ROM size code.");
     else if(report.declaredRomBytes!=rom.size())report.warnings.push_back("Actual ROM length differs from the declared ROM size.");
     if(report.ramSizeCode>=std::size(ramBytes))report.warnings.push_back("Unknown RAM size code.");
-    if(rom.size()<32768||rom.size()>8*1024*1024||rom.size()%16384)report.warnings.push_back("Core requires complete 16 KiB banks, from 32 KiB to 8 MiB.");
+    if(rom.size()<16384||rom.size()>8*1024*1024||rom.size()%16384||(rom.size()==16384&&report.cartridgeType!=0&&report.cartridgeType!=8&&report.cartridgeType!=9))report.warnings.push_back("Core requires complete 16 KiB banks (16 KiB unbanked, otherwise 32 KiB to 8 MiB).");
     if(report.sgbFlag==3)report.warnings.push_back("SGB enhancement commands and borders are not implemented.");
     return report;
 }

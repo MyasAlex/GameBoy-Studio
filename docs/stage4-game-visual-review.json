@@ -1,0 +1,400 @@
+{
+  "schema": "gameboy-studio-saved-frame-review-v1",
+  "reviewed_utc": "2026-10-18T08:16:23.438068+00:00",
+  "scope": "Assistant visual inspection of 168 sampled headless frames; not manual Windows GUI/device QA.",
+  "runner_sha256": "e36197e885be7ec004e44a90dc6c548bd5a589f01b9f73cef46ce6dbb15fe7d9",
+  "runs": [
+    {
+      "id": "2048gb",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Меняется игровое поле; достигнута плитка 64. PCM в этом сценарии нулевой."
+    },
+    {
+      "id": "adjustris",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Падающие фигуры, изменение стопки и счёта."
+    },
+    {
+      "id": "carazu",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Платформенная сцена, положение персонажа меняется."
+    },
+    {
+      "id": "geometrix",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Поле головоломки, курсор и таймер меняются в обоих режимах."
+    },
+    {
+      "id": "geometrix",
+      "model": "cgb",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Поле головоломки, курсор и таймер меняются в обоих режимах."
+    },
+    {
+      "id": "libbet",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 720,
+      "observation": "Видны изменения прогресса до кадра 720 DMG / 1200 CGB; последующие снимки одинаковы. Длительная активная игра не подтверждена."
+    },
+    {
+      "id": "libbet",
+      "model": "cgb",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 1200,
+      "observation": "Видны изменения прогресса до кадра 720 DMG / 1200 CGB; последующие снимки одинаковы. Длительная активная игра не подтверждена."
+    },
+    {
+      "id": "petris",
+      "model": "cgb",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "После заставки видны падающие фигурки и стопка."
+    },
+    {
+      "id": "postbot",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Видно поле головоломки и изменение позиции ранее; итог контрольной ветки ввода совпал с бездействием."
+    },
+    {
+      "id": "snake",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 1200,
+      "observation": "Игра и изменение счёта видны на 720/1200; на 1800/2400 присутствует надпись PAUSE+GO."
+    },
+    {
+      "id": "snake",
+      "model": "cgb",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 1200,
+      "observation": "Игра и изменение счёта видны на 720/1200; на 1800/2400 присутствует надпись PAUSE+GO."
+    },
+    {
+      "id": "sushi-nights",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 1800,
+      "observation": "Игровая сцена до 1800; на 2400 Game Over / Time’s up."
+    },
+    {
+      "id": "tobutobugirl",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "После заставок на 1800/2400 виден вертикальный уровень с персонажем и противниками."
+    },
+    {
+      "id": "tobutobugirldeluxe",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 1800,
+      "observation": "На 1800 виден игровой уровень в обоих режимах. CGB продолжает игру на 2400; DMG на 2400 одноцветный, причина не проверена."
+    },
+    {
+      "id": "tobutobugirldeluxe",
+      "model": "cgb",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "На 1800 виден игровой уровень в обоих режимах. CGB продолжает игру на 2400; DMG на 2400 одноцветный, причина не проверена."
+    },
+    {
+      "id": "tuff",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Видна игровая комната и изменение позиции персонажа; содержимое SRAM за сценарий не изменилось."
+    },
+    {
+      "id": "tuff",
+      "model": "cgb",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Видна игровая комната и изменение позиции персонажа; содержимое SRAM за сценарий не изменилось."
+    },
+    {
+      "id": "ucity",
+      "model": "cgb",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 720,
+      "observation": "Создан новый город, видны название, дата, средства и меню бюджета. Карта города не показана; ветка ввода совпала с бездействием."
+    },
+    {
+      "id": "porklike-gb",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Видна комната этажа 0; положение персонажа меняется, контрольная ветка ввода различается. Новые этажи не достигнуты."
+    },
+    {
+      "id": "gb-wordyl",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Поле и экранная клавиатура; заполнение первой строки меняется. Контрольная ветка ввода совпала; PCM нулевой."
+    },
+    {
+      "id": "gb-wordyl",
+      "model": "cgb",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Поле и экранная клавиатура; заполнение первой строки меняется. Контрольная ветка ввода совпала; PCM нулевой."
+    },
+    {
+      "id": "big2small",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Из заставки и карты мира переход в первый лесной пазл. Контрольная ветка ввода совпала; решение уровня не проверено."
+    },
+    {
+      "id": "big2small",
+      "model": "cgb",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Из заставки и карты мира переход в первый лесной пазл. Контрольная ветка ввода совпала; решение уровня не проверено."
+    },
+    {
+      "id": "shock-lobster",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 1200,
+      "observation": "Бой, изменение здоровья и счёта; к 2400 Game Over."
+    },
+    {
+      "id": "squishy-the-turtle",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Игровая сцена с персонажем, объектами и HUD; контролируемая ветка ввода различается."
+    },
+    {
+      "id": "gb-corp",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Игровая сцена управления, изменение денег и пункта New hire. Контрольная ветка ввода совпала с бездействием."
+    },
+    {
+      "id": "gb-corp",
+      "model": "cgb",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Игровая сцена управления, изменение денег и пункта New hire. Контрольная ветка ввода совпала с бездействием."
+    },
+    {
+      "id": "plantboy",
+      "model": "dmg",
+      "reviewed_frames": [
+        180,
+        360,
+        720,
+        1200,
+        1800,
+        2400
+      ],
+      "representative_frame": 2400,
+      "observation": "Оригинальный 16-КиБ ROM загружается без дописывания байтов; видны игровая сцена, персонаж и движущиеся объекты."
+    }
+  ]
+}
