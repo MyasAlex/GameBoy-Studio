@@ -1,0 +1,85 @@
+name: Publish verified Studio Core release
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Prepared release tag
+        required: true
+        default: v1.1.0
+        type: string
+      source_sha:
+        description: Verified source commit
+        required: true
+        default: 052f4296e63dfe6bf0c51023b541e2607420c61d
+        type: string
+      build_run:
+        description: Successful native build workflow run
+        required: true
+        default: '40476330785'
+        type: string
+permissions:
+  contents: read
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RELEASE_TAG: ${{ inputs.release_tag }}
+      SOURCE_SHA: ${{ inputs.source_sha }}
+      BUILD_RUN: ${{ inputs.build_run }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify successful source build
+        shell: bash
+        run: |
+          [[ "$RELEASE_TAG" == v1.1.0 ]]
+          [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$BUILD_RUN" =~ ^[0-9]+$ ]]
+          gh api "repos/$GH_REPO/actions/runs/$BUILD_RUN" > verified-build.json
+          python3 - <<'PY'
+          import json, os
+          run = json.load(open('verified-build.json'))
+          assert run['conclusion'] == 'success'
+          assert run['path'] == '.github/workflows/build.yml'
+          assert run['head_sha'] == os.environ['SOURCE_SHA']
+          assert run['head_repository']['full_name'] == os.environ['GH_REPO']
+          PY
+      - name: Verify complete archive and source manifest
+        shell: bash
+        run: |
+          cd releases/v1.1.0
+          sha256sum --check GameBoy-Studio-1.1.0.sha256
+          cd ../..
+          python3 - <<'PY'
+          import hashlib, json, os, subprocess, zipfile
+          prefix = 'GameBoy-Studio-1.1.0/'
+          with zipfile.ZipFile('releases/v1.1.0/GameBoy-Studio-1.1.0.zip') as archive:
+              assert archive.testzip() is None
+              for line in archive.read(prefix + 'SHA256SUMS.txt').decode().splitlines():
+                  expected, path = line.split('  ', 1)
+                  assert hashlib.sha256(archive.read(prefix + path)).hexdigest() == expected, path
+              manifest = json.loads(archive.read(prefix + 'docs/validation/source-sha256.json'))
+              canonical = json.dumps(manifest['files'], sort_keys=True, separators=(',', ':')).encode()
+              assert hashlib.sha256(canonical).hexdigest() == manifest['manifest_sha256']
+              for path, expected in manifest['files'].items():
+                  actual = subprocess.check_output(['git', 'show', os.environ['SOURCE_SHA'] + ':' + path])
+                  assert hashlib.sha256(actual).hexdigest() == expected, path
+          PY
+      - name: Upload and publish verified assets
+        shell: bash
+        run: |
+          gh release view "$RELEASE_TAG" --json isDraft,targetCommitish > prepared-release.json
+          python3 - <<'PY'
+          import json, os
+          release = json.load(open('prepared-release.json'))
+          assert release['isDraft'], 'Refusing to overwrite an already published release'
+          assert release['targetCommitish'] == os.environ['SOURCE_SHA']
+          PY
+          gh release upload "$RELEASE_TAG" releases/v1.1.0/GameBoy-Studio-1.1.0.zip releases/v1.1.0/GameBoy-Studio-1.1.0.sha256 --clobber
+          gh release edit "$RELEASE_TAG" --draft=false --latest --title "GameBoy Studio 1.1.0 — Studio Core" --notes-file docs/RELEASE_NOTES.md
