@@ -1,7 +1,8 @@
 #pragma once
 // Game Boy Studio - original DMG/CGB core, clocked at individual CPU bus accesses.
 // No copyrighted ROM or Nintendo boot ROM is included.
-#include "accuracy_api.h"
+#include "core_inspection.hpp"
+#include "state_codec.hpp"
 #include <algorithm>
 #include <array>
 #include <chrono>
@@ -60,6 +61,8 @@ public:
     bool ramEnabled=false, hasBattery=false, hasRTC=false, cgbROM=false;
     bool cgbMode=false,doubleSpeed=false,cpuHalted=false;
     bool cgbHardware=false,dmgCompatibility=false,rumbleActive=false,hucIRMode=false,hucIRLight=false;
+    // Immutable hardware profile for timing/revision rules in the native units.
+    HardwareModel hardwareModel=HardwareModel::Auto;
     int serialBits=0;
     std::function<void()> serialClock;
     std::function<bool()> infraredInput;
@@ -101,7 +104,6 @@ public:
     std::function<bool()> externalBatterySave;
     std::function<std::size_t(bool)> externalROMBank;
     std::function<void(unsigned,std::size_t,u8)> externalPoke;
-    bool extendedControllers=false;
     void pokeVRAM(unsigned bank,std::size_t offset,u8 value){if(bank>1||offset>=8192)return;vram[bank*8192+offset]=value;if(externalPoke)externalPoke(3,bank*8192+offset,value);}
     void pokeOAM(std::size_t offset,u8 value){if(offset>=oam.size())return;oam[offset]=value;if(externalPoke)externalPoke(7,offset,value);}
     void pokePalette(bool obj,std::size_t offset,u8 value){if(offset>=64)return;(obj?objPalette:bgPalette)[offset]=value;if(externalPoke)externalPoke(obj?9:8,offset,value);}
@@ -185,11 +187,10 @@ public:
             case 0xFF:controller=101;break;
             case 0xFC:controller=252;break;
             default:
-                if(extendedControllers&&(type==0x0B||type==0x0C||type==0x0D||type==0x20||type==0xFE))controller=type==0x20?6:type==0xFE?103:100;
-                else {loadError="Unsupported cartridge controller: "+std::to_string(type);return false;}break;
+                loadError="Unsupported cartridge controller: "+std::to_string(type);return false;
         }
-        // Released unbanked homebrew may contain only its used 16 KiB bank.
-        // A banked 16 KiB image is still treated as a truncated cartridge.
+        // A one-bank ROM-only homebrew image mirrors its physical 16 KiB.
+        // Controllers with bank registers still require a complete base pair.
         if(data.size()==16384&&controller!=0){loadError="Banked ROM must contain at least 32 KiB.";return false;}
         rom=std::move(data); romPath=path; mbc=controller;
         romBank=1; bankHigh=0; ramBank=0; mbcMode=0; ramEnabled=(mbc==0);
@@ -327,15 +328,17 @@ public:
     void hblankDMA(){if(cgbMode&&hdmaActive&&hdmaHblank&&!cpuHalted&&io[0x44]<144)startDmaBlock();}
     void startVramDMA(u8 value){
         if(hdmaActive&&hdmaHblank){
-            if(!(value&0x80)){hdmaActive=false;hdmaBytes=0;io[0x55]=(u8)(0x80|(hdmaBlocks-1));}
+            if(!(value&0x80)){hdmaActive=false;hdmaBytes=0;hdmaBlocks=(value&0x7F)+1;io[0x55]=(u8)(0x80|(value&0x7F));}
             return;
         }
         hdmaSource=(u16)((io[0x51]<<8)|(io[0x52]&0xF0));
         hdmaDest=(u16)(0x8000|((io[0x53]&0x1F)<<8)|(io[0x54]&0xF0));
         hdmaBlocks=(value&0x7F)+1;hdmaActive=true;
-        hdmaHblank=(value&0x80)&&(io[0x40]&0x80);
+        hdmaHblank=(value&0x80)!=0;
         io[0x55]=(u8)(hdmaBlocks-1);
-        if(!hdmaHblank)startDmaBlock();
+        // Starting HDMA in an existing HBlank (including LCD-off mode 0)
+        // copies one block immediately; it must not become a full GDMA.
+        if(!hdmaHblank||!(io[0x40]&0x80)||(ppuMode==0&&io[0x44]<144))startDmaBlock();
     }
     void tickBaseDot(){
         if(hasRTC&&++rtcCycles>=GB_CLOCK){rtcCycles-=GB_CLOCK;rtcSecond();}
@@ -401,7 +404,17 @@ public:
             return addr>=0xFF30?io[addr-0xFF00]:(u8)(io[addr-0xFF00]|masks[addr-0xFF10]);
         }
         if(addr>=0xFF4C&&addr<=0xFF7F){
-            if(!cgbMode)return 0xFF;
+            if(!cgbMode){
+                // These CGB hardware ports also exist while a monochrome
+                // cartridge runs; banking, KEY1 and HDMA remain unavailable.
+                if(isCGBHardware())switch(addr){
+                    case 0xFF72:case 0xFF73:return io[addr-0xFF00];
+                    case 0xFF75:return io[0x75]|0x8F;
+                    case 0xFF76:case 0xFF77:return soundPCM?soundPCM(addr):0;
+                    default:break;
+                }
+                return 0xFF;
+            }
             switch(addr){
                 case 0xFF4D:return (u8)(0x7E|(doubleSpeed?0x80:0)|(io[0x4D]&1));
                 case 0xFF4F:return io[0x4F]|0xFE;
@@ -510,7 +523,14 @@ public:
         if(addr>=0xFF80){hram[addr-0xFF80]=v;return;}
         if(addr>=0xFF10&&addr<=0xFF3F&&soundWrite){soundWrite(addr,v);return;}
         if(addr>=0xFF4C&&addr<=0xFF7F){
-            if(!cgbMode)return;
+            if(!cgbMode){
+                if(isCGBHardware())switch(addr){
+                    case 0xFF72:case 0xFF73:io[addr-0xFF00]=v;break;
+                    case 0xFF75:io[0x75]=v&0x70;break;
+                    default:break;
+                }
+                return;
+            }
             switch(addr){
                 case 0xFF4C:if(bootROMMapped)io[0x4C]=v;break;
                 case 0xFF6C:if(bootROMMapped)io[0x6C]=v&1;break;
@@ -597,13 +617,18 @@ public:
         if(!hasBattery)return;
         if(!eram.empty()) {auto file=loadBytes(savePath(),eram.size());if(file.size()==eram.size())eram=std::move(file);}
         if(!hasRTC)return;
-        std::ifstream f(rtcPath(),std::ios::binary);
-        char magic[7]{};std::int64_t stamp=0;
-        if(f && f.read(magic,7) && std::string(magic,7)=="GBRTC01" && f.read((char*)rtc.data(),5) && f.read((char*)&stamp,sizeof(stamp))){
-            const auto now=(std::int64_t)std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-            auto elapsed=std::clamp<std::int64_t>(now-stamp,0,86400*365LL);
-            advanceRTC((u64)elapsed);
-        }
+        // A truncated clock file must never partially overwrite the live RTC.
+        // Read the entire legacy record before committing any register values.
+        const auto bytes=loadBytes(rtcPath(),20);
+        if(bytes.size()!=20||std::memcmp(bytes.data(),"GBRTC01",7))return;
+        std::array<u8,5> restored{};std::copy_n(bytes.data()+7,5,restored.begin());
+        std::int64_t stamp=0;std::memcpy(&stamp,bytes.data()+12,sizeof(stamp));
+        if(restored[0]>=60||restored[1]>=60||restored[2]>=24||(restored[4]&~0xC1)||stamp<0)return;
+        rtc=restored;
+        const auto now=(std::int64_t)std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        // Avoid signed overflow from a damaged timestamp before clamping.
+        const u64 elapsed=now>stamp?(u64)now-(u64)stamp:0;
+        advanceRTC(std::min<u64>(elapsed,86400*365ULL));
     }
 };
 class CPU {
@@ -783,6 +808,9 @@ public:
         IME = false;
         imeDelay = 0;
         halted = false;
+        // EI;HALT with an already buffered interrupt suppresses the fetch
+        // increment during acknowledgement, so RETI returns to HALT itself.
+        if(haltBug){PC=static_cast<u16>(PC-1);haltBug=false;}
         int bit = 0;
         while (((pending >> bit) & 1) == 0) ++bit;
         idle(8);
@@ -965,456 +993,20 @@ public:
 };
 
 
-class PPU {
-public:
-    Memory& m;
-    std::array<u32,GB_W*GB_H> pixels{}, drawing{};
-    int dot=0, palette=0;
-    bool lcdWasOn=true;
-    u64 frameNumber=0;
-    struct Sprite {int id=0,x=0,y=0,tile=0;u8 attr=0;};
-    struct Pipeline {
-        int line=0,windowLine=0,selectedCount=0,x=0,stall=0,scx=0,lastSpriteTile=-100000,windowX=0;
-        bool windowYTriggered=false,windowActive=false,windowDrawn=false,firstLine=false;
-        std::array<Sprite,10> sprites{};
-        std::array<bool,10> fetched{};
-    } state;
-    static constexpr std::array<std::array<u32,4>,4> palettes{{
-        {{0xFF9BBD0F,0xFF8BAC0F,0xFF306230,0xFF0F380F}},
-        {{0xFFFFFFFF,0xFFAAAAAA,0xFF555555,0xFF000000}},
-        {{0xFFDCEAF6,0xFF8CA7C2,0xFF3E6991,0xFF192F4A}},
-        {{0xFFFFE8B8,0xFFD6A078,0xFF89506B,0xFF34172A}}
-    }};
-    explicit PPU(Memory& mem):m(mem){reset();}
-    u32 shade(int value)const{return palettes[palette&3][value&3];}
-    u32 blankColor()const{return m.dmgCompatibility&&!m.cgbMode?color(m.bgPalette,0,0):m.cgbMode?0xFFFFFFFF:shade(0);}
-    u32 color(const std::array<u8,64>& ram,int paletteNumber,int raw)const{
-        const int address=(paletteNumber&7)*8+(raw&3)*2;
-        const u16 rgb=(u16)(ram[address]|(ram[address+1]<<8));
-        const auto expand=[](u32 value){return (value<<3)|(value>>2);};
-        return 0xFF000000|(expand(rgb&31)<<16)|(expand((rgb>>5)&31)<<8)|expand((rgb>>10)&31);
-    }
-    void reset(){
-        dot=0;state={};frameNumber=0;lcdWasOn=(m.io[0x40]&0x80)!=0;
-        m.io[0x44]=m.ppuCompareLY=0;m.ppuDot=0;m.ppuMode=m.ppuStatMode=lcdWasOn?2:0;
-        pixels.fill(blankColor());drawing=pixels;beginLine();syncStat();
-    }
-    void power(bool enabled){
-        dot=enabled?-2:0;state={};state.firstLine=enabled;lcdWasOn=enabled;m.io[0x44]=0;m.ppuMode=m.ppuStatMode=0;
-        m.ppuDot=dot;if(enabled)m.ppuCompareLY=0;
-        if(!enabled){pixels.fill(blankColor());drawing=pixels;}
-        else beginLine();
-        syncStat();
-    }
-    void beginLine(){
-        state.selectedCount=0;state.x=0;state.windowActive=state.windowDrawn=false;
-        state.fetched.fill(false);state.lastSpriteTile=-100000;
-        if(state.line==m.io[0x4A])state.windowYTriggered=true;
-    }
-    struct BackgroundPixel {int raw=0;u8 attr=0;};
-    BackgroundPixel backgroundAt(bool window,int px,int py)const {
-        const u8 lcdc=m.io[0x40];
-        const int mapBase=(window?(lcdc&0x40):(lcdc&8))?0x1C00:0x1800;
-        const int mapAddress=mapBase+((py&255)/8)*32+(px&255)/8;
-        const u8 tile=m.vramByte(0,(u16)mapAddress);
-        const u8 attr=m.cgbMode?m.vramByte(1,(u16)mapAddress):0;
-        const int offset=(lcdc&0x10)?tile*16:0x1000+(int)(s8)tile*16;
-        const int row=((attr&0x40)?7-(py&7):(py&7))*2;
-        const int bit=(attr&0x20)?(px&7):7-(px&7);
-        const unsigned bank=(attr>>3)&1;
-        return {((m.vramByte(bank,(u16)(offset+row))>>bit)&1)|
-                (((m.vramByte(bank,(u16)(offset+row+1))>>bit)&1)<<1),attr};
-    }
-    int tileAt(bool window,int px,int py)const{return backgroundAt(window,px,py).raw;}
-    void scanSprite(int id){
-        if(m.dmaPos<160)return;
-        const int height=(m.io[0x40]&4)?16:8;
-        const int y=(int)m.oam[id*4]-16;
-        if(state.selectedCount<10&&state.line>=y&&state.line<y+height){
-            state.sprites[state.selectedCount++]={id,(int)m.oam[id*4+1]-8,y,(int)m.oam[id*4+2],m.oam[id*4+3]};
-        }
-    }
-    void pixel(){
-        const int x=state.x,y=state.line;
-        const u8 lcdc=m.io[0x40];
-        const bool bgEnabled=m.cgbMode||(lcdc&1);
-        const auto bg=bgEnabled?backgroundAt(state.windowActive,
-            state.windowActive?x-state.windowX:x+m.io[0x43],
-            state.windowActive?state.windowLine:y+m.io[0x42]):BackgroundPixel{};
-        u32 output=(m.dmgCompatibility&&!m.cgbMode)?color(m.bgPalette,0,bgEnabled?((m.io[0x47]>>(2*bg.raw))&3):0):m.cgbMode?color(m.bgPalette,bg.attr&7,bg.raw):
-            shade(bgEnabled?((m.io[0x47]>>(2*bg.raw))&3):0);
-        if(lcdc&2){
-            // Select the winning OBJ first, then apply its BG priority. A hidden
-            // winner still masks lower-priority OBJs (important in Mario games).
-            // Sprites remain X-sorted for fetch timing, but CGB drawing priority
-            // is determined exclusively by the original OAM index.
-            const Sprite* winner=nullptr;
-            int winnerRaw=0;
-            for(int i=0;i<state.selectedCount;++i){
-                const auto& s=state.sprites[i];
-                if(x<s.x||x>=s.x+8)continue;
-                const int height=(lcdc&4)?16:8;
-                int row=y-s.y;
-                if(s.attr&0x40)row=height-1-row;
-                int tile=height==16?(s.tile&0xFE):s.tile;
-                tile+=row/8;
-                const int off=tile*16+(row&7)*2;
-                const int bit=(s.attr&0x20)?x-s.x:7-(x-s.x);
-                const unsigned bank=m.cgbMode?((s.attr>>3)&1):0;
-                const int raw=((m.vramByte(bank,(u16)off)>>bit)&1)|
-                    (((m.vramByte(bank,(u16)(off+1))>>bit)&1)<<1);
-                if(!raw)continue;
-                if(!winner||s.id<winner->id){winner=&s;winnerRaw=raw;}
-                if(!m.cgbMode)break;
-            }
-            if(winner){
-                const bool behind=m.cgbMode?
-                    ((lcdc&1)&&bg.raw&&((bg.attr|winner->attr)&0x80)):
-                    (bg.raw&&(winner->attr&0x80));
-                if(!behind)output=(m.dmgCompatibility&&!m.cgbMode)?color(m.objPalette,(winner->attr&0x10)?1:0,(m.io[(winner->attr&0x10)?0x49:0x48]>>(winnerRaw*2))&3):m.cgbMode?color(m.objPalette,winner->attr&7,winnerRaw):
-                    shade((m.io[(winner->attr&0x10)?0x49:0x48]>>(winnerRaw*2))&3);
-            }
-        }
-        drawing[y*GB_W+x]=output;
-    }
-    void transferDot(){
-        if(state.stall>0){--state.stall;return;}
-        const int wx=(int)m.io[0x4B]-7;
-        if(!state.windowActive&&state.windowYTriggered&&(m.io[0x40]&0x20)&&
-           (m.cgbMode||(m.io[0x40]&1))&&
-           wx<160&&state.x>=std::max(0,wx)){
-            state.windowActive=state.windowDrawn=true;state.windowX=wx;
-            state.lastSpriteTile=-100000;state.stall=5;return;
-        }
-        if(m.io[0x40]&2){
-            for(int i=0;i<state.selectedCount;++i){
-                const auto& s=state.sprites[i];
-                if(state.fetched[i]||s.x>=160||s.x>state.x)continue;
-                state.fetched[i]=true;
-                const int pos=state.windowActive?s.x-state.windowX:s.x+state.scx;
-                const int key=(pos>=0?pos/8:(pos-7)/8)+(state.windowActive?64:0);
-                const int penalty=6+(state.lastSpriteTile==key?0:s.x==-8?5:std::max(0,5-(pos&7)));
-                state.lastSpriteTile=key;state.stall=penalty-1;return;
-            }
-        }
-        pixel();
-        ++state.x;
-        if(state.x==GB_W-4){m.ppuStatMode=0;syncStat();}
-        if(state.x==GB_W){m.ppuMode=0;syncStat();m.hblankDMA();}
-    }
-    void syncStat(){m.refreshStat();}
-    void tick(int cycles){
-        if(!(m.io[0x40]&0x80)){if(lcdWasOn)power(false);return;}
-        if(!lcdWasOn)power(true);
-        for(int t=0;t<cycles;++t){
-            ++dot;
-            m.ppuDot=dot;
-            if(dot==4){m.ppuCompareLY=state.line==153?0:(u8)state.line;syncStat();}
-            if(state.line<GB_H){
-                const int oamEnd=state.firstLine?76:84;
-                if(!state.firstLine&&dot==4){m.ppuMode=2;syncStat();}
-                if(dot>(state.firstLine?0:4)&&dot<=oamEnd&&!(dot&1))scanSprite((dot-(state.firstLine?0:4))/2-1);
-                if(dot==oamEnd){
-                    std::sort(state.sprites.begin(),state.sprites.begin()+state.selectedCount,
-                        [](const Sprite& a,const Sprite& b){return a.x==b.x?a.id<b.id:a.x<b.x;});
-                    state.scx=m.io[0x43];state.stall=12+(state.scx&7);
-                    // The first OBJ fetch overlaps a background startup dot.
-                    if((m.io[0x40]&2)&&state.selectedCount&&state.sprites[0].x<160)--state.stall;
-                    m.ppuMode=m.ppuStatMode=3;syncStat();
-                }else if(m.ppuMode==3)transferDot();
-            }else if(state.line==153&&dot==4){m.io[0x44]=m.ppuCompareLY=0;syncStat();}
-            if(dot==(state.firstLine?448:456)){
-                dot=0;
-                m.ppuDot=0;
-                state.firstLine=false;
-                if(state.line<GB_H&&state.windowDrawn)++state.windowLine;
-                ++state.line;
-                m.ppuCompareLY=0xFF; // LY comparison is inactive for the first four dots.
-                if(state.line==144){
-                    pixels=drawing;++frameNumber;m.io[0x0F]|=1;
-                    if((m.io[0x41]&0x20)&&!m.statLine)m.io[0x0F]|=2;
-                    m.ppuMode=m.ppuStatMode=1;
-                }
-                else if(state.line==154){state.line=0;state.windowLine=0;state.windowYTriggered=false;m.ppuMode=0;m.ppuStatMode=2;}
-                else if(state.line<144){m.ppuMode=0;m.ppuStatMode=2;}
-                m.io[0x44]=(u8)state.line;
-                if(state.line<144)beginLine();
-                syncStat();
-            }
-        }
-    }
-};
-
-// APU counters run on the emulated clock, never on the host's audio callbacks.
-class APU {
-public:
-    Memory& m;
-    static constexpr int rate=44100;
-    int sampleRate=rate;
-    std::array<int,4> channelVolume={100,100,100,100};
-    std::array<std::array<std::int16_t,512>,4> scope{};
-    std::size_t scopePosition=0;
-    double capacitorCharge=std::pow(0.999958,(double)GB_CLOCK/rate);
-    bool setSampleRate(int value){if(value!=44100&&value!=48000&&value!=96000)return false;
-        sampleRate=value;clearQueue();state.sampleClock=0;updateCapacitor();return true;}
-    void updateCapacitor(){capacitorCharge=std::pow(m.isCGBHardware()?0.998943:0.999958,(double)GB_CLOCK/sampleRate);}
-    void setChannelVolume(int channel,int percent){if(channel>=0&&channel<4)channelVolume[(std::size_t)channel]=std::clamp(percent,0,100);}
-    struct Channel {
-        int timer=1,length=0,phase=0,volume=0,envelopeTimer=0;
-        bool enabled=false,dac=false,lengthEnabled=false,envelopeRunning=false,started=false;
-    };
-    struct State {
-        std::array<Channel,4> channels{};
-        int frameStep=0,sweepShadow=0,sweepTimer=0,waveAccess=0,waveByte=0;
-        bool sweepEnabled=false,sweepNegated=false;
-        u16 lfsr=0x7FFF;
-        u8 waveBuffer=0;
-        u32 sampleClock=0;
-        int mixDivider=0,mixCount=0;
-        double sumLeft=0,sumRight=0,capLeft=0,capRight=0;
-    } state;
-    std::array<std::int16_t,32768> queue{};
-    std::size_t readPos=0,writePos=0,count=0;
-    std::array<bool,4> mutedChannels{};
-    void setChannelMuted(int channel,bool muted){if(channel>=0&&channel<4)mutedChannels[(std::size_t)channel]=muted;}
-    explicit APU(Memory& memory):m(memory){}
-    void clearQueue(){readPos=writePos=count=0;}
-    std::size_t available()const{return count/2;}
-    int period(int channel)const{
-        static constexpr int lo[3]={0x13,0x18,0x1D};
-        return m.io[lo[channel]]|((m.io[lo[channel]+1]&7)<<8);
-    }
-    int reload(int channel)const{
-        if(channel<3)return (2048-period(channel))*(channel==2?2:4);
-        static constexpr int divs[8]={8,16,32,48,64,80,96,112};
-        return divs[m.io[0x22]&7]<<(m.io[0x22]>>4);
-    }
-    int envelopeRegister(int channel)const{return channel==0?0x12:channel==1?0x17:0x21;}
-    void status(){
-        m.io[0x26]&=0x80;
-        for(int i=0;i<4;++i)if(state.channels[i].enabled)m.io[0x26]|=(u8)(1<<i);
-    }
-    void reset(){
-        state={};clearQueue();updateCapacitor();scopePosition=0;for(auto& channel:scope)channel.fill(0);
-        for(int i=0;i<4;++i){
-            auto& c=state.channels[i];
-            c.dac=i==2?(m.io[0x1A]&0x80)!=0:(m.io[envelopeRegister(i)]&0xF8)!=0;
-            c.enabled=c.dac&&(m.io[0x26]&(1<<i));c.timer=reload(i);
-            c.started=c.enabled;c.length=i==2?256:64;
-        }
-        status();
-    }
-    u8 read(u16 addr)const{
-        static constexpr u8 masks[32]={0x80,0x3F,0,0xFF,0xBF,0xFF,0x3F,0,0xFF,0xBF,
-            0x7F,0xFF,0x9F,0xFF,0xBF,0xFF,0xFF,0,0,0xBF,0,0,0x70,
-            0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
-        if(addr>=0xFF30){
-            if(state.channels[2].enabled)
-                return (m.isCGBHardware()||state.waveAccess>0)?m.io[0x30+state.waveByte]:0xFF;
-            return m.io[addr-0xFF00];
-        }
-        return (u8)(m.io[addr-0xFF00]|masks[addr-0xFF10]);
-    }
-    int sweepCalculation(){
-        const int delta=state.sweepShadow>>(m.io[0x10]&7);
-        if(m.io[0x10]&8)state.sweepNegated=true;
-        const int value=state.sweepShadow+((m.io[0x10]&8)?-delta:delta);
-        if(value>2047)state.channels[0].enabled=false;
-        return value;
-    }
-    void trigger(int i){
-        auto& c=state.channels[i];
-        c.enabled=c.dac;c.started=true;
-        if(!c.length){c.length=i==2?256:64;if(c.lengthEnabled&&(state.frameStep&1))--c.length;}
-        c.timer=reload(i)+(i==2?6:0);
-        if(i<2)c.timer=(c.timer&~3)|(state.channels[i].timer&3);
-        if(i==2){
-            c.phase=0;state.waveAccess=0;
-            if(m.isCGBHardware())state.waveByte=0;
-        }else{
-            const int env=m.io[envelopeRegister(i)];
-            c.volume=env>>4;c.envelopeTimer=(env&7)?(env&7):8;
-            if(state.frameStep==7)++c.envelopeTimer;
-            c.envelopeRunning=true;
-        }
-        if(i==0){
-            state.sweepShadow=period(0);state.sweepTimer=(m.io[0x10]>>4)&7;
-            if(!state.sweepTimer)state.sweepTimer=8;
-            state.sweepEnabled=(m.io[0x10]&0x77)!=0;state.sweepNegated=false;
-            if(m.io[0x10]&7)sweepCalculation();
-        }
-        if(i==3)state.lfsr=0x7FFF;
-        status();
-    }
-    void write(u16 addr,u8 value){
-        const int reg=addr-0xFF00;
-        if(reg>=0x30){
-            if(state.channels[2].enabled){if(m.isCGBHardware()||state.waveAccess>0)m.io[0x30+state.waveByte]=value;}
-            else m.io[reg]=value;
-            return;
-        }
-        if(reg==0x26){
-            const bool old=(m.io[reg]&0x80)!=0,on=(value&0x80)!=0;
-            if(old&&!on){
-                for(int j=0x10;j<=0x25;++j)m.io[j]=0;
-                for(auto& c:state.channels){const int len=c.length;c={};c.length=m.isCGBHardware()?0:len;}
-                state.frameStep=0;state.sweepEnabled=false;state.waveBuffer=0;
-            }else if(!old&&on){
-                state.frameStep=0;state.waveBuffer=0;
-                for(auto& c:state.channels)c.phase=0;
-            }
-            m.io[reg]=(u8)(on?0x80:0);status();return;
-        }
-        if(!(m.io[0x26]&0x80)){
-            // On DMG, length registers remain writable while sound is off.
-            if(!m.isCGBHardware()&&(reg==0x11||reg==0x16||reg==0x1B||reg==0x20)){
-                const int i=reg==0x11?0:reg==0x16?1:reg==0x1B?2:3;
-                state.channels[i].length=i==2?256-value:64-(value&63);
-            }
-            return;
-        }
-        if(reg==0x15||reg==0x1F||reg>=0x27)return;
-        const u8 old=m.io[reg];
-        m.io[reg]=value;
-        if(reg==0x10){
-            if((old&8)&&!(value&8)&&state.sweepNegated)state.channels[0].enabled=false;
-        }
-        if(reg==0x11||reg==0x16||reg==0x1B||reg==0x20){
-            const int i=reg==0x11?0:reg==0x16?1:reg==0x1B?2:3;
-            state.channels[i].length=i==2?256-value:64-(value&63);
-        }
-        if(reg==0x12||reg==0x17||reg==0x21){
-            const int i=reg==0x12?0:reg==0x17?1:3;
-            auto& c=state.channels[i];
-            if(c.enabled){
-                // Common DMG manual-volume ("zombie envelope") behaviour.
-                if(!(old&7)&&c.envelopeRunning)++c.volume;
-                if(!(old&8)&&(!m.isCGBHardware()||(old&7)||!c.envelopeRunning))c.volume+=2;
-                if((old^value)&8)c.volume=16-c.volume;
-                c.volume&=15;
-            }
-            c.dac=(value&0xF8)!=0;if(!c.dac)c.enabled=false;
-        }
-        if(reg==0x1A){state.channels[2].dac=(value&0x80)!=0;if(!state.channels[2].dac)state.channels[2].enabled=false;}
-        if(reg==0x14||reg==0x19||reg==0x1E||reg==0x23){
-            const int i=reg==0x14?0:reg==0x19?1:reg==0x1E?2:3;
-            auto& c=state.channels[i];const bool enable=(value&0x40)!=0;
-            if(!c.lengthEnabled&&enable&&(state.frameStep&1)&&c.length>0)
-                if(--c.length==0)c.enabled=false;
-            c.lengthEnabled=enable;
-            if(value&0x80){
-                if(!m.isCGBHardware()&&i==2&&c.enabled&&c.timer==2){
-                    const int byte=((c.phase+1)&31)/2;
-                    if(byte<4)m.io[0x30]=m.io[0x30+byte];
-                    else {const int base=byte&~3;for(int j=0;j<4;++j)m.io[0x30+j]=m.io[0x30+base+j];}
-                }
-                trigger(i);
-            }
-        }
-        status();
-    }
-    void sequencer(){
-        if(!(m.io[0x26]&0x80))return;
-        const int step=state.frameStep;
-        if(!(step&1))for(auto& c:state.channels)
-            if(c.lengthEnabled&&c.length>0&&--c.length==0)c.enabled=false;
-        if(step==2||step==6){
-            if(--state.sweepTimer<=0){
-                const int pace=(m.io[0x10]>>4)&7;state.sweepTimer=pace?pace:8;
-                if(state.sweepEnabled&&pace){
-                    const int value=sweepCalculation();
-                    if(value<=2047&&(m.io[0x10]&7)){
-                        state.sweepShadow=value;m.io[0x13]=(u8)(value&255);m.io[0x14]=(u8)((m.io[0x14]&0xF8)|(value>>8));
-                        sweepCalculation();
-                    }
-                }
-            }
-        }
-        if(step==7){
-            for(int i:{0,1,3}){
-                auto& c=state.channels[i];
-                if(c.envelopeRunning&&--c.envelopeTimer<=0){
-                    const int env=m.io[envelopeRegister(i)];c.envelopeTimer=(env&7)?(env&7):8;
-                    if(env&7){const int v=c.volume+((env&8)?1:-1);
-                        if(v>=0&&v<=15)c.volume=v;else c.envelopeRunning=false;}
-                }
-            }
-        }
-        state.frameStep=(step+1)&7;status();
-    }
-    int output(int i)const{
-        const auto& c=state.channels[i];
-        if(!c.enabled)return 0;
-        if(i<2){
-            static constexpr u8 duty[4]={0x80,0x81,0xE1,0x7E};
-            return ((duty[m.io[i==0?0x11:0x16]>>6]>>c.phase)&1)?c.volume:0;
-        }
-        if(i==2){const int volume=(m.io[0x1C]>>5)&3;
-            const int sample=(c.phase&1)?(state.waveBuffer&15):(state.waveBuffer>>4);
-            return volume?sample>>(volume-1):0;}
-        return (state.lfsr&1)?0:c.volume;
-    }
-    void mix(){
-        double left=0,right=0;
-        if(m.io[0x26]&0x80)for(int i=0;i<4;++i)if(state.channels[i].dac&&!mutedChannels[i]){
-            const double sample=(15-output(i)*2)*(channelVolume[(std::size_t)i]/100.0);
-            if(m.io[0x25]&(1<<(i+4)))left+=sample;
-            if(m.io[0x25]&(1<<i))right+=sample;
-        }
-        state.sumLeft+=left*(((m.io[0x24]>>4)&7)+1);
-        state.sumRight+=right*((m.io[0x24]&7)+1);++state.mixCount;
-    }
-    u8 pcm(u16 addr)const{
-        const int first=addr==0xFF76?0:2;
-        return static_cast<u8>(output(first)|(output(first+1)<<4));
-    }
-    void emit(){
-        const double left=state.mixCount?state.sumLeft/state.mixCount:0;
-        const double right=state.mixCount?state.sumRight/state.mixCount:0;
-        const double filteredL=left-state.capLeft,filteredR=right-state.capRight;
-        // Model-specific capacitor, resampled from the base 4.194 MHz clock.
-        const double charge=capacitorCharge;
-        state.capLeft=left-filteredL*charge;state.capRight=right-filteredR*charge;
-        for(int i=0;i<4;++i)scope[(std::size_t)i][scopePosition]=(std::int16_t)(output(i)*2048);
-        scopePosition=(scopePosition+1)%512;
-        if(count+2>queue.size()){readPos=(readPos+2)%queue.size();count-=2;}
-        queue[writePos]=(std::int16_t)std::clamp(filteredL*48.0,-32767.0,32767.0);writePos=(writePos+1)%queue.size();
-        queue[writePos]=(std::int16_t)std::clamp(filteredR*48.0,-32767.0,32767.0);writePos=(writePos+1)%queue.size();count+=2;
-        state.sumLeft=state.sumRight=0;state.mixCount=0;
-    }
-    void tick(){
-        if(state.waveAccess>0)--state.waveAccess;
-        if(m.io[0x26]&0x80){
-            for(int i=0;i<4;++i){
-                auto& c=state.channels[i];
-                if(!c.started)continue;
-                if(--c.timer<=0){
-                    c.timer=reload(i);
-                    if(i<2)c.phase=(c.phase+1)&7;
-                    else if(i==2){
-                        if(c.enabled){c.phase=(c.phase+1)&31;state.waveByte=c.phase/2;
-                            state.waveBuffer=m.io[0x30+state.waveByte];state.waveAccess=2;}
-                    }else if((m.io[0x22]>>4)<14){
-                        const int bit=(state.lfsr^(state.lfsr>>1))&1;
-                        state.lfsr=(u16)((state.lfsr>>1)|(bit<<14));
-                        if(m.io[0x22]&8)state.lfsr=(u16)((state.lfsr&~0x40)|(bit<<6));
-                    }
-                }
-            }
-        }
-        if(++state.mixDivider==4){state.mixDivider=0;mix();}
-        state.sampleClock+=(u32)sampleRate;
-        if(state.sampleClock>=GB_CLOCK){state.sampleClock-=GB_CLOCK;emit();}
-    }
-    void samples(std::int16_t* stereo,int frames){
-        const std::size_t take=std::min(count,(std::size_t)frames*2);
-        for(std::size_t i=0;i<take;++i){stereo[i]=queue[readPos];readPos=(readPos+1)%queue.size();}
-        count-=take;std::fill(stereo+take,stereo+frames*2,std::int16_t{0});
-    }
-};
+#include "native_ppu.hpp"
+#include "native_apu.hpp"
 
 class GameBoy {
 public:
+    static bool monochromeModel(HardwareModel requested){
+        return requested==HardwareModel::DMG||requested==HardwareModel::Pocket||requested==HardwareModel::Light||
+            requested==HardwareModel::SGB||requested==HardwareModel::SGB2||requested==HardwareModel::SGBPAL;
+    }
+    static bool colorModel(HardwareModel requested){
+        return requested==HardwareModel::CGB||requested==HardwareModel::CGB0||requested==HardwareModel::CGBA||
+            requested==HardwareModel::CGBB||requested==HardwareModel::CGBC||requested==HardwareModel::CGBD||
+            requested==HardwareModel::CGBE||requested==HardwareModel::AGB;
+    }
     Memory mem;
     CPU cpu;
     PPU ppu;
@@ -1465,8 +1057,11 @@ public:
         }
     }
     void reset(){
+        mem.hardwareModel=model==HardwareModel::Auto?(mem.cgbROM?HardwareModel::CGBE:HardwareModel::DMG):model==HardwareModel::CGB?HardwareModel::CGBE:model;
         if(backendReset&&!mem.rom.empty()){frameDebt=0;totalCycles=0;ppu.frameNumber=0;apu.clearQueue();if(!backendReset())mem.loadError="Hardware backend initialization failed.";return;}
-        mem.cgbHardware=(mem.cgbROM&&model!=HardwareModel::DMG)||model==HardwareModel::CGB;
+        // Cartridge capability selects the hardware only in Auto mode. An
+        // explicit monochrome or color model must retain its hardware family.
+        mem.cgbHardware=colorModel(model)||(model==HardwareModel::Auto&&mem.cgbROM);
         mem.dmgCompatibility=mem.cgbHardware&&!mem.cgbROM;
         mem.cgbMode=mem.cgbHardware;
         mem.resetIO();
@@ -1477,16 +1072,48 @@ public:
         mem.bootROMMapped=!mem.bootROM.empty();
         if(mem.dmgCompatibility&&!mem.bootROMMapped){
             mem.cgbMode=false;mem.io[0x4C]=4;
-            static constexpr std::array<u16,4> bg={0x7FFF,0x32BF,0x00D0,0x0000},obj={0x7FFF,0x421F,0x001F,0x0000};
+            // Unrecognized/non-Nintendo cartridges use compatibility palette
+            // ID 00: green/blue BG and the same red palette for both OBJ sets.
+            // These RGB555 hardware values follow Pan Docs' palette-ID rules
+            // and its linked boot-ROM research, not an emulator implementation:
+            // https://gbdev.io/pandocs/Power_Up_Sequence.html#compatibility-palettes
+            // https://codeberg.org/ISSOtm/gb-bootroms/src/commit/443d7f057ae06e8d1d76fa8083650cf0be2cd0ae/src/cgb.asm#L1243-L1311
+            // Game-specific title palettes still require an external boot ROM.
+            static constexpr std::array<u16,4> bg={0x7FFF,0x1BEF,0x6180,0x0000},obj={0x7FFF,0x421F,0x1CF2,0x0000};
             for(int i=0;i<4;++i){mem.bgPalette[i*2]=(u8)bg[i];mem.bgPalette[i*2+1]=(u8)(bg[i]>>8);
                 for(int p=0;p<2;++p){mem.objPalette[p*8+i*2]=(u8)obj[i];mem.objPalette[p*8+i*2+1]=(u8)(obj[i]>>8);}}
         }
-        if(mem.cgbHardware){cpu.setAF(0x1180);cpu.setBC(0x0000);cpu.setDE(0xFF56);cpu.setHL(0x000D);}
-        else {cpu.setAF(0x01B0);cpu.setBC(0x0013);cpu.setDE(0x00D8);cpu.setHL(0x014D);}
+        if(mem.cgbHardware){
+            u8 checksum=0;
+            const bool nintendo=mem.rom.size()>0x14B&&(mem.rom[0x14B]==1||
+                (mem.rom[0x14B]==0x33&&mem.rom[0x144]=='0'&&mem.rom[0x145]=='1'));
+            if(mem.dmgCompatibility&&nintendo)for(unsigned at=0x134;at<0x144;++at)checksum=(u8)(checksum+mem.rom[at]);
+            const bool advance=mem.hardwareModel==HardwareModel::AGB;
+            const u8 b=(u8)(checksum+(advance?1:0));
+            const u8 flags=advance?(u8)((b==0?0x80:0)|((checksum&15)==15?0x20:0)):0x80;
+            cpu.setAF((u16)(0x1100|flags));cpu.setBC((u16)b<<8);
+            cpu.setDE(mem.dmgCompatibility?0x0008:0xFF56);
+            cpu.setHL(mem.dmgCompatibility?(checksum==0x43||checksum==0x58?0x991A:0x007C):0x000D);
+        }
+        else {
+            // The monochrome boot handoff differs across DMG, MGB and SGB.
+            // In particular, Pocket/Light identify themselves with A=FF, and
+            // DMG/MGB H/C reflect whether the header checksum is nonzero.
+            // Pan Docs, Power-Up Sequence, "CPU registers".
+            const bool super=mem.hardwareModel==HardwareModel::SGB||mem.hardwareModel==HardwareModel::SGB2||mem.hardwareModel==HardwareModel::SGBPAL;
+            const bool ff=mem.hardwareModel==HardwareModel::Pocket||mem.hardwareModel==HardwareModel::Light||mem.hardwareModel==HardwareModel::SGB2;
+            const u8 flags=super?0:(mem.rom.size()>0x14D&&mem.rom[0x14D]==0?0x80:0xB0);
+            cpu.setAF((u16)((ff?0xFF00:0x0100)|flags));
+            cpu.setBC(super?0x0014:0x0013);cpu.setDE(super?0x0000:0x00D8);cpu.setHL(super?0xC060:0x014D);
+        }
         cpu.SP=0xFFFE;cpu.PC=0x100;cpu.IME=false;cpu.imeDelay=0;
         cpu.halted=false;cpu.stopped=false;cpu.haltBug=false;
         cpu.locked=false;cpu.elapsed=cpu.instructionElapsed=0;frameDebt=0;totalCycles=0;
-        mem.divCounter=mem.cgbMode?0x1EA0:0xABC8;
+        // Canonical post-boot phase without executing external firmware. The
+        // compatibility path includes palette setup, unlike a color cartridge.
+        // Exact proprietary-boot duration also depends on header/button input.
+        mem.divCounter=mem.cgbMode?0x1EA0:mem.cgbHardware?
+            (mem.hardwareModel==HardwareModel::CGB0?0x2880:mem.hardwareModel==HardwareModel::AGB?0x2678:0x2674):0xABC8;
         if(mem.bootROMMapped){
             // Deterministic power-on state: the boot code initializes the
             // cartridge hand-off registers, LCD, APU and divider itself.
@@ -1497,8 +1124,8 @@ public:
         ppu.palette=currentPalette;ppu.reset();apu.reset();
     }
     bool bootROMConfigured(HardwareModel requested)const{
-        if(requested==HardwareModel::DMG)return !mem.dmgBootROM.empty();
-        if(requested==HardwareModel::CGB)return !mem.cgbBootROM.empty();
+        if(monochromeModel(requested))return !mem.dmgBootROM.empty();
+        if(colorModel(requested))return !mem.cgbBootROM.empty();
         return !mem.dmgBootROM.empty()||!mem.cgbBootROM.empty();
     }
     bool loadBootROM(const std::filesystem::path& path){
@@ -1513,13 +1140,13 @@ public:
         mem.loadError="Boot ROM must be 256 bytes (DMG), or 2048/2304 bytes (CGB).";return false;
     }
     void clearBootROM(HardwareModel requested=HardwareModel::Auto){
-        if(requested!=HardwareModel::CGB){mem.dmgBootROM.clear();mem.dmgBootROMPath.clear();}
-        if(requested!=HardwareModel::DMG){mem.cgbBootROM.clear();mem.cgbBootROMPath.clear();}
+        if(!colorModel(requested)){mem.dmgBootROM.clear();mem.dmgBootROMPath.clear();}
+        if(!monochromeModel(requested)){mem.cgbBootROM.clear();mem.cgbBootROMPath.clear();}
     }
     bool modelCompatible(HardwareModel requested){
         mem.loadError.clear();
         if(mem.rom.size()>0x143){
-            if((requested==HardwareModel::DMG||requested==HardwareModel::Pocket||requested==HardwareModel::Light||requested==HardwareModel::SGB||requested==HardwareModel::SGB2||requested==HardwareModel::SGBPAL)&&mem.rom[0x143]==0xC0){mem.loadError="This cartridge requires Game Boy Color.";return false;}
+            if(monochromeModel(requested)&&mem.rom[0x143]==0xC0){mem.loadError="This cartridge requires Game Boy Color.";return false;}
         }
         return true;
     }
@@ -1531,7 +1158,7 @@ public:
         // Validate model compatibility before replacing the running cartridge.
         const auto data=Memory::loadBytes(path,8*1024*1024);
         if(data.size()>0x143){
-            if((requested==HardwareModel::DMG||requested==HardwareModel::Pocket||requested==HardwareModel::Light||requested==HardwareModel::SGB||requested==HardwareModel::SGB2||requested==HardwareModel::SGBPAL)&&data[0x143]==0xC0){mem.loadError="This cartridge requires Game Boy Color.";return false;}
+            if(monochromeModel(requested)&&data[0x143]==0xC0){mem.loadError="This cartridge requires Game Boy Color.";return false;}
         }
         mem.saveBattery();
         if(!mem.loadROM(path))return false;
@@ -1550,9 +1177,26 @@ public:
     u32 romHash() const {u32 h=2166136261u;for(u8 x:mem.rom){h^=x;h*=16777619u;}return h;}
     std::filesystem::path statePath()const{auto p=mem.romPath;p.replace_extension(".state");return p;}
     static constexpr std::size_t state6ExtensionSize=48+64+4+3584;
+    static constexpr std::size_t accuracyStateLimit=16384;
+    static constexpr u32 accuracyStateSignature=0x31584147; // GAX1
+    static constexpr std::size_t auxiliaryStateLimit=2*1024*1024;
+    static constexpr std::size_t nativeStateLimit=400000;
+    static constexpr std::size_t stateSizeLimit=nativeStateLimit+accuracyStateLimit+auxiliaryStateLimit+16;
     std::vector<u8> serializeState(bool version5=false)const{
         if(backendState)return backendState();
         if(mem.rom.empty())return {};
+        const bool hasAuxiliary=!version5&&bool(auxiliaryState);
+        const auto auxiliary=hasAuxiliary?auxiliaryState():std::vector<u8>{};
+        if(auxiliary.size()>auxiliaryStateLimit)return {};
+        std::vector<u8> accuracyPayload;
+        if(!version5){
+            native_state::Codec codec;
+            u32 signature=accuracyStateSignature,profile=(u32)mem.hardwareModel;
+            bool progress=hasAuxiliary;codec.fields(signature,profile,progress);
+            native_state::writeAccuracy(ppu,codec);native_state::writeAccuracy(apu,codec);
+            if(!codec.ok||codec.output.size()>accuracyStateLimit)return {};
+            accuracyPayload=std::move(codec.output);
+        }
         std::ostringstream f(std::ios::binary|std::ios::out);
         u32 checksum=2166136261u;
         auto write=[&](const char* data,std::streamsize size){
@@ -1560,7 +1204,7 @@ public:
             for(std::streamsize i=0;i<size;++i){checksum^=(u8)data[i];checksum*=16777619u;}
         };
         auto put=[&](auto v){write((const char*)&v,sizeof(v));};
-        write(version5?"GBSTATE5":"GBSTATE6",8);put(romHash());
+        write(version5?"GBSTATE5":"GBSTATE8",8);put(romHash());
         for(u8 v:{cpu.A,cpu.F,cpu.B,cpu.C,cpu.D,cpu.E,cpu.H,cpu.L})put(v);
         put(cpu.SP);put(cpu.PC);put((u8)cpu.IME);put((u8)cpu.halted);put((u8)cpu.stopped);put((u8)cpu.haltBug);put((std::int32_t)cpu.imeDelay);
         put(mem.ie);put(mem.divCounter);put((std::int32_t)mem.timerReload);
@@ -1634,6 +1278,10 @@ public:
             index=48;for(u8 value:mem.cameraRegisters)number(value,1);number((u32)mem.cameraTicks,4);for(u8 value:mem.cameraPending)number(value,1);
             bytes(ext);
         }
+        if(!version5){
+            put((u32)accuracyPayload.size());bytes(accuracyPayload);
+            put((u32)auxiliary.size());bytes(auxiliary);
+        }
         f.write((const char*)&checksum,sizeof(checksum));
         if(!f)return {};
         const auto result=f.str();return {result.begin(),result.end()};
@@ -1643,13 +1291,13 @@ public:
         return !bytes.empty()&&Memory::writeAtomic(path,std::string_view((const char*)bytes.data(),bytes.size()));
     }
     bool saveState()const{return saveState(statePath());}
-    bool loadState(const std::filesystem::path& path){return deserializeState(Memory::loadBytes(path,400000));}
+    bool loadState(const std::filesystem::path& path){return deserializeState(Memory::loadBytes(path,stateSizeLimit));}
     bool loadState(){return loadState(statePath());}
     bool deserializeState(std::span<const u8> bytes){
         if(backendRestore)return backendRestore(bytes);
         if(mem.rom.empty())return false;
         // Reject truncated/wrong-version/different-ROM states before mutating live objects.
-        if(bytes.size()<120 || bytes.size()>400000 || mem.eram.size()>131072)return false;
+        if(bytes.size()<120 || bytes.size()>stateSizeLimit || mem.eram.size()>131072)return false;
         u32 storedChecksum=0;std::memcpy(&storedChecksum,bytes.data()+bytes.size()-4,4);
         u32 actualChecksum=2166136261u;
         for(std::size_t i=0;i<bytes.size()-4;++i){actualChecksum^=bytes[i];actualChecksum*=16777619u;}
@@ -1657,31 +1305,36 @@ public:
         GameBoy tmp;
         tmp.mem.rom=mem.rom;tmp.mem.eram=mem.eram;tmp.mem.romPath=mem.romPath;
         tmp.mem.mbc=mem.mbc;tmp.mem.hasBattery=mem.hasBattery;tmp.mem.hasRTC=mem.hasRTC;tmp.mem.cgbROM=mem.cgbROM;
+        tmp.mem.mbc1Multicart=mem.mbc1Multicart;tmp.mem.rumble=mem.rumble;
         tmp.mem.cgbMode=mem.cgbMode;tmp.mem.cgbHardware=mem.cgbHardware;tmp.mem.dmgCompatibility=mem.dmgCompatibility;tmp.model=model;
+        tmp.mem.hardwareModel=mem.hardwareModel;
         std::size_t off=0;
         auto pull=[&](auto& val)->bool {if(off+sizeof(val)>bytes.size())return false;std::memcpy(&val,bytes.data()+off,sizeof(val));off+=sizeof(val);return true;};
         auto array=[&](auto& arr)->bool {const auto n=arr.size()*sizeof(arr[0]);if(off+n>bytes.size())return false;if(n)std::memcpy(arr.data(),bytes.data()+off,n);off+=n;return true;};
         const std::string version((const char*)bytes.data(),8);
         const bool legacy=version=="GBSTATE3";
-        const bool modern=version=="GBSTATE6",extended=version=="GBSTATE5"||modern;
+        const bool accurate=version=="GBSTATE8";
+        bool hasAuxiliary=version=="GBSTATE7";
+        const bool modern=version=="GBSTATE6"||hasAuxiliary||accurate,extended=version=="GBSTATE5"||modern;
         if((!legacy&&!extended&&version!="GBSTATE4")||(legacy&&mem.cgbMode))return false;off=8;
+        if(!hasAuxiliary&&!accurate&&bytes.size()>nativeStateLimit)return false;
         u32 hash=0;if(!pull(hash)||hash!=romHash())return false;
         if(!pull(tmp.cpu.A)||!pull(tmp.cpu.F)||!pull(tmp.cpu.B)||!pull(tmp.cpu.C)||!pull(tmp.cpu.D)||!pull(tmp.cpu.E)||!pull(tmp.cpu.H)||!pull(tmp.cpu.L))return false;
         u8 flag=0;
-        if(!pull(tmp.cpu.SP)||!pull(tmp.cpu.PC)||!pull(flag))return false;tmp.cpu.IME=flag!=0;
-        if(!pull(flag))return false;tmp.cpu.halted=flag!=0;
-        if(!pull(flag))return false;tmp.cpu.stopped=flag!=0;
-        if(!pull(flag))return false;tmp.cpu.haltBug=flag!=0;
+        if(!pull(tmp.cpu.SP)||!pull(tmp.cpu.PC)||!pull(flag)||flag>1)return false;tmp.cpu.IME=flag!=0;
+        if(!pull(flag)||flag>1)return false;tmp.cpu.halted=flag!=0;
+        if(!pull(flag)||flag>1)return false;tmp.cpu.stopped=flag!=0;
+        if(!pull(flag)||flag>1)return false;tmp.cpu.haltBug=flag!=0;
         std::int32_t n=0;if(!pull(n))return false;tmp.cpu.imeDelay=n;
         if(!pull(tmp.mem.ie)||!pull(tmp.mem.divCounter)||!pull(n))return false;tmp.mem.timerReload=n;
         if(!pull(n))return false;tmp.mem.serialTicks=n;
         if(!pull(n))return false;tmp.mem.dmaTicks=n;
         if(!pull(n))return false;tmp.mem.dmaPos=n;
         if(!pull(tmp.mem.dmaSource)||!pull(n))return false;tmp.mem.ppuMode=n;
-        if(!pull(flag))return false;tmp.mem.statLine=flag!=0;
-        if(!pull(flag))return false;tmp.mem.ramEnabled=flag!=0;
+        if(!pull(flag)||flag>1)return false;tmp.mem.statLine=flag!=0;
+        if(!pull(flag)||flag>1)return false;tmp.mem.ramEnabled=flag!=0;
         if(!pull(tmp.mem.romBank)||!pull(tmp.mem.bankHigh)||!pull(tmp.mem.ramBank)||!pull(tmp.mem.mbcMode)||!pull(tmp.mem.latchWrite))return false;
-        if(!pull(flag))return false;tmp.mem.rtcLatched=flag!=0;
+        if(!pull(flag)||flag>1)return false;tmp.mem.rtcLatched=flag!=0;
         if(!pull(tmp.mem.rtcCycles))return false;
         if(!legacy){
             if(!pull(flag)||flag>1||((flag!=0)!=mem.cgbMode&&!(mem.cgbHardware&&!mem.cgbROM)))return false;tmp.mem.cgbMode=flag!=0;
@@ -1704,8 +1357,8 @@ public:
         if(!legacy&&(!array(tmp.mem.bgPalette)||!array(tmp.mem.objPalette)))return false;
         if(!array(tmp.mem.rtc)||!array(tmp.mem.latchedRTC)||!array(tmp.mem.soundTrigger))return false;
         u32 ext=0;if(!pull(ext)||ext!=mem.eram.size()||!array(tmp.mem.eram))return false;
-        if(!pull(flag))return false;tmp.cpu.locked=flag!=0;
-        if(!pull(flag))return false;tmp.mem.timerJustReloaded=flag!=0;
+        if(!pull(flag)||flag>1)return false;tmp.cpu.locked=flag!=0;
+        if(!pull(flag)||flag>1)return false;tmp.mem.timerJustReloaded=flag!=0;
         if(!pull(n))return false;tmp.mem.dmaDelay=n;
         if(!pull(tmp.mem.pendingDmaSource)||!pull(tmp.mem.serialSent)||!pull(tmp.mem.ppuCompareLY)||!pull(n))return false;tmp.mem.ppuStatMode=n;
         if(!pull(n))return false;tmp.frameDebt=n;
@@ -1727,10 +1380,29 @@ public:
             if(!boolean(off+offsetof(APU::State,channels)+i*sizeof(APU::Channel)+at))return false;
         if(!pull(tmp.apu.state))return false;
         if(!pull(n))return false;tmp.ppu.dot=n;
-        if(!pull(flag))return false;tmp.ppu.lcdWasOn=flag!=0;
+        if(!pull(flag)||flag>1)return false;tmp.ppu.lcdWasOn=flag!=0;
         if(!pull(n)||n<0||n>3)return false;tmp.currentPalette=n;tmp.ppu.palette=n;
         const auto len=tmp.ppu.pixels.size()*sizeof(u32);
-        if(off+len*2+(extended?7:0)+(modern?state6ExtensionSize:0)+4!=bytes.size()||tmp.ppu.dot< -2||tmp.ppu.dot>=456||tmp.mem.ppuMode<0||tmp.mem.ppuMode>3||tmp.mem.ppuStatMode<0||tmp.mem.ppuStatMode>3||tmp.cpu.imeDelay<0||tmp.cpu.imeDelay>2)return false;
+        std::size_t auxiliaryAt=off+len*2+(extended?7:0)+(modern?state6ExtensionSize:0);
+        if(accurate){
+            if(auxiliaryAt+4>bytes.size()-4)return false;
+            u32 size=0;std::memcpy(&size,bytes.data()+auxiliaryAt,4);auxiliaryAt+=4;
+            if(size>accuracyStateLimit||size>bytes.size()-4-auxiliaryAt)return false;
+            native_state::Codec codec(bytes.subspan(auxiliaryAt,size));
+            u32 signature=0,profile=0;codec.fields(signature,profile,hasAuxiliary);
+            if(!codec.ok||signature!=accuracyStateSignature||profile!=(u32)mem.hardwareModel)return false;
+            native_state::readAccuracy(tmp.ppu,codec);native_state::readAccuracy(tmp.apu,codec);
+            if(!codec.ok||codec.at!=codec.input.size())return false;
+            auxiliaryAt+=size;
+        }
+        std::span<const u8> auxiliary;
+        if(hasAuxiliary||accurate){
+            if(auxiliaryAt+8>bytes.size())return false;
+            u32 size=0;std::memcpy(&size,bytes.data()+auxiliaryAt,4);
+            if(size>auxiliaryStateLimit||(!hasAuxiliary&&size)||auxiliaryAt+8+size!=bytes.size())return false;
+            auxiliary=bytes.subspan(auxiliaryAt+4,size);
+        }else if(auxiliaryAt+4!=bytes.size())return false;
+        if(tmp.ppu.dot< -2||tmp.ppu.dot>=456||tmp.mem.ppuMode<0||tmp.mem.ppuMode>3||tmp.mem.ppuStatMode<0||tmp.mem.ppuStatMode>3||tmp.cpu.imeDelay<0||tmp.cpu.imeDelay>2)return false;
         if(tmp.mem.dmaPos<0||tmp.mem.dmaPos>160||tmp.mem.dmaTicks<0||tmp.mem.dmaTicks>3||
            tmp.mem.dmaDelay<0||tmp.mem.dmaDelay>8||tmp.frameDebt<0||tmp.frameDebt>(legacy?24:8224)||
            tmp.ppu.state.line<0||tmp.ppu.state.line>153||tmp.ppu.state.selectedCount<0||tmp.ppu.state.selectedCount>10||
@@ -1802,6 +1474,18 @@ public:
             for(auto& value:tmp.mem.cameraRegisters)value=(u8)number(1);tmp.mem.cameraTicks=(int)number(4);for(auto& value:tmp.mem.cameraPending)value=(u8)number(1);
             if((tmp.mem.cameraRegisters[0]&~7)||tmp.mem.cameraTicks<0||tmp.mem.cameraTicks>5000000)return false;
         }else {const int period=tmp.mem.cgbMode&&(tmp.mem.io[2]&2)?16:512;tmp.mem.serialBits=tmp.mem.serialTicks?8-tmp.mem.serialTicks/period:0;}
+        if(!accurate){native_state::restoreLegacy(tmp.ppu);native_state::restoreLegacy(tmp.apu);}
+        if(!native_state::validAccuracy(tmp.ppu)||!native_state::validAccuracy(tmp.apu))return false;
+        // All native fields have passed validation. Restore external progress
+        // before committing core state, and roll it back if its loader rejects.
+        if(hasAuxiliary&&auxiliaryRestore){
+            if(!auxiliaryState)return false;
+            const auto previous=auxiliaryState();
+            if(previous.size()>auxiliaryStateLimit)return false;
+            bool restored=false;
+            try{restored=auxiliaryRestore(auxiliary);}catch(...){restored=false;}
+            if(!restored){try{auxiliaryRestore(previous);}catch(...){}return false;}
+        }
         // References in CPU/PPU/APU must remain bound to this GameBoy's Memory.
         mem.vram=tmp.mem.vram;mem.wram=tmp.mem.wram;mem.oam=tmp.mem.oam;mem.io=tmp.mem.io;mem.hram=tmp.mem.hram;
         mem.bgPalette=tmp.mem.bgPalette;mem.objPalette=tmp.mem.objPalette;
@@ -1833,6 +1517,7 @@ public:
         mem.cpuHalted=cpu.halted;
         ppu.dot=tmp.ppu.dot;ppu.lcdWasOn=tmp.ppu.lcdWasOn;ppu.pixels=tmp.ppu.pixels;
         ppu.drawing=tmp.ppu.drawing;ppu.state=tmp.ppu.state;ppu.frameNumber=tmp.ppu.frameNumber;
+        native_state::commitAccuracy(ppu,tmp.ppu);native_state::commitAccuracy(apu,tmp.apu);
         mem.pendingDmaSource=tmp.mem.pendingDmaSource;mem.dmaDelay=tmp.mem.dmaDelay;mem.timerJustReloaded=tmp.mem.timerJustReloaded;
         mem.serialSent=tmp.mem.serialSent;mem.ppuStatMode=tmp.mem.ppuStatMode;
         mem.ppuCompareLY=tmp.mem.ppuCompareLY;mem.ppuDot=ppu.dot;

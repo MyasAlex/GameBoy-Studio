@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Win32-ninja"
+	tests="1"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname="6915fe0a2fbc"
+	time="2"
+	timestamp="2026-10-23T01:53:28"
+	>
+	<testcase name="frame_pacing" classname="frame_pacing" time="2.9075" status="run">
+		<properties/>
+		<system-out>PASS: 10-second refresh-independent pacing at 60/144/240 Hz, explicit rates, catchup bounds, transitions and invalid clocks
+</system-out>
+	</testcase>
+</testsuite>

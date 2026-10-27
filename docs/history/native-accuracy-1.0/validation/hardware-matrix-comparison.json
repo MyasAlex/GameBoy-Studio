@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "baseline_report_sha256": "7f4f764f8e03e7c5bd4845cf9b706ddb6ff7cbb25da1210ade04713884ad135e",
+  "final_report_sha256": "17cfdacede2d9bc7113ec2e5e7753a2d2a085c0c41fc72cb7fab4714f3378427",
+  "protocol_audit_sha256": "9c208eff53dd24fbbd69483e88606de37c193208171e20ccaf1487860461fa64",
+  "same_jobs_and_rom_hashes": true,
+  "total_jobs": 602,
+  "baseline_summary": {
+    "gbmicrotest": {
+      "PASS": 337,
+      "FAIL": 145,
+      "INCOMPLETE": 31,
+      "TIMEOUT": 0,
+      "ERROR": 0
+    },
+    "mooneye-cgb": {
+      "PASS": 81,
+      "FAIL": 8,
+      "INCOMPLETE": 0,
+      "TIMEOUT": 0,
+      "ERROR": 0
+    }
+  },
+  "final_summary": {
+    "gbmicrotest": {
+      "PASS": 337,
+      "FAIL": 145,
+      "INCOMPLETE": 31,
+      "TIMEOUT": 0,
+      "ERROR": 0
+    },
+    "mooneye-cgb": {
+      "PASS": 88,
+      "FAIL": 1,
+      "INCOMPLETE": 0,
+      "TIMEOUT": 0,
+      "ERROR": 0
+    }
+  },
+  "pass_change": 7,
+  "asserting_gbmicrotest": {
+    "baseline": {
+      "PASS": 337,
+      "FAIL": 145
+    },
+    "final": {
+      "PASS": 337,
+      "FAIL": 145
+    }
+  },
+  "manual_gbmicrotest_probes": [
+    {
+      "rom": "gbmicrotest/000-oam_lock.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/000-write_to_x8000.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/001-vram_unlocked.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/002-vram_locked.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/004-tima_boot_phase.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/004-tima_cycle_timer.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/007-lcd_on_stat.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/400-dma.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/500-scx-timing.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/800-ppu-latch-scx.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/801-ppu-latch-scy.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/802-ppu-latch-tileselect.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/803-ppu-latch-bgdisplay.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/audio_testbench.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/cpu_bus_1.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/dma_basic.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/flood_vram.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/lcdon_write_timing.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/ly_while_lcd_off.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/minimal.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/mode2_stat_int_to_oam_unlock.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/oam_sprite_trashing.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/poweron.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/ppu_scx_vs_bgp.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/ppu_sprite_testbench.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/ppu_spritex_vs_scx.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/ppu_win_vs_wx.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/ppu_wx_early.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/temp.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/toggle_lcdc.gb",
+      "status": "INCOMPLETE"
+    },
+    {
+      "rom": "gbmicrotest/wave_write_to_0xC003.gb",
+      "status": "INCOMPLETE"
+    }
+  ],
+  "improvements": [
+    {
+      "suite": "mooneye-cgb",
+      "rom": "mooneye-test-suite/misc/bits/unused_hwio-C.gb",
+      "model": "cgbe",
+      "before": "FAIL",
+      "after": "PASS"
+    },
+    {
+      "suite": "mooneye-cgb",
+      "rom": "mooneye-test-suite/misc/boot_div-A.gb",
+      "model": "agb",
+      "before": "FAIL",
+      "after": "PASS"
+    },
+    {
+      "suite": "mooneye-cgb",
+      "rom": "mooneye-test-suite/misc/boot_div-cgb0.gb",
+      "model": "cgb0",
+      "before": "FAIL",
+      "after": "PASS"
+    },
+    {
+      "suite": "mooneye-cgb",
+      "rom": "mooneye-test-suite/misc/boot_div-cgbABCDE.gb",
+      "model": "cgbe",
+      "before": "FAIL",
+      "after": "PASS"
+    },
+    {
+      "suite": "mooneye-cgb",
+      "rom": "mooneye-test-suite/misc/boot_regs-A.gb",
+      "model": "agb",
+      "before": "FAIL",
+      "after": "PASS"
+    },
+    {
+      "suite": "mooneye-cgb",
+      "rom": "mooneye-test-suite/misc/boot_regs-cgb.gb",
+      "model": "cgbe",
+      "before": "FAIL",
+      "after": "PASS"
+    },
+    {
+      "suite": "mooneye-cgb",
+      "rom": "mooneye-test-suite/misc/ppu/vblank_stat_intr-C.gb",
+      "model": "cgbe",
+      "before": "FAIL",
+      "after": "PASS"
+    }
+  ],
+  "regressions": [],
+  "other_changes": [],
+  "limitations": "Pass counts apply to these exact ROM hashes and hardware profiles only. GBMicrotest includes experimental assertions and manual probes; no failure has been excluded or relabeled. 31 nonasserting probes remain reported separately by source audit. No commercial games were tested.",
+  "raw_final_report_sha256": "09e03087dbbd7d4885844232300f88dfb4b9fa4e588253d172311302298a2d4e",
+  "final_report": "../native-hardware-matrix.json",
+  "baseline_report": "hardware-matrix-baseline.json"
+}

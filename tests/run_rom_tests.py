@@ -84,7 +84,7 @@ def main(argv=None):
     parser.add_argument('--download', action='store_true')
     parser.add_argument('--mooneye', action='store_true')
     parser.add_argument('--boot-rom', type=Path,
-                        help='Use a user-supplied 256-byte DMG boot image for every test; default: bundled SameBoy replacement firmware')
+                        help='Use a user-supplied 256-byte DMG boot image for every test; default: Studio native post-boot initialization')
     parser.add_argument('--allow-known-failures', action='store_true')
     parser.add_argument('--report', type=Path, default=ROOT/'build/rom-tests.json')
     args = parser.parse_args(argv)
@@ -92,9 +92,9 @@ def main(argv=None):
     if not executable.is_file():
         parser.error(f'Emulator executable not found: {executable}')
     boot_options = []
-    boot_firmware = {'source': 'bundled_sameboy_replacement', 'model': 'DMG',
+    boot_firmware = {'source': 'studio_native_post_boot', 'model': 'DMG',
                      'sha256': None,
-                     'note': 'Default accuracy-core boot policy; the executable does not expose the embedded firmware hash.'}
+                     'note': 'Studio initializes the hardware at the cartridge entry point without executing bundled boot firmware.'}
     if args.boot_rom:
         boot_path = args.boot_rom.resolve()
         try:

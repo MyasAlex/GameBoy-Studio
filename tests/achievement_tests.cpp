@@ -1,9 +1,9 @@
 #include "../src/achievement_tools.hpp"
-#include "../src/accuracy_core.hpp"
+#include "../src/portable_state.hpp"
 #include "../src/session.hpp"
 #include <chrono>
 #define CHECK(x) do{if(!(x)){std::cerr<<"FAIL "<<#x<<" line "<<__LINE__<<'\n';return 1;}}while(false)
-int main(int argc,char** argv){CHECK(argc==2);auto g=std::make_unique<GameBoy>();CHECK(accurate::enable(*g)&&g->load(argv[1]));
+int main(int argc,char** argv){CHECK(argc==2);auto g=std::make_unique<GameBoy>();CHECK(g->load(argv[1]));
     std::atomic<unsigned> unlocks=0;
     achievements::Client client(*g,[&](const achievements::Request& r)->achievements::Response{
         if(r.post.find("r=login2")!=std::string::npos)return {R"({"Success":true,"User":"OfflineTest","Token":"FakeToken","Score":0,"SoftcoreScore":0,"Messages":0})",200};
@@ -15,9 +15,10 @@ int main(int argc,char** argv){CHECK(argc==2);auto g=std::make_unique<GameBoy>()
     client.login("OfflineTest","FakeToken");const auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(5);
     while(client.rows().empty()&&std::chrono::steady_clock::now()<deadline){client.poll();std::this_thread::yield();}
     CHECK(client.signedIn()&&client.rows().size()==1&&client.hardcore());CHECK(client.takeReset());g->reset();client.reset();
-    client.setHardcore(false);g->mem.write(0xC023,0);client.frame();const auto state=g->serializeState();CHECK(!client.progress().empty());
+    client.setHardcore(false);g->mem.write(0xC023,0);client.frame();const auto state=g->serializeState(),bess=saves::exportBess(*g);CHECK(!client.progress().empty()&&!bess.empty());
     g->mem.write(0xC023,42);client.frame();client.frame();
     while(!unlocks&&std::chrono::steady_clock::now()<deadline){client.poll();std::this_thread::yield();}CHECK(unlocks==1);
+    CHECK(saves::importBess(*g,bess)&&g->mem.read(0xC023)==0);
     CHECK(g->deserializeState(state)&&g->mem.read(0xC023)==0);client.setHardcore(true);CHECK(client.takeReset());g->reset();client.reset();
     CHECK(client.hardcore());client.logout();CHECK(!client.signedIn()&&!client.hardcore());
     CHECK(g->deserializeState(state)&&g->mem.read(0xC023)==0);

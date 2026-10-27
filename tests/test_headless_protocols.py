@@ -26,11 +26,17 @@ class HeadlessProtocols(unittest.TestCase):
 
     def test_capture_requires_software_breakpoint(self):
         ready = self.rom('ready.gb', b'\x40\x18\xfe')
-        for core in ('accurate', 'original'):
+        for core in ('studio', 'original'):
             with self.subTest(core=core):
                 result = self.execute(ready, '--core', core, '--ppu-test')
                 self.assertEqual(result.returncode, 0, result.stdout+result.stderr)
                 self.assertIn('RESULT: PASS', result.stdout)
+
+    def test_removed_core_is_rejected_without_silent_fallback(self):
+        ready = self.rom('unsupported-core.gb', b'\x40\x18\xfe')
+        result = self.execute(ready, '--core', 'accurate', '--ppu-test')
+        self.assertEqual(result.returncode, 2, result.stdout+result.stderr)
+        self.assertNotIn('RESULT: PASS', result.stdout)
 
     def test_budget_exhaustion_cannot_pass_even_if_image_export_succeeds(self):
         pending = self.rom('pending.gb', b'\x18\xfe')

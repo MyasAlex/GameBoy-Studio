@@ -1,0 +1,41 @@
+Test project /workspace/build-native-asan
+      Start  4: native_integration
+      Start 17: feature_pack
+ 1/18 Test  #4: native_integration ...............   Passed   14.61 sec
+      Start 18: loader_fuzz
+ 2/18 Test #17: feature_pack .....................   Passed   15.00 sec
+      Start  3: native_state_fuzz
+ 3/18 Test  #3: native_state_fuzz ................   Passed    7.62 sec
+      Start 13: session
+ 4/18 Test #18: loader_fuzz ......................   Passed   10.98 sec
+      Start  7: core
+ 5/18 Test #13: session ..........................   Passed    8.67 sec
+      Start 11: cgb_integration
+ 6/18 Test  #7: core .............................   Passed    7.81 sec
+      Start  5: integration_pack
+ 7/18 Test #11: cgb_integration ..................   Passed    3.03 sec
+      Start 15: audio_buffer
+ 8/18 Test #15: audio_buffer .....................   Passed    0.02 sec
+      Start 12: core_extension
+ 9/18 Test #12: core_extension ...................   Passed    1.12 sec
+      Start  8: cgb_memory
+10/18 Test  #5: integration_pack .................   Passed    2.07 sec
+      Start  2: native_core_regressions
+11/18 Test  #2: native_core_regressions ..........   Passed    0.33 sec
+      Start  6: achievements
+12/18 Test  #8: cgb_memory .......................   Passed    0.51 sec
+      Start 14: studio_tools
+13/18 Test  #6: achievements .....................   Passed    0.19 sec
+      Start 10: cgb_apu
+14/18 Test #14: studio_tools .....................   Passed    0.08 sec
+      Start  9: cgb_ppu
+15/18 Test #10: cgb_apu ..........................   Passed    0.10 sec
+      Start 16: cartridge_tools
+16/18 Test  #9: cgb_ppu ..........................   Passed    0.04 sec
+      Start  1: frame_pacing
+17/18 Test  #1: frame_pacing .....................   Passed    0.01 sec
+18/18 Test #16: cartridge_tools ..................   Passed    0.03 sec
+
+100% tests passed out of 18
+
+Total Test time (real) =  36.12 sec

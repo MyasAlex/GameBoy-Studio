@@ -22,9 +22,12 @@ cmake --build build\cmake --config Release --parallel 4
 if errorlevel 1 goto failed
 ctest --test-dir build\cmake -C Release --output-on-failure
 if errorlevel 1 goto failed
+rem Remove engine DLLs left over from older installations; Studio Core is built in.
+if exist dist\gb_accuracy.dll del /q dist\gb_accuracy.dll
+if exist dist\tools\gb_accuracy.dll del /q dist\tools\gb_accuracy.dll
 cmake --install build\cmake --config Release --prefix dist
 if errorlevel 1 goto failed
-echo SUCCESS: dist\GBStudio.exe
+echo SUCCESS: dist\GBStudio.exe - native Studio Core, no engine DLL required
 if "%GB_NO_LAUNCH%"=="1" exit /b 0
 start "" "dist\GBStudio.exe"
 exit /b 0

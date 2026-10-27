@@ -32,7 +32,7 @@ public:
         return out;
     }
     static bool unpack(std::span<const u8> packet,std::size_t expected,std::vector<u8>& output) {
-        if(expected>500000)return false;
+        if(expected>GameBoy::stateSizeLimit)return false;
         std::vector<u8> value;value.reserve(expected);
         std::size_t i=0;
         while(i<packet.size()) {

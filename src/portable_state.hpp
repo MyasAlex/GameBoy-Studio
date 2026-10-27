@@ -4,39 +4,20 @@
 #include <type_traits>
 #include <memory>
 
-// BESS 1.1 plus a portable, field-encoded GBSP extension. Native GBSTATE3-6
+// BESS 1.1 plus a portable, field-encoded GBSP extension. Native GBSTATE3-8
 // remain readable. No C++ object layout or padding is stored in GBSP.
 namespace saves {
+// BESS includes standard RAM/VRAM buffers in addition to the exact GBSP state.
+// Its file limit must therefore exceed the native-state limit.
+inline constexpr std::size_t bessFileSizeLimit=6*1024*1024;
 inline u32 le32(std::span<const u8> b,std::size_t at){return (u32)b[at]|((u32)b[at+1]<<8)|((u32)b[at+2]<<16)|((u32)b[at+3]<<24);}
 inline u16 le16(std::span<const u8> b,std::size_t at){return (u16)(b[at]|(b[at+1]<<8));}
 inline void put32(std::vector<u8>& b,u32 v){for(int i=0;i<4;++i)b.push_back((u8)(v>>(i*8)));}
 inline void set32(std::vector<u8>& b,std::size_t at,u32 v){for(int i=0;i<4;++i)b[at+i]=(u8)(v>>(i*8));}
 inline void set16(std::vector<u8>& b,std::size_t at,u16 v){b[at]=(u8)v;b[at+1]=(u8)(v>>8);}
 inline u32 hash(std::span<const u8> b){u32 v=2166136261u;for(u8 n:b){v^=n;v*=16777619u;}return v;}
-struct Codec {
-    std::vector<u8> output;std::span<const u8> input;std::size_t at=0;bool reading=false,ok=true;
-    explicit Codec(std::span<const u8> bytes):input(bytes),reading(true){}
-    Codec()=default;
-    template<class T> void field(T& value){
-        constexpr unsigned size=std::is_same_v<T,bool>?1:std::is_same_v<T,int>?4:sizeof(T);
-        static_assert(size<=8);
-        u64 v=0;
-        if(reading){if(at>input.size()||size>input.size()-at){ok=false;return;}
-            for(unsigned i=0;i<size;++i)v|=(u64)input[at++]<<(8*i);
-            if constexpr(std::is_same_v<T,bool>){if(v>1){ok=false;return;}value=v!=0;}
-            else if constexpr(std::is_same_v<T,double>){value=std::bit_cast<double>(v);if(!std::isfinite(value))ok=false;}
-            else if constexpr(std::is_same_v<T,int>)value=(int)(std::int32_t)(u32)v;
-            else value=(T)v;
-        }else{
-            if constexpr(std::is_same_v<T,double>)v=std::bit_cast<u64>(value);
-            else v=(u64)value;
-            for(unsigned i=0;i<size;++i)output.push_back((u8)(v>>(8*i)));
-        }
-    }
-    template<class... T> void fields(T&... v){(field(v),...);}
-    template<class T> void array(T& data){for(auto& v:data)field(v);}
-};
-inline void visit(GameBoy& g,Codec& c){
+using Codec=native_state::Codec;
+inline void visit(GameBoy& g,Codec& c,bool accuracy=true){
     auto& m=g.mem;auto& cpu=g.cpu;auto& p=g.ppu;auto& a=g.apu;auto& s=p.state;auto& t=a.state;
     c.fields(cpu.A,cpu.F,cpu.B,cpu.C,cpu.D,cpu.E,cpu.H,cpu.L,cpu.SP,cpu.PC,cpu.IME,cpu.halted,cpu.stopped,cpu.haltBug,cpu.locked,cpu.imeDelay);
     c.fields(m.ie,m.divCounter,m.timerReload,m.timerJustReloaded,m.serialTicks,m.serialBits,m.serialSent,m.dmaTicks,m.dmaPos,m.dmaDelay,m.dmaSource,m.pendingDmaSource);
@@ -53,6 +34,12 @@ inline void visit(GameBoy& g,Codec& c){
     c.array(p.pixels);c.array(p.drawing);
     for(auto& channel:t.channels)c.fields(channel.timer,channel.length,channel.phase,channel.volume,channel.envelopeTimer,channel.enabled,channel.dac,channel.lengthEnabled,channel.envelopeRunning,channel.started);
     c.fields(t.frameStep,t.sweepShadow,t.sweepTimer,t.waveAccess,t.waveByte,t.sweepEnabled,t.sweepNegated,t.lfsr,t.waveBuffer,t.sampleClock,t.mixDivider,t.mixCount,t.sumLeft,t.sumRight,t.capLeft,t.capRight,a.sampleRate);
+    if(accuracy){
+        u32 profile=(u32)m.hardwareModel;c.field(profile);
+        if(profile!=(u32)m.hardwareModel){c.ok=false;return;}
+        native_state::readAccuracy(p,c);native_state::readAccuracy(a,c);
+        if(!native_state::validAccuracy(p)||!native_state::validAccuracy(a))c.ok=false;
+    }
 }
 inline void configureClone(GameBoy& target,const GameBoy& source){
     target.mem.rom=source.mem.rom;target.mem.eram=source.mem.eram;target.mem.romPath=source.mem.romPath;
@@ -64,7 +51,7 @@ inline void configureClone(GameBoy& target,const GameBoy& source){
 inline std::vector<u8> portable(const GameBoy& source){
     auto cloneStorage=std::make_unique<GameBoy>();auto& clone=*cloneStorage;configureClone(clone,source);
     if(!clone.deserializeState(source.serializeState()))return {};
-    Codec c;u32 signature=0x32505347,rom=source.romHash(),boot=source.mem.bootROMMapped?hash(source.mem.bootROM):0;
+    Codec c;u32 signature=0x33505347,rom=source.romHash(),boot=source.mem.bootROMMapped?hash(source.mem.bootROM):0;
     c.fields(signature,rom,boot);visit(clone,c);const u32 sum=hash(c.output);put32(c.output,sum);return c.output;
 }
 inline void block(std::vector<u8>& file,std::string_view name,std::span<const u8> data){file.insert(file.end(),name.begin(),name.end());put32(file,(u32)data.size());file.insert(file.end(),data.begin(),data.end());}
@@ -83,7 +70,7 @@ inline std::vector<u8> exportBess(const GameBoy& g){
     buffer(0xA8,g.mem.eram);buffer(0xB0,g.mem.oam);buffer(0xB8,g.mem.hram);
     buffer(0xC0,g.mem.isCGBHardware()?std::span<const u8>(g.mem.bgPalette):std::span<const u8>());
     buffer(0xC8,g.mem.isCGBHardware()?std::span<const u8>(g.mem.objPalette):std::span<const u8>());
-    const u32 start=(u32)file.size();const std::string name="GameBoy Studio 0.9";block(file,"NAME",{(const u8*)name.data(),name.size()});
+    const u32 start=(u32)file.size();const std::string name="GameBoy Studio native";block(file,"NAME",{(const u8*)name.data(),name.size()});
     std::vector<u8> info(g.mem.rom.begin()+0x134,g.mem.rom.begin()+0x144);info.push_back(g.mem.rom[0x14E]);info.push_back(g.mem.rom[0x14F]);block(file,"INFO",info);block(file,"CORE",core);
     std::vector<u8> mbc;auto write=[&](u16 addr,u8 value){mbc.push_back((u8)addr);mbc.push_back((u8)(addr>>8));mbc.push_back(value);};
     if(g.mem.mbc){write(0,g.mem.ramEnabled?0x0A:0);write(g.mem.mbc==2?0x2100:0x2000,(u8)g.mem.romBank);
@@ -93,20 +80,26 @@ inline std::vector<u8> exportBess(const GameBoy& g){
     if(g.mem.hasRTC){std::vector<u8> rtc(48);for(int i=0;i<5;++i){rtc[i*4]=g.mem.rtc[i];rtc[20+i*4]=g.mem.latchedRTC[i];}
         const auto now=(u64)std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
         for(int i=0;i<8;++i)rtc[40+i]=(u8)(now>>(i*8));block(file,"RTC ",rtc);}
-    const auto exact=portable(g);if(exact.empty())return {};block(file,"GBSP",exact);block(file,"END ",{});put32(file,start);file.insert(file.end(),{'B','E','S','S'});return file;
+    const auto exact=portable(g);if(exact.empty())return {};block(file,"GBSP",exact);
+    // Auxiliary state is independent of the standard BESS hardware payload.
+    // The checksum makes corrupted progress reject before either state commits.
+    if(g.auxiliaryState){auto auxiliary=g.auxiliaryState();if(auxiliary.size()>GameBoy::auxiliaryStateLimit)return {};
+        put32(auxiliary,hash(auxiliary));block(file,"GBAU",auxiliary);}
+    block(file,"END ",{});put32(file,start);file.insert(file.end(),{'B','E','S','S'});return file;
 }
 inline bool importBess(GameBoy& live,std::span<const u8> file,std::string* error=nullptr){
     if(live.backendRestore){const bool ok=live.backendRestore(file);if(error)*error=ok?"":"Hardware backend rejected the BESS state.";return ok;}
     auto fail=[&](const char* text){if(error)*error=text;return false;};
     if(live.mem.rom.size()<0x150)return fail("Load a ROM before importing a state.");
-    if(file.size()<16||file.size()>2*1024*1024||std::memcmp(file.data()+file.size()-4,"BESS",4))return fail("Missing BESS footer.");
+    if(file.size()<16||file.size()>bessFileSizeLimit||std::memcmp(file.data()+file.size()-4,"BESS",4))return fail("Missing BESS footer.");
     std::size_t at=le32(file,file.size()-8);if(at>file.size()-8)return fail("Invalid BESS block offset.");
-    std::span<const u8> core,exact,info,mbc,rtc;bool end=false;unsigned blocks=0;
+    std::span<const u8> core,exact,info,mbc,rtc,auxiliary;bool end=false,hasAuxiliary=false;unsigned blocks=0;
     while(at<file.size()-8&&++blocks<=128){if(file.size()-8-at<8)return fail("Truncated BESS block.");
         const std::string tag((const char*)file.data()+at,4);const auto size=le32(file,at+4);at+=8;
         if(size>file.size()-8-at)return fail("BESS block exceeds file.");const auto data=file.subspan(at,size);at+=size;
         if(tag=="CORE"){if(!core.empty())return fail("Duplicate CORE block.");core=data;}
         else if(tag=="GBSP"){if(!exact.empty())return fail("Duplicate GBSP block.");exact=data;}
+        else if(tag=="GBAU"){if(hasAuxiliary)return fail("Duplicate auxiliary state block.");hasAuxiliary=true;auxiliary=data;}
         else if(tag=="INFO")info=data;else if(tag=="MBC ")mbc=data;else if(tag=="RTC ")rtc=data;
         else if(tag=="END "){if(size||at!=file.size()-8)return fail("Invalid END block.");end=true;break;}
     }
@@ -116,12 +109,16 @@ inline bool importBess(GameBoy& live,std::span<const u8> file,std::string* error
     for(std::size_t offset=0x98;offset<=0xC8;offset+=8){const u32 size=le32(core,offset),pos=le32(core,offset+4);if(pos>file.size()-8||size>file.size()-8-pos)return fail("Invalid BESS memory buffer.");}
     const bool color=core[4]=='C',compat=color&&(core[24+0x4C]&4);
     if(color!=live.mem.isCGBHardware()||(core[24+0x50]!=0&&compat!=live.mem.dmgCompatibility))return fail("Select the same hardware model before importing this state.");
+    if(hasAuxiliary&&(auxiliary.size()<4||auxiliary.size()-4>GameBoy::auxiliaryStateLimit||
+       hash(auxiliary.first(auxiliary.size()-4))!=le32(auxiliary,auxiliary.size()-4)))return fail("Auxiliary state checksum mismatch.");
     auto storage=std::make_unique<GameBoy>();auto& tmp=*storage;configureClone(tmp,live);
     if(!exact.empty()){
         if(exact.size()<16||hash(exact.first(exact.size()-4))!=le32(exact,exact.size()-4))return fail("GBSP checksum mismatch.");
         Codec codec(exact.first(exact.size()-4));u32 version=0,rom=0,boot=0;codec.fields(version,rom,boot);
-        if(version!=0x32505347||rom!=live.romHash())return fail("GBSP version/ROM mismatch.");visit(tmp,codec);
+        if((version!=0x32505347&&version!=0x33505347)||rom!=live.romHash())return fail("GBSP version/ROM mismatch.");
+        visit(tmp,codec,version==0x33505347);
         if(!codec.ok||codec.at!=codec.input.size())return fail("Invalid portable state payload.");
+        if(version==0x32505347){native_state::restoreLegacy(tmp.ppu);native_state::restoreLegacy(tmp.apu);}
         if(tmp.mem.bootROMMapped){const auto& image=tmp.mem.bootROMCGB?live.mem.cgbBootROM:live.mem.dmgBootROM;
             if(hash(live.mem.bootROM)==boot&&!live.mem.bootROM.empty())tmp.mem.bootROM=live.mem.bootROM;
             else if(hash(image)==boot&&!image.empty())tmp.mem.bootROM=image;else return fail("This state needs its original boot ROM.");}
@@ -143,9 +140,17 @@ inline bool importBess(GameBoy& live,std::span<const u8> file,std::string* error
         tmp.mem.refreshStat();
     }
     auto validator=std::make_unique<GameBoy>();auto& validate=*validator;configureClone(validate,live);const auto native=tmp.serializeState();if(!validate.deserializeState(native))return fail("State failed core validation.");
-    if(!live.deserializeState(native))return fail("State could not be committed.");if(error)error->clear();return true;
+    std::vector<u8> previousAuxiliary;bool auxiliaryApplied=false;
+    if(hasAuxiliary&&live.auxiliaryRestore){
+        if(!live.auxiliaryState)return fail("Auxiliary restoration requires a state snapshot callback.");
+        previousAuxiliary=live.auxiliaryState();if(previousAuxiliary.size()>GameBoy::auxiliaryStateLimit)return fail("Previous auxiliary state is too large.");
+        bool restored=false;try{restored=live.auxiliaryRestore(auxiliary.first(auxiliary.size()-4));}catch(...){restored=false;}
+        if(!restored){try{live.auxiliaryRestore(previousAuxiliary);}catch(...){}return fail("Auxiliary state was rejected.");}auxiliaryApplied=true;
+    }
+    if(!live.deserializeState(native)){if(auxiliaryApplied){try{live.auxiliaryRestore(previousAuxiliary);}catch(...){}}return fail("State could not be committed.");}
+    if(error)error->clear();return true;
 }
 inline bool save(GameBoy& gb,const std::filesystem::path& path){const auto bytes=exportBess(gb);return !bytes.empty()&&Memory::writeAtomic(path,{(const char*)bytes.data(),bytes.size()},true);}
-inline bool load(GameBoy& gb,const std::filesystem::path& path,std::string* error=nullptr){const auto bytes=Memory::loadBytes(path,6*1024*1024);
+inline bool load(GameBoy& gb,const std::filesystem::path& path,std::string* error=nullptr){const auto bytes=Memory::loadBytes(path,bessFileSizeLimit);
     if(bytes.size()>=4&&!std::memcmp(bytes.data()+bytes.size()-4,"BESS",4))return importBess(gb,bytes,error);return gb.deserializeState(bytes);}
 } // namespace saves

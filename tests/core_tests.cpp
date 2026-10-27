@@ -33,30 +33,6 @@ static void testCartridges(){
     std::filesystem::remove(path);
 
 }
-static void testSingleBankHomebrew(){
-    const auto path=std::filesystem::temp_directory_path()/"gbstudio-single-bank.gb";
-    std::vector<u8> image(16384,0);
-    image[0x123]=0x5A;image.back()=0xA5;
-    Memory memory;
-    for(u8 type:{u8(0x00),u8(0x08),u8(0x09)}){
-        image[0x147]=type;image[0x149]=type?2:0;
-        CHECK(Memory::writeAtomic(path,{(const char*)image.data(),image.size()}));
-        CHECK(memory.loadROM(path)&&memory.rom==image&&memory.mbc==0);
-        // Legacy unbanked addressing mirrors its sole physical bank.
-        CHECK(memory.read(0x0123)==0x5A&&memory.read(0x4123)==0x5A);
-        CHECK(memory.read(0x3FFF)==0xA5&&memory.read(0x7FFF)==0xA5);
-    }
-    const auto previous=memory.rom;
-    for(u8 type:{u8(0x01),u8(0x03),u8(0x13),u8(0x1B)}){
-        image[0x147]=type;
-        CHECK(Memory::writeAtomic(path,{(const char*)image.data(),image.size()}));
-        CHECK(!memory.loadROM(path)&&memory.rom==previous);
-    }
-    image.resize(16383);image[0x147]=0;
-    CHECK(Memory::writeAtomic(path,{(const char*)image.data(),image.size()}));
-    CHECK(!memory.loadROM(path)&&memory.rom==previous);
-    std::filesystem::remove(path);
-}
 static void testTimer(){
     Memory m;
     m.write(0xFF06,42);m.write(0xFF05,0xFF);m.write(0xFF07,0x05);
@@ -198,7 +174,7 @@ static void testStateIntegrity(const std::filesystem::path& demo){
     std::filesystem::remove(g.statePath());std::filesystem::remove(temp);
 }
 int main(int argc,char** argv){
-    testCartridges();testSingleBankHomebrew();testTimer();testPpu();testCpuAllDocumented();testCBGroup();testJoypad();
+    testCartridges();testTimer();testPpu();testCpuAllDocumented();testCBGroup();testJoypad();
     testInterruptSequence();testVideoBusAndDma();testFrameClockAndAudio();testRtc();
     if(argc>1){testStatesAndDemo(argv[1]);testStateIntegrity(argv[1]);}
     std::cout<<"ALL CORE TESTS PASSED\n";

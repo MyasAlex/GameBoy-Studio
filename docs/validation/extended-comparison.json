@@ -1,0 +1,740 @@
+{
+  "baseline": "../history/native-v1/native-extended-results.json",
+  "current": "../native-extended-results.json",
+  "same_cases": true,
+  "baseline_passed": 25,
+  "current_passed": 73,
+  "total": 149,
+  "pass_regressions": [],
+  "changed_results_or_pixel_counts": [
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_bg_map_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 1982,
+      "after_differing_pixels": 586
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_bg_map_change2.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 725,
+      "after_differing_pixels": 327
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 244,
+      "after_differing_pixels": 355
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_scx.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 223,
+      "after_differing_pixels": 140
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 1730,
+      "after_differing_pixels": 1746
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_change2.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 1329,
+      "after_differing_pixels": 1316
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_win_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 1000,
+      "after_differing_pixels": 1426
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_win_change2.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 1372,
+      "after_differing_pixels": 1863
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_win_en_change_multiple.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": 8316,
+      "after_differing_pixels": 0
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_win_map_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 1202,
+      "after_differing_pixels": 526
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_win_map_change2.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 470,
+      "after_differing_pixels": 210
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_scx_high_5_bits.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 8903,
+      "after_differing_pixels": 19
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_scx_high_5_bits_change2.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 303,
+      "after_differing_pixels": 102
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_scy_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 7359,
+      "after_differing_pixels": 7298
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_scy_change2.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 373,
+      "after_differing_pixels": 390
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_window_timing.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 819,
+      "after_differing_pixels": 823
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_window_timing_wx_0.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 807,
+      "after_differing_pixels": 898
+    },
+    {
+      "suite": "mealybug-cgb-c",
+      "rom": "mealybug-tearoom-tests/ppu/m3_wx_4_change_sprites.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 10,
+      "after_differing_pixels": 20
+    },
+    {
+      "suite": "mealybug-cgb-d",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_bg_map_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 1982,
+      "after_differing_pixels": 586
+    },
+    {
+      "suite": "mealybug-cgb-d",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 244,
+      "after_differing_pixels": 355
+    },
+    {
+      "suite": "mealybug-cgb-d",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_scx.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 223,
+      "after_differing_pixels": 140
+    },
+    {
+      "suite": "mealybug-cgb-d",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 1730,
+      "after_differing_pixels": 1746
+    },
+    {
+      "suite": "mealybug-cgb-d",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_win_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 1000,
+      "after_differing_pixels": 1426
+    },
+    {
+      "suite": "mealybug-cgb-d",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_win_en_change_multiple.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": 8316,
+      "after_differing_pixels": 0
+    },
+    {
+      "suite": "mealybug-cgb-d",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_win_map_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 1202,
+      "after_differing_pixels": 526
+    },
+    {
+      "suite": "mealybug-cgb-d",
+      "rom": "mealybug-tearoom-tests/ppu/m3_scx_high_5_bits.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 8903,
+      "after_differing_pixels": 19
+    },
+    {
+      "suite": "mealybug-cgb-d",
+      "rom": "mealybug-tearoom-tests/ppu/m3_scy_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 10287,
+      "after_differing_pixels": 6141
+    },
+    {
+      "suite": "mealybug-cgb-d",
+      "rom": "mealybug-tearoom-tests/ppu/m3_window_timing.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 957,
+      "after_differing_pixels": 959
+    },
+    {
+      "suite": "mealybug-cgb-d",
+      "rom": "mealybug-tearoom-tests/ppu/m3_window_timing_wx_0.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 917,
+      "after_differing_pixels": 1008
+    },
+    {
+      "suite": "mealybug-cgb-d",
+      "rom": "mealybug-tearoom-tests/ppu/m3_wx_4_change_sprites.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 10,
+      "after_differing_pixels": 20
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_bg_map_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 1678,
+      "after_differing_pixels": 970
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 223,
+      "after_differing_pixels": 370
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_obj_size_change_scx.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 169,
+      "after_differing_pixels": 190
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 1506,
+      "after_differing_pixels": 2054
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_tile_sel_win_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 1322,
+      "after_differing_pixels": 1608
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_win_en_change_multiple.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": 8316,
+      "after_differing_pixels": 0
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_win_en_change_multiple_wx.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 5988,
+      "after_differing_pixels": 896
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_lcdc_win_map_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 1036,
+      "after_differing_pixels": 708
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_scx_high_5_bits.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 8887,
+      "after_differing_pixels": 84
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_scy_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 4496,
+      "after_differing_pixels": 9798
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_window_timing.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 957,
+      "after_differing_pixels": 959
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_window_timing_wx_0.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 917,
+      "after_differing_pixels": 1008
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_wx_4_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 229,
+      "after_differing_pixels": 780
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_wx_4_change_sprites.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 10,
+      "after_differing_pixels": 20
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_wx_5_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 638,
+      "after_differing_pixels": 1573
+    },
+    {
+      "suite": "mealybug-dmg",
+      "rom": "mealybug-tearoom-tests/ppu/m3_wx_6_change.gb",
+      "before": "FAIL",
+      "after": "FAIL",
+      "before_differing_pixels": 13799,
+      "after_differing_pixels": 13810
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_align.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_align_cpu.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_delay.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_duty.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_duty_delay.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_extra_length_clocking-cgb0B.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_freq_change.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_nrx2_glitch.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_nrx2_speed_change.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_restart.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_restart_nrx2_glitch.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_stop_div.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_stop_restart.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_sweep.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_sweep_restart.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_volume.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_1/channel_1_volume_div.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_2/channel_2_align.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_2/channel_2_align_cpu.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_2/channel_2_delay.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_2/channel_2_duty.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_2/channel_2_duty_delay.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_2/channel_2_extra_length_clocking-cgb0B.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_2/channel_2_freq_change.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_2/channel_2_nrx2_glitch.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_2/channel_2_nrx2_speed_change.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_2/channel_2_restart.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_2/channel_2_restart_nrx2_glitch.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_2/channel_2_stop_div.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_2/channel_2_stop_restart.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_2/channel_2_volume.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_2/channel_2_volume_div.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_3/channel_3_extra_length_clocking-cgb0.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_3/channel_3_extra_length_clocking-cgbB.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_4/channel_4_align.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_4/channel_4_delay.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_4/channel_4_extra_length_clocking-cgb0B.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/channel_4/channel_4_lfsr_7_15.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/div_trigger_volume_10.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/div_write_trigger_10.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/apu/div_write_trigger_volume_10.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/dma/gdma_addr_mask.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/dma/hdma_lcd_off.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/dma/hdma_mode0.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    },
+    {
+      "suite": "same-suite",
+      "rom": "same-suite/interrupt/ei_delay_halt.gb",
+      "before": "FAIL",
+      "after": "PASS",
+      "before_differing_pixels": null,
+      "after_differing_pixels": null
+    }
+  ],
+  "limits": "Failing image cases may have larger pixel differences despite improvements in other hardware behaviors. Pixel counts are not a universal accuracy score."
+}

@@ -1,0 +1,243 @@
+{
+  "GBStudio.exe": {
+    "sha256": "4895defdb4c62dc1a9b0af123e0925741253ef4c4a32de214292667adbd443e1",
+    "bytes": 4758980,
+    "imported_dlls": [
+      "AVICAP32.dll",
+      "AVRT.dll",
+      "comdlg32.dll",
+      "d3d11.dll",
+      "D3DCOMPILER_47.dll",
+      "GDI32.dll",
+      "KERNEL32.dll",
+      "msvcrt.dll",
+      "ole32.dll",
+      "SHELL32.dll",
+      "USER32.dll",
+      "WINHTTP.dll",
+      "WINMM.dll",
+      "WS2_32.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_accuracy_state_tests.exe": {
+    "sha256": "9299de0b5fb8785fb82213df48dcbbd298b1bf8f9366856bae950ebaa89dd657",
+    "bytes": 3141177,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_achievement_tests.exe": {
+    "sha256": "7945d6cf02d10984b229ac2a9e7dba70e85458f00f3f5ca982b4cb3b303919e8",
+    "bytes": 3500640,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll",
+      "WINHTTP.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_audio_buffer_tests.exe": {
+    "sha256": "7c79a59a648beff4676475cdac81978ac6baaccc6b45e4857cf85f5e96b30977",
+    "bytes": 2796959,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_cartridge_tools_tests.exe": {
+    "sha256": "c5eb69d3413ea48ad542890203ff457068a5a21a593e8306eb493942c211d24a",
+    "bytes": 2557204,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_cgb_apu_tests.exe": {
+    "sha256": "984bf55457faec70391b19e99ee025f8e28df9449c74f596eb4ad816631f4779",
+    "bytes": 2692204,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_cgb_integration_tests.exe": {
+    "sha256": "82c21723b99f6ab57c6c363795ee4eb6724081e8fa1df06171e20586fb3f4993",
+    "bytes": 3075228,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_cgb_memory_tests.exe": {
+    "sha256": "2b91e0764e97a799bc6d344236f4e9ea92ce1cec75e08d78babe0c3d4b5dd934",
+    "bytes": 3070349,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_cgb_ppu_tests.exe": {
+    "sha256": "6fbb138d50ca5063224436858d78de9870800b447d0c509eacc758af4c536031",
+    "bytes": 2634995,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_core_extension_tests.exe": {
+    "sha256": "a7527252132dff97ef97032fd0fa4601ce638548fbda24b25912f1bf66dff8ec",
+    "bytes": 3104639,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_core_tests.exe": {
+    "sha256": "570dd9168831ba4cbd2f20cca6eace3c729264d363c524c9479f372d47bf67c2",
+    "bytes": 3091669,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_cpu_dma_accuracy_tests.exe": {
+    "sha256": "4a340dc44c42525a31f11372ffbd607dadb8e8b2054730508c717c7140d147ea",
+    "bytes": 2715553,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_feature_pack_tests.exe": {
+    "sha256": "b24b43b458e5285d73f4e4f53b4db5c20bcbfc12c6012980e1b7b6f4b3353d72",
+    "bytes": 3642505,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll",
+      "WS2_32.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_frame_pacing_tests.exe": {
+    "sha256": "996329f4f759ca2f726e3b0dffb89ed297e62446766bd74cf1b4d3e633a1c559",
+    "bytes": 2535086,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_headless.exe": {
+    "sha256": "9d631b5feb80603dcbcdd1d14e945b6a53b854dda250ac551875405e6ca07923",
+    "bytes": 3115405,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll",
+      "SHELL32.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_integration_pack_tests.exe": {
+    "sha256": "a542502620c29e2cd7451a472c14ef26943879c0470a43839d152cff4efca0b1",
+    "bytes": 3441352,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_loader_fuzz_tests.exe": {
+    "sha256": "fef88050df220c43fdf10b642ba06a5841313ab98f1d0efb8184c7b4ed81dfe0",
+    "bytes": 3213929,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_native_apu_accuracy_tests.exe": {
+    "sha256": "cdb89dea13c1ad2199fb8f72ec6776479105c04510f9a07885f1da248db796db",
+    "bytes": 2625656,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_native_core_regression_tests.exe": {
+    "sha256": "79e365b36a3cfc760cd9181489a628c3b6d0523f00eb2ad896aa8639314ca907",
+    "bytes": 3082130,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_native_integration_tests.exe": {
+    "sha256": "258536d2fe8662dae82c7e1da61554de830a63812e734923803ef6741d66ddd7",
+    "bytes": 3201100,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll",
+      "WS2_32.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_native_ppu_accuracy_tests.exe": {
+    "sha256": "4c1b3a4cb893ef95171bfd1d318c9cd3d8c293ccf2373a6197f9b3f1c51d899f",
+    "bytes": 2697597,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_native_state_fuzz_tests.exe": {
+    "sha256": "7a3c8ceacb2abcc1c0f2e2d481b5877b023ea80a50ec44b67b2b21710ef779f8",
+    "bytes": 3107877,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_pixel_filters.exe": {
+    "sha256": "176adbd3ad8592a0b0a850904b673419fcb5aa65518a65fb4dea927636d22ea3",
+    "bytes": 2960264,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_session_tests.exe": {
+    "sha256": "a6452692f3302623f9107dc6eeed6e8da5e78f2613f1a5725ab790f165cf4843",
+    "bytes": 3086544,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  },
+  "gb_studio_tools_tests.exe": {
+    "sha256": "ba798458ce59303851ff20365580c662d36003aaa60f598c3524289be8f835f6",
+    "bytes": 2949282,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "pe_stack_reserve": "0000000000800000"
+  }
+}

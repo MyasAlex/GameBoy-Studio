@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-10-23T01:55:45.755072+00:00",
+  "edition": "GameBoy Studio native core",
+  "engine": {
+    "source": "src/gameboy.hpp",
+    "sha256": "94ea21cdb3064f0d7950f80bd1070b51e2d0cbfcab57788ad888c8b28586e790",
+    "origin": "The existing original Studio C++ core, made the sole engine and developed in this task.",
+    "sameboy_engine_or_firmware_included": false,
+    "external_engine_dll_required": false,
+    "original_project_license_retained": true
+  },
+  "internal_suites": {
+    "release": {
+      "description": "Linux x86_64 GCC 14 Release",
+      "status": "PASS",
+      "passed": 18,
+      "total": 18,
+      "failed": 0,
+      "junit": "validation/native-delivery-ctest.xml",
+      "log": "validation/native-delivery-ctest.txt",
+      "cases": [
+        "frame_pacing",
+        "native_core_regressions",
+        "native_state_fuzz",
+        "native_integration",
+        "integration_pack",
+        "achievements",
+        "core",
+        "cgb_memory",
+        "cgb_ppu",
+        "cgb_apu",
+        "cgb_integration",
+        "core_extension",
+        "session",
+        "studio_tools",
+        "audio_buffer",
+        "cartridge_tools",
+        "feature_pack",
+        "loader_fuzz"
+      ]
+    },
+    "sanitizers": {
+      "description": "Linux x86_64 GCC 14 Debug with AddressSanitizer and UndefinedBehaviorSanitizer",
+      "status": "PASS",
+      "passed": 18,
+      "total": 18,
+      "failed": 0,
+      "junit": "validation/native-delivery-asan-ctest.xml",
+      "log": "validation/native-delivery-asan-ctest.txt",
+      "cases": [
+        "frame_pacing",
+        "native_core_regressions",
+        "native_state_fuzz",
+        "native_integration",
+        "integration_pack",
+        "achievements",
+        "core",
+        "cgb_memory",
+        "cgb_ppu",
+        "cgb_apu",
+        "cgb_integration",
+        "core_extension",
+        "session",
+        "studio_tools",
+        "audio_buffer",
+        "cartridge_tools",
+        "feature_pack",
+        "loader_fuzz"
+      ]
+    }
+  },
+  "python_protocol_and_harness_tests": {
+    "status": "PASS",
+    "passed": 23,
+    "total": 23,
+    "groups": {
+      "headless_protocols": 5,
+      "extended_harness": 11,
+      "fetch_extended_suite": 4,
+      "rom_test_runner": 3
+    }
+  },
+  "hardware_rom_suites": [
+    {
+      "report": "native-dmg-results.json",
+      "report_sha256": "df95d844a6bcd3210adf6993225ce38046d635da299ea994c78be6c0e4f866c0",
+      "passed": 130,
+      "total": 130,
+      "summary": {
+        "PASS": 130
+      },
+      "emulator_sha256": "5039ddc384fb63b6e79bd64430847545e681e62a236aafc9f7051ce756715af0",
+      "validation_utc": "2026-10-20T14:41:45.611959+00:00"
+    },
+    {
+      "report": "native-cgb-results.json",
+      "report_sha256": "355cff364f00e614221ee53f862a5a3e57f367c6760a1c01ad10839096bab282",
+      "passed": 15,
+      "total": 15,
+      "summary": {
+        "PASS": 15
+      },
+      "emulator_sha256": "5039ddc384fb63b6e79bd64430847545e681e62a236aafc9f7051ce756715af0",
+      "validation_utc": "2026-10-20T14:41:45.611959+00:00"
+    },
+    {
+      "report": "native-extended-results.json",
+      "report_sha256": "029ad5b506ab2bf02e88e50d8ea3a96e0228e3a079a24064c027b1a70fc1db02",
+      "passed": 25,
+      "total": 149,
+      "summary": {
+        "same-suite": {
+          "PASS": 22,
+          "FAIL": 56,
+          "ERROR": 0
+        },
+        "mealybug-dmg": {
+          "PASS": 1,
+          "FAIL": 23,
+          "ERROR": 0
+        },
+        "mealybug-cgb-c": {
+          "PASS": 1,
+          "FAIL": 26,
+          "ERROR": 0
+        },
+        "mealybug-cgb-d": {
+          "PASS": 1,
+          "FAIL": 19,
+          "ERROR": 0
+        }
+      },
+      "emulator_sha256": "5039ddc384fb63b6e79bd64430847545e681e62a236aafc9f7051ce756715af0",
+      "validation_utc": "2026-10-20T14:41:45.611959+00:00"
+    }
+  ],
+  "coverage_fuzzer": {
+    "status": "PASS",
+    "seconds": 10.0154,
+    "iterations": 299,
+    "accepted": 95,
+    "rejected": 204,
+    "coverage_slots": 4119,
+    "new_corpus_inputs": 8,
+    "corpus_inputs": 11,
+    "scope": "GCC trace-pc native state/BESS loader feedback; finite run, hashed coverage slots; not exhaustive"
+  },
+  "windows_validation_report": "windows-native-validation.json",
+  "windows_validation": {
+    "schema_version": 1,
+    "validated_at_utc": "2026-10-23T01:55:19.022134+00:00",
+    "status": "passed_with_wine_runner_retry",
+    "build": {
+      "target": "Windows x86-64",
+      "configuration": "Release",
+      "compiler": "MinGW-w64 GCC 14-posix (Debian trixie packages; MinGW-w64 12.0.0)",
+      "cmake": "4.4.4",
+      "generator": "Ninja",
+      "source_build_success": true,
+      "build_log": "windows-validation/build-resumed-final.log"
+    },
+    "execution_environment": {
+      "host": "Linux",
+      "compatibility_layer": "Wine 10.0 (Debian 10.0~repack-6)",
+      "virtual_display": "Xvfb :91",
+      "native_windows_execution": false
+    },
+    "verified_suites": {
+      "passed": 18,
+      "total": 18,
+      "method": "17 successful suites in the final full CTest run, followed by a clean isolated CTest rerun of frame_pacing after correcting the Wine launcher."
+    },
+    "full_ctest": {
+      "tests": 18,
+      "passed": 17,
+      "failed": 1,
+      "failed_test": "frame_pacing",
+      "failure_reason": "Wine server inherited the CTest stdout pipe; the test printed PASS, but the runner waited for EOF and reached its 90-second timeout.",
+      "log": "windows-validation/windows-wine-final.log",
+      "junit": "windows-validation/windows-wine-final.xml"
+    },
+    "isolated_retry": {
+      "test": "frame_pacing",
+      "passed": 1,
+      "failed": 0,
+      "seconds": 2.9075,
+      "log": "windows-validation/windows-frame-pacing-final.log",
+      "junit": "windows-validation/windows-frame-pacing-final.xml"
+    },
+    "gui_cpu_rendering_self_test": {
+      "command": "GBStudio.exe --self-test demo.gbc",
+      "exit_code": 0,
+      "scope": "Hidden Win32 window, CPU/GDI rendering to multiple surface sizes/effects, and preservation of the raw framebuffer under Wine/Xvfb.",
+      "log": "windows-validation/wine-gui-selftest-resumed-final.log"
+    },
+    "demos": [
+      {
+        "rom": "demo.gb",
+        "frames": 120,
+        "windows_exit_code": 0,
+        "linux_exit_code": 0,
+        "exact_linux_frame_match": true,
+        "frame_sha256": "54c897dcb143fc20697a1c2a35e45b6a8fccf4c2b6456a6d9c27f6381db772b3",
+        "frame_bytes": 69135
+      },
+      {
+        "rom": "demo.gbc",
+        "frames": 120,
+        "windows_exit_code": 0,
+        "linux_exit_code": 0,
+        "exact_linux_frame_match": true,
+        "frame_sha256": "7f8890ab98833c5ef59fad9a4c47114e34cf86d30fe73a037ed42e590e74cecf",
+        "frame_bytes": 69135
+      }
+    ],
+    "binaries": {
+      "GBStudio.exe": {
+        "sha256": "0b63cca36d1c0bd86ee3463389d1ab040990a51c85449d42ece7499689051424",
+        "bytes": 4743936,
+        "imported_dlls": [
+          "AVICAP32.dll",
+          "AVRT.dll",
+          "comdlg32.dll",
+          "d3d11.dll",
+          "D3DCOMPILER_47.dll",
+          "GDI32.dll",
+          "KERNEL32.dll",
+          "msvcrt.dll",
+          "ole32.dll",
+          "SHELL32.dll",
+          "USER32.dll",
+          "WINHTTP.dll",
+          "WINMM.dll",
+          "WS2_32.dll"
+        ],
+        "stack_reserve_bytes": 8388608
+      },
+      "gb_headless.exe": {
+        "sha256": "8bfb20a3793391b01cae3b305a9f852a861d49f7821dc2d0de2b2313573ab6b3",
+        "bytes": 3107123,
+        "imported_dlls": [
+          "KERNEL32.dll",
+          "msvcrt.dll",
+          "SHELL32.dll"
+        ],
+        "stack_reserve_bytes": 8388608
+      },
+      "gb_pixel_filters.exe": {
+        "sha256": "bc9c4219589d22f6d947e23876f258a6d02391775cf9b88db479d05bec48206b",
+        "bytes": 2960264,
+        "imported_dlls": [
+          "KERNEL32.dll",
+          "msvcrt.dll"
+        ],
+        "stack_reserve_bytes": 8388608
+      }
+    },
+    "dependencies": {
+      "sameboy_runtime_dependency": false,
+      "imports_only_windows_system_dlls": true,
+      "mingw_runtime_dll_required": false,
+      "sameboy_distribution_files": []
+    },
+    "source_sha256": {
+      "src/gameboy.hpp": "94ea21cdb3064f0d7950f80bd1070b51e2d0cbfcab57788ad888c8b28586e790",
+      "src/network_tools.hpp": "5f0b54e14399adf9fb789dcb1d1f4d517f86f2bd04a917f3a7417fffff6b6875",
+      "src/portable_state.hpp": "99990182f9689de84155e55d8c902bdee3d17ec71d033590cf95336bee26fdce",
+      "tests/native_integration_tests.cpp": "d9966e96ac7909d38c71f6fe67d743ae55b6859fc415e8835b5306b39797d2cd"
+    },
+    "installed_to": "/workspace/windows-native-dist",
+    "not_verified": [
+      "Execution on native Windows hardware",
+      "Direct3D GPU/device-loss behavior",
+      "Audible quality or audio/device latency",
+      "Physical controllers, camera, printer, infrared, WAN sessions or commercial-game compatibility"
+    ]
+  },
+  "binaries": {
+    "dist/GBStudio.exe": {
+      "sha256": "0b63cca36d1c0bd86ee3463389d1ab040990a51c85449d42ece7499689051424",
+      "bytes": 4743936
+    },
+    "dist/gb_pixel_filters.exe": {
+      "sha256": "bc9c4219589d22f6d947e23876f258a6d02391775cf9b88db479d05bec48206b",
+      "bytes": 2960264
+    },
+    "dist/tools/gb_headless.exe": {
+      "sha256": "8bfb20a3793391b01cae3b305a9f852a861d49f7821dc2d0de2b2313573ab6b3",
+      "bytes": 3107123
+    }
+  },
+  "fixes": [
+    "Native Studio is the only engine in frontend, headless runner and tools.",
+    "Explicit hardware-family selection and optional boot image selection.",
+    "Transactional RTC validation and bounded timestamp arithmetic.",
+    "GBSTATE7 and BESS GBAU auxiliary progress with validation and rollback.",
+    "Separate BESS size limit and maximum Camera RAM/2 MiB progress roundtrip.",
+    "Rewind snapshots larger than 500 KiB.",
+    "Native renderer observations without preview-generated debugger events.",
+    "Hardware default ID00 compatibility palette for DMG cartridges on CGB.",
+    "Winsock asynchronous connection-error readiness and exclusive server binding.",
+    "MinGW executable stack reserve of 8 MiB."
+  ],
+  "limits": [
+    "Basic hardware suites pass 145/145; extended suites pass 25/149 with 124 explicit failures.",
+    "Remaining extended failures include APU/PPU timing and hardware-revision differences.",
+    "MMM01, MBC6, HuC3 and SGB enhancements are not implemented.",
+    "Old SameBoy exact snapshots and TAS are not exact native Studio snapshots.",
+    "No commercial games or proprietary Nintendo boot firmware were tested or bundled.",
+    "Wine checks do not establish complete real-Windows GUI/GPU/audio or physical-device support.",
+    "Network sessions require matching builds; old engine peers are not verified.",
+    "No universal or 100 percent compatibility claim is made."
+  ]
+}

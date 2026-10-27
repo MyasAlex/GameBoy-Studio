@@ -1,0 +1,7 @@
+Test project /workspace/build-windows-native
+    Start 1: frame_pacing
+1/1 Test #1: frame_pacing .....................   Passed    2.91 sec
+
+100% tests passed out of 1
+
+Total Test time (real) =   2.91 sec

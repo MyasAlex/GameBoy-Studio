@@ -1,5 +1,4 @@
 build/
-build-*/
 dist/
 tests/roms/
 __pycache__/
@@ -20,3 +19,6 @@ __pycache__/
 *.ini
 .Sessions/
 *_screen_*.bmp
+
+# The legacy snapshot is a required regression fixture, not a user save.
+!tests/fixtures/dmg-v0.6.state

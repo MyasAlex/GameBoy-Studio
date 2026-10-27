@@ -23,7 +23,7 @@
 #include "d3d_renderer.hpp"
 #include "webcam.hpp"
 #include "update_check.hpp"
-#include "accuracy_core.hpp"
+#include "portable_state.hpp"
 #include "achievement_tools.hpp"
 #include "image_loader.hpp"
 #include "pixel_filter_host.hpp"
@@ -206,7 +206,7 @@ static void saveConfig(){
     extraSaveConfig();
     if(configPath.empty()||selfTest)return;
     WINDOWPLACEMENT pos{};pos.length=sizeof(pos);if(fullscreen)pos=placement;else GetWindowPlacement(hwnd,&pos);
-    std::wostringstream out;out<<L"; GameBoy Studio 1.0 preview. UTF-16 INI; values are documented in README.\r\n[Studio]\r\n";
+    std::wostringstream out;out<<L"; GameBoy Studio 1.1. UTF-16 INI; values are documented in README.\r\n[Studio]\r\n";
     auto value=[&](const wchar_t* key,auto data){out<<key<<L'='<<data<<L"\r\n";};
     value(L"Russian",russian);value(L"Sound",sound);value(L"IntegerScaling",integerScaling);value(L"Ghosting",ghosting);value(L"ResumeSession",resumeSession);
     value(L"LightTheme",lightTheme);value(L"CompareDisplay",compareDisplay);
@@ -681,8 +681,8 @@ static void command(UINT id){
     else if(id==IDM_WAV_STOP)alert(audio.stopRecording()?tr(L"WAV recording saved",L"Запись WAV сохранена"):wide(audio.lastError()).c_str());
     else if(id==IDM_LANGUAGE||id==IDM_LANGUAGE+1){russian=id==IDM_LANGUAGE+1;rebuildMenus();}else if(id==IDM_STUDIO)showStudio();else if(id==IDM_REPORT)exportReport();else if(id==IDM_HELP)showHelp();
     else if(id==IDM_CONFIG){saveConfig();MessageBoxW(hwnd,configPath.c_str(),tr(L"Configuration file",L"Файл настроек"),MB_OK|MB_ICONINFORMATION);}
-    else if(id==IDM_ABOUT)MessageBoxW(hwnd,tr(L"GameBoy Studio 1.0 preview\nDMG / MGB / CGB / SGB emulator for Windows x64.\nSameBoy accuracy core; GameBoy Studio tools.\nDirect3D effects, linked consoles, BESS, TAS and Studio tools.\n\nNo commercial games or proprietary boot ROMs are included.\nSee README and ROADMAP for verified features and limitations.",
-        L"GameBoy Studio 1.0 preview\nСобственный эмулятор SM83 / DMG / CGB для Windows x64.\nЭффекты экрана, состояния, перемотка, запись ввода и инструменты Studio.\n\nКоммерческие игры и фирменные загрузочные ROM не включены.\nПодтверждённые функции и ограничения — в README и ROADMAP."),L"GameBoy Studio",MB_OK|MB_ICONINFORMATION);
+    else if(id==IDM_ABOUT)MessageBoxW(hwnd,tr(L"GameBoy Studio 1.1\nDMG / CGB emulator for Windows x64.\nBuilt-in GameBoy Studio core (C++20).\nDirect3D effects, linked consoles, BESS, TAS and Studio tools.\n\nNo commercial games or proprietary boot ROMs are included.\nSee README_RU.md and docs/NATIVE_CORE_RU.md for verified features and limitations.",
+        L"GameBoy Studio 1.1\nСобственный эмулятор SM83 / DMG / CGB для Windows x64.\nЭффекты экрана, состояния, перемотка, запись ввода и инструменты Studio.\n\nКоммерческие игры и фирменные загрузочные ROM не включены.\nПодтверждённые функции и ограничения — в docs/NATIVE_CORE_RU.md."),L"GameBoy Studio",MB_OK|MB_ICONINFORMATION);
     else if(id==IDM_EXIT){saveConfig();DestroyWindow(hwnd);return;}updateTitle();saveConfig();refreshStudio();
 }
 static LRESULT CALLBACK wndProc(HWND w,UINT msg,WPARAM wp,LPARAM lp){
@@ -717,7 +717,6 @@ static LRESULT CALLBACK wndProc(HWND w,UINT msg,WPARAM wp,LPARAM lp){
 }
 #include "windows_qa.hpp"
 int WINAPI wWinMain(HINSTANCE instance,HINSTANCE,LPWSTR,int show){
-    if(!accurate::enable(gb)||!accurate::enable(gbSecond)){MessageBoxW(nullptr,L"gb_accuracy.dll is missing or incompatible. Restore it from the distribution.",L"GameBoy Studio",MB_OK|MB_ICONERROR);return 1;}
     gb.auxiliaryState=[](){return achievementClient.progress();};gb.auxiliaryRestore=[](std::span<const u8> data){return achievementClient.restore(data);};
     audio.capture=[](std::span<const host_audio::StereoFrame> data){if(video.recording()&&!video.appendAudio(data)){video.close();alert(L"Video audio capture failed");}};
     appInstance=instance;gb.mem.cameraImage=[](){return webcam.image();};SetProcessDPIAware();int count=0;LPWSTR* args=CommandLineToArgvW(GetCommandLineW(),&count);std::filesystem::path requested;
@@ -738,7 +737,7 @@ int WINAPI wWinMain(HINSTANCE instance,HINSTANCE,LPWSTR,int show){
     if(!RegisterClassW(&cls))return 1;WNDCLASSW inspector=cls;inspector.lpfnWndProc=studioProc;inspector.lpszClassName=L"GBStudioInspector";inspector.hbrBackground=(HBRUSH)(COLOR_BTNFACE+1);RegisterClassW(&inspector);
     RECT r{0,0,GB_W*renderScale,GB_H*renderScale+statusHeight};AdjustWindowRect(&r,WS_OVERLAPPEDWINDOW,TRUE);appMenu=createMenus();
     const int width=restoredWindow.right>=240?restoredWindow.right:r.right-r.left,height=restoredWindow.bottom>=260?restoredWindow.bottom:r.bottom-r.top;
-    hwnd=CreateWindowExW(0,cls.lpszClassName,L"GameBoy Studio 1.0 preview",WS_OVERLAPPEDWINDOW,restoredWindow.left,restoredWindow.top,width,height,nullptr,appMenu,instance,nullptr);if(!hwnd)return 1;
+    hwnd=CreateWindowExW(0,cls.lpszClassName,L"GameBoy Studio 1.1",WS_OVERLAPPEDWINDOW,restoredWindow.left,restoredWindow.top,width,height,nullptr,appMenu,instance,nullptr);if(!hwnd)return 1;
     if(!selfTest||(timingTest&&timingAudio)){timingAudioOpened=audio.open(audioLatency,(unsigned)gb.apu.sampleRate);if(!timingAudioOpened&&!selfTest)alert(tr(L"Audio device unavailable",L"Звуковое устройство недоступно"));}audio.setVolume(volume);
     ShowWindow(hwnd,selfTest&&!uiSelfTest?SW_HIDE:(restoredMaximized?SW_SHOWMAXIMIZED:show));UpdateWindow(hwnd);bool loaded=false;
     if(!requested.empty())loaded=openROM(requested);else if(!selfTest&&!recentROMs[0].empty()&&std::filesystem::exists(recentROMs[0]))loaded=openROM(recentROMs[0],true);

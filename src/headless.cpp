@@ -12,14 +12,14 @@
 #endif
 #endif
 #include "studio_tools.hpp"
-#include "accuracy_core.hpp"
+#include "portable_state.hpp"
 
 namespace {
 struct Options {
     std::filesystem::path rom,output,report,trace,dump,boot;
     u64 frames=120,traceLimit=100000,instructions=0,dumpCount=0,disassemblyCount=0;
     u16 dumpStart=0,disassemblyStart=0;
-    bool test=false,mooneye=false,grey=false,reportOnly=false,help=false,accurateCore=true,ppuTest=false;
+    bool test=false,mooneye=false,grey=false,reportOnly=false,help=false,ppuTest=false;
     std::vector<u16> breakpoints;
     std::optional<u16> runTo;
     HardwareModel model=HardwareModel::Auto;
@@ -28,9 +28,8 @@ constexpr const char* usage=
     "Usage: gb_headless ROM.gb|ROM.gbc [frames] [options]\n"
     "  --frames N               Frame budget, 1..100000 (default 120)\n"
     "  --model MODEL            auto,dmg,cgb,pocket,light,cgb0,cgba,cgbb,cgbc,cgbd,cgbe,agb,sgb,sgb2,sgb-pal\n"
-    "  --core accurate|original Select hardware engine (default accurate)\n"
+    "  --core studio|original   Use the built-in Studio core (default studio)\n"
     "  --ppu-test               Stop at the PPU software breakpoint\n"
-    "  --core accurate|original  Select accuracy or legacy engine\n"
     "  --boot-rom file.bin       Use an external DMG/CGB boot image\n"
     "  --test | --mooneye        Detect hardware-test result\n"
     "  --output frame.ppm       Export the original 160x144 framebuffer\n"
@@ -101,7 +100,7 @@ Options parse(const std::vector<std::string>& arguments) {
         else if(arg=="--run-to")o.runTo=(u16)number(next(),65535,16);
         else if(arg=="--dump"){o.dumpStart=(u16)number(next(),65535,16);o.dumpCount=positive(next(),65536);o.dump=utf8Path(next());}
         else if(arg=="--disassemble"){o.disassemblyStart=(u16)number(next(),65535,16);o.disassemblyCount=positive(next(),4096);}
-        else if(arg=="--core"){const auto& name=next();if(name=="accurate")o.accurateCore=true;else if(name=="original")o.accurateCore=false;else throw std::runtime_error("Unknown core: "+name);}
+        else if(arg=="--core"){const auto& name=next();if(name!="studio"&&name!="original")throw std::runtime_error("This build contains only the Studio core. Use --core studio (or original).");}
         else if(arg=="--model"){
             const auto& name=next();
             if(name=="auto")o.model=HardwareModel::Auto;else if(name=="dmg")o.model=HardwareModel::DMG;
@@ -156,10 +155,9 @@ int execute(const Options& o) {
         if(o.report.empty())std::cout<<report;else writeText(o.report,report);return 0;
     }
     GameBoy gb;
-    if(o.accurateCore&&!accurate::enable(gb))throw std::runtime_error("Accuracy engine unavailable; place gb_accuracy.dll beside the executable.");
     if(!o.boot.empty()&&!gb.loadBootROM(o.boot))throw std::runtime_error("Could not configure Boot ROM: "+gb.mem.loadError);
     if(!gb.load(o.rom,o.model))throw std::runtime_error("Could not load ROM: "+gb.mem.loadError);
-    if(o.test&&gb.mem.eram.empty()&&gb.mem.mbc==1){if(gb.backendOwner)std::static_pointer_cast<accurate::Engine>(gb.backendOwner)->testRAM();else gb.mem.eram.assign(8192,0xFF);}
+    if(o.test&&gb.mem.eram.empty()&&gb.mem.mbc==1)gb.mem.eram.assign(8192,0xFF);
     if(o.grey)gb.setPalette(1);
     studio::Debugger debugger(gb);debugger.setTraceCapacity(o.trace.empty()?0:1);
     for(u16 address:o.breakpoints)debugger.addBreakpoint(address);

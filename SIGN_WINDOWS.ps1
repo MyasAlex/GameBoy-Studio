@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Stop'
 $certificate = Get-ChildItem Cert:\CurrentUser\My | Where-Object { $_.Thumbprint -eq $CertificateThumbprint -and $_.HasPrivateKey }
 if (-not $certificate) { throw 'A code-signing certificate with its private key is required in CurrentUser\My.' }
 $folder = if (Test-Path -LiteralPath (Join-Path $PSScriptRoot 'GBStudio.exe')) { $PSScriptRoot } else { Join-Path $PSScriptRoot 'dist' }
-$files = @('GBStudio.exe','gb_accuracy.dll','gb_pixel_filters.exe','tools\gb_headless.exe','tools\gb_accuracy.dll')
+$files = @('GBStudio.exe','gb_pixel_filters.exe','tools\gb_headless.exe')
 foreach ($name in $files) {
     $file = Join-Path $folder $name
     if (-not (Test-Path -LiteralPath $file)) { throw "Missing distribution file: $name" }

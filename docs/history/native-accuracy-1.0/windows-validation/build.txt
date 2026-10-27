@@ -1,0 +1,186 @@
+[0/2] Re-checking globbed directories...
+[1/125] Building C object CMakeFiles/gb_miniz.dir/third_party/miniz/miniz.c.obj
+/workspace/GameBoy-Studio-main/third_party/miniz/miniz.c: In function ‘mz_compress2’:
+/workspace/GameBoy-Studio-main/third_party/miniz/miniz.c:325:46: warning: comparison is always false due to limited range of data type [-Wtype-limits]
+  325 |     if ((mz_uint64)(source_len | *pDest_len) > 0xFFFFFFFFU)
+      |                                              ^
+/workspace/GameBoy-Studio-main/third_party/miniz/miniz.c: In function ‘mz_uncompress2’:
+/workspace/GameBoy-Studio-main/third_party/miniz/miniz.c:568:48: warning: comparison is always false due to limited range of data type [-Wtype-limits]
+  568 |     if ((mz_uint64)(*pSource_len | *pDest_len) > 0xFFFFFFFFU)
+      |                                                ^
+[2/125] Building C object CMakeFiles/gb_miniz.dir/third_party/miniz/miniz_tinfl.c.obj
+[3/125] Building C object CMakeFiles/gb_miniz.dir/third_party/miniz/miniz_tdef.c.obj
+[4/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lauxlib.c.obj
+[5/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lapi.c.obj
+[6/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lbaselib.c.obj
+[7/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lcorolib.c.obj
+[8/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lctype.c.obj
+[9/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/ldblib.c.obj
+[10/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lcode.c.obj
+[11/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/ldebug.c.obj
+[12/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/ldo.c.obj
+[13/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lfunc.c.obj
+[14/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/ldump.c.obj
+[15/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/linit.c.obj
+[16/125] Building C object CMakeFiles/gb_miniz.dir/third_party/miniz/miniz_zip.c.obj
+/workspace/GameBoy-Studio-main/third_party/miniz/miniz_zip.c:44:9: warning: "WIN32_LEAN_AND_MEAN" redefined
+   44 | #define WIN32_LEAN_AND_MEAN
+      |         ^~~~~~~~~~~~~~~~~~~
+<command-line>: note: this is the location of the previous definition
+[17/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/liolib.c.obj
+[18/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lgc.c.obj
+[19/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/llex.c.obj
+[20/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lmem.c.obj
+[21/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lmathlib.c.obj
+[22/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lopcodes.c.obj
+[23/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/loslib.c.obj
+[24/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lobject.c.obj
+[25/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lstate.c.obj
+[26/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lstring.c.obj
+[27/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/loadlib.c.obj
+[28/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lparser.c.obj
+[29/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/ltablib.c.obj
+[30/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/ltm.c.obj
+[31/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/ltable.c.obj
+[32/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lundump.c.obj
+[33/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lutf8lib.c.obj
+[34/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lzio.c.obj
+[35/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lstrlib.c.obj
+[36/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/api/rc_api_editor.c.obj
+[37/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/api/rc_api_common.c.obj
+[38/125] Building C object CMakeFiles/gb_lua.dir/third_party/lua-src/lvm.c.obj
+[39/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/api/rc_api_user.c.obj
+[40/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/api/rc_api_info.c.obj
+[41/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/api/rc_api_runtime.c.obj
+[42/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/client/rc_client_external.c.obj
+[43/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/client/rc_client_raintegration.c.obj
+[44/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/hash/aes.c.obj
+[45/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/hash/rc_cdreader.c.obj
+[46/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/hash/rc_hash.c.obj
+/workspace/GameBoy-Studio-main/third_party/rcheevos/src/hash/rc_hash.c:8:9: warning: "WIN32_LEAN_AND_MEAN" redefined
+    8 | #define WIN32_LEAN_AND_MEAN
+      |         ^~~~~~~~~~~~~~~~~~~
+<command-line>: note: this is the location of the previous definition
+[47/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/hash/rc_hash_encrypted.c.obj
+[48/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/client/rc_client.c.obj
+/workspace/GameBoy-Studio-main/third_party/rcheevos/src/client/rc_client.c:28:10: warning: "WIN32_LEAN_AND_MEAN" redefined
+   28 |  #define WIN32_LEAN_AND_MEAN
+      |          ^~~~~~~~~~~~~~~~~~~
+<command-line>: note: this is the location of the previous definition
+[49/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/hash/rc_hash_disc.c.obj
+[50/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/runtime/rc_alloc.c.obj
+[51/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/runtime/rc_condition.c.obj
+[52/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/hash/rc_hash_rom.c.obj
+[53/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/runtime/rc_consoleinfo.c.obj
+[54/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/hash/rc_hash_zip.c.obj
+[55/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/runtime/rc_lboard.c.obj
+[56/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/runtime/rc_condset.c.obj
+[57/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/runtime/rc_operand.c.obj
+[58/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/runtime/rc_memref.c.obj
+[59/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/runtime/rc_format.c.obj
+[60/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/runtime/rc_richpresence.c.obj
+[61/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/runtime/rc_trigger.c.obj
+[62/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/runtime/rc_typed_value.c.obj
+[63/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/runtime/rc_runtime.c.obj
+[64/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/runtime/rc_runtime_progress.c.obj
+[65/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/runtime/rc_value.c.obj
+[66/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/util/md5.c.obj
+[67/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/util/rc_compat.c.obj
+[68/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/util/rc_util.c.obj
+[69/125] Linking C static library libgb_miniz.a
+[70/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/util/rc_version.c.obj
+[71/125] Linking C static library libgb_lua.a
+[72/125] Building C object CMakeFiles/gb_achievements.dir/third_party/rcheevos/src/runtime/rc_validate.c.obj
+[73/125] Linking C static library libgb_achievements.a
+[74/125] Building CXX object CMakeFiles/gb_pixel_filters.dir/src/pixel_filter_main.cpp.obj
+[75/125] Building CXX object CMakeFiles/gb_cpu_dma_accuracy_tests.dir/tests/cpu_dma_accuracy_tests.cpp.obj
+[76/125] Building CXX object CMakeFiles/gb_native_apu_accuracy_tests.dir/tests/native_apu_accuracy_tests.cpp.obj
+[77/125] Building CXX object CMakeFiles/gb_headless.dir/src/headless.cpp.obj
+[78/125] Building CXX object CMakeFiles/gb_native_ppu_accuracy_tests.dir/tests/native_ppu_accuracy_tests.cpp.obj
+[79/125] Building CXX object CMakeFiles/gb_frame_pacing_tests.dir/tests/frame_pacing_tests.cpp.obj
+[80/125] Building CXX object CMakeFiles/gb_pixel_filters.dir/third_party/xbrz/xbrz.cpp.obj
+[81/125] Building CXX object CMakeFiles/gb_accuracy_state_tests.dir/tests/accuracy_state_tests.cpp.obj
+[82/125] Building CXX object CMakeFiles/gb_native_core_regression_tests.dir/tests/native_core_regression_tests.cpp.obj
+[83/125] Building CXX object CMakeFiles/gb_native_state_fuzz_tests.dir/tests/native_state_fuzz_tests.cpp.obj
+[84/125] Building CXX object CMakeFiles/gb_integration_pack_tests.dir/tests/integration_pack_tests.cpp.obj
+[85/125] Building CXX object CMakeFiles/gb_native_integration_tests.dir/tests/native_integration_tests.cpp.obj
+In file included from /workspace/GameBoy-Studio-main/tests/native_integration_tests.cpp:1:
+/workspace/GameBoy-Studio-main/tests/../src/network_tools.hpp:5: warning: ignoring ‘#pragma comment ’ [-Wunknown-pragmas]
+    5 | #pragma comment(lib,"ws2_32.lib")
+[86/125] Building CXX object CMakeFiles/gb_achievement_tests.dir/tests/achievement_tests.cpp.obj
+[87/125] Building CXX object CMakeFiles/gb_cgb_memory_tests.dir/tests/cgb_memory_tests.cpp.obj
+[88/125] Building CXX object CMakeFiles/gb_cgb_ppu_tests.dir/tests/cgb_ppu_tests.cpp.obj
+[89/125] Building CXX object CMakeFiles/gb_core_tests.dir/tests/core_tests.cpp.obj
+[90/125] Building CXX object CMakeFiles/gb_cgb_apu_tests.dir/tests/cgb_apu_tests.cpp.obj
+[91/125] Building CXX object CMakeFiles/gb_core_extension_tests.dir/tests/core_extension_tests.cpp.obj
+[92/125] Building CXX object CMakeFiles/gb_cgb_integration_tests.dir/tests/cgb_integration_tests.cpp.obj
+/workspace/GameBoy-Studio-main/tests/cgb_integration_tests.cpp: In function ‘void testMalformedState(GameBoy&, const std::vector<unsigned char>&)’:
+/workspace/GameBoy-Studio-main/tests/cgb_integration_tests.cpp:124:20: warning: loop variable ‘<structured bindings>’ creates a copy from type ‘const std::pair<long long unsigned int, unsigned char>’ [-Wrange-loop-construct]
+  124 |     for(const auto [offset,value]:std::array<std::pair<std::size_t,u8>,5>{{
+      |                    ^~~~~~~~~~~~~~
+/workspace/GameBoy-Studio-main/tests/cgb_integration_tests.cpp:124:20: note: use reference type to prevent copying
+  124 |     for(const auto [offset,value]:std::array<std::pair<std::size_t,u8>,5>{{
+      |                    ^~~~~~~~~~~~~~
+      |                    &
+[93/125] Building CXX object CMakeFiles/gb_audio_buffer_tests.dir/tests/audio_buffer_tests.cpp.obj
+[94/125] Building CXX object CMakeFiles/gb_cartridge_tools_tests.dir/tests/cartridge_tools_tests.cpp.obj
+[95/125] Building CXX object CMakeFiles/gb_studio_tools_tests.dir/tests/studio_tools_tests.cpp.obj
+[96/125] Building CXX object CMakeFiles/gb_session_tests.dir/tests/session_tests.cpp.obj
+[97/125] Building CXX object CMakeFiles/gb_loader_fuzz_tests.dir/tests/loader_fuzz_tests.cpp.obj
+[98/125] Linking CXX executable gb_pixel_filters.exe
+[99/125] Linking CXX executable gb_headless.exe
+[100/125] Linking CXX executable gb_cpu_dma_accuracy_tests.exe
+[101/125] Linking CXX executable gb_native_apu_accuracy_tests.exe
+[102/125] Linking CXX executable gb_native_ppu_accuracy_tests.exe
+[103/125] Linking CXX executable gb_accuracy_state_tests.exe
+[104/125] Linking CXX executable gb_frame_pacing_tests.exe
+[105/125] Linking CXX executable gb_native_core_regression_tests.exe
+[106/125] Linking CXX executable gb_native_state_fuzz_tests.exe
+[107/125] Linking CXX executable gb_native_integration_tests.exe
+[108/125] Linking CXX executable gb_integration_pack_tests.exe
+[109/125] Linking CXX executable gb_achievement_tests.exe
+[110/125] Linking CXX executable gb_core_tests.exe
+[111/125] Linking CXX executable gb_cgb_memory_tests.exe
+[112/125] Linking CXX executable gb_cgb_ppu_tests.exe
+[113/125] Linking CXX executable gb_cgb_apu_tests.exe
+[114/125] Linking CXX executable gb_cgb_integration_tests.exe
+[115/125] Linking CXX executable gb_core_extension_tests.exe
+[116/125] Linking CXX executable gb_session_tests.exe
+[117/125] Linking CXX executable gb_studio_tools_tests.exe
+[118/125] Linking CXX executable gb_audio_buffer_tests.exe
+[119/125] Linking CXX executable gb_cartridge_tools_tests.exe
+[120/125] Linking CXX executable gb_loader_fuzz_tests.exe
+[121/125] Building CXX object CMakeFiles/gb_feature_pack_tests.dir/tests/feature_pack_tests.cpp.obj
+In file included from /workspace/GameBoy-Studio-main/tests/feature_pack_tests.cpp:1:
+/workspace/GameBoy-Studio-main/tests/../src/network_tools.hpp:5: warning: ignoring ‘#pragma comment ’ [-Wunknown-pragmas]
+    5 | #pragma comment(lib,"ws2_32.lib")
+[122/125] Linking CXX executable gb_feature_pack_tests.exe
+[123/125] Building CXX object CMakeFiles/GBStudio.dir/src/windows_main.cpp.obj
+In file included from /workspace/GameBoy-Studio-main/src/windows_main.cpp:453:
+/workspace/GameBoy-Studio-main/src/studio_features_ui.hpp: In function ‘bool extraCommand(UINT)’:
+/workspace/GameBoy-Studio-main/src/studio_features_ui.hpp:207:328: warning: ‘std::filesystem::__cxx11::path std::filesystem::__cxx11::u8path(const _Source&) [with _Source = std::__cxx11::basic_string<char>; _Require = path; _CharT = char]’ is deprecated: use 'path((const char8_t*)&*source)' instead [-Wdeprecated-declarations]
+  207 |     else if(id==EX_LIBRARY){std::vector<std::wstring> rows;std::vector<std::filesystem::path> covers;for(const auto& game:library.games){rows.push_back((game.favorite?L"★ ":L"")+wide(game.title)+L" | "+std::to_wstring(game.cycles/GB_CLOCK/60)+L" min | "+wide(game.note+" | "+game.path));covers.push_back(std::filesystem::u8path(game.cover));}
+      |                                                                                                                                                                                                                                                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+In file included from /workspace/toolchains/mingw/usr/lib/gcc/x86_64-w64-mingw32/14-posix/include/c++/filesystem:52,
+                 from /workspace/GameBoy-Studio-main/src/gameboy.hpp:13,
+                 from /workspace/GameBoy-Studio-main/src/portable_state.hpp:2,
+                 from /workspace/GameBoy-Studio-main/src/link_devices.hpp:2,
+                 from /workspace/GameBoy-Studio-main/src/network_tools.hpp:15,
+                 from /workspace/GameBoy-Studio-main/src/windows_main.cpp:7:
+/workspace/toolchains/mingw/usr/lib/gcc/x86_64-w64-mingw32/14-posix/include/c++/bits/fs_path.h:843:5: note: declared here
+  843 |     u8path(const _Source& __source)
+      |     ^~~~~~
+/workspace/GameBoy-Studio-main/src/studio_features_ui.hpp:208:123: warning: ‘std::filesystem::__cxx11::path std::filesystem::__cxx11::u8path(const _Source&) [with _Source = std::__cxx11::basic_string<char>; _Require = path; _CharT = char]’ is deprecated: use 'path((const char8_t*)&*source)' instead [-Wdeprecated-declarations]
+  208 |         const auto row=chooseRow(tr(L"Game library",L"Библиотека игр"),rows,covers);if(row)openROM(std::filesystem::u8path(library.games[*row].path));}
+      |                                                                                                    ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/toolchains/mingw/usr/lib/gcc/x86_64-w64-mingw32/14-posix/include/c++/bits/fs_path.h:843:5: note: declared here
+  843 |     u8path(const _Source& __source)
+      |     ^~~~~~
+/workspace/GameBoy-Studio-main/src/windows_main.cpp: In function ‘int wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)’:
+/workspace/GameBoy-Studio-main/src/windows_main.cpp:726:36: warning: cast between incompatible function types from ‘FARPROC’ {aka ‘long long int (*)()’} to ‘XInputGetStateFn’ {aka ‘long unsigned int (*)(long unsigned int, XINPUT_STATE*)’} [-Wcast-function-type]
+  726 |     if(gamepadLibrary){readGamepad=reinterpret_cast<XInputGetStateFn>(GetProcAddress(gamepadLibrary,"XInputGetState"));sendRumble=reinterpret_cast<XInputSetStateFn>(GetProcAddress(gamepadLibrary,"XInputSetState"));}
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/GameBoy-Studio-main/src/windows_main.cpp:726:131: warning: cast between incompatible function types from ‘FARPROC’ {aka ‘long long int (*)()’} to ‘XInputSetStateFn’ {aka ‘long unsigned int (*)(long unsigned int, XINPUT_VIBRATION*)’} [-Wcast-function-type]
+  726 |     if(gamepadLibrary){readGamepad=reinterpret_cast<XInputGetStateFn>(GetProcAddress(gamepadLibrary,"XInputGetState"));sendRumble=reinterpret_cast<XInputSetStateFn>(GetProcAddress(gamepadLibrary,"XInputSetState"));}
+      |                                                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[124/125] Linking CXX executable GBStudio.exe

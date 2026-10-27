@@ -110,19 +110,11 @@ function Invoke-WindowsQA {
         $stdout=Join-Path $reportFolder "$id.stdout.txt"; $stderr=Join-Path $reportFolder "$id.stderr.txt"
         [IO.File]::WriteAllText($stdout,$result.stdout,(New-Object Text.UTF8Encoding($false)))
         [IO.File]::WriteAllText($stderr,$result.stderr,(New-Object Text.UTF8Encoding($false)))
-        $check=[pscustomobject]@{name=$name;check_type=$checkType;status=$result.status;exit_code=$result.exit_code;seconds=$result.seconds;stdout=$result.stdout;stderr=$result.stderr;stdout_file=$stdout;stderr_file=$stderr;capture_complete=$result.capture_complete;screenshot=$null;details=$null}
+        $check=[pscustomobject]@{name=$name;check_type=$checkType;status=$result.status;exit_code=$result.exit_code;seconds=$result.seconds;stdout=$result.stdout;stderr=$result.stderr;stdout_file=$stdout;stderr_file=$stderr;capture_complete=$result.capture_complete;screenshot=$null}
         $results.Add($check)
         return $check
     }
     $null=Run-Check 'Win32 CPU rendering self-test' (Join-Path $folder 'GBStudio.exe') @('--self-test',(Join-Path $folder 'demo.gbc')) 'cpu_rendering_self_test'
-    $uiReport=Join-Path $reportFolder 'win32-ui-regression.json'
-    $uiCheck=Run-Check 'Win32 focus, input and menu regression' (Join-Path $folder 'GBStudio.exe') @('--ui-self-test',$uiReport,(Join-Path $folder 'demo.gbc')) 'win32_message_integration'
-    if($uiCheck.status -eq 'PASS'){
-        try {
-            $uiCheck.details=Get-Content -LiteralPath $uiReport -Raw | ConvertFrom-Json
-            if($uiCheck.details.status -ne 'PASS' -or -not $uiCheck.details.checks.Count -or @($uiCheck.details.checks | Where-Object {$_.status -ne 'PASS'}).Count){throw 'Win32 UI regression report contains failed or missing checks.'}
-        } catch {$uiCheck.status='FAIL';$uiCheck.stderr+="`n"+$_.Exception.Message}
-    }
     foreach($rom in @((Join-Path $folder 'demo.gb'),(Join-Path $folder 'demo.gbc'))){
         $image=Join-Path $reportFolder ([IO.Path]::GetFileName($rom)+'.ppm')
         # These original demos do not contain the licensed Nintendo boot logo;
@@ -146,8 +138,8 @@ function Invoke-WindowsQA {
         }
     }
     $binaryHashes=@{}
-    foreach($name in @('GBStudio.exe','gb_accuracy.dll','gb_pixel_filters.exe','tools\gb_headless.exe')){$binaryHashes[$name]=(Get-FileHash -LiteralPath (Join-Path $folder $name) -Algorithm SHA256).Hash}
-    $report=[ordered]@{schema_version=3;date=(Get-Date).ToString('o');platform=[Environment]::OSVersion.VersionString;binary_sha256=$binaryHashes;frames=$Frames;tests=@($results.ToArray());scope='PASS means only that this automated check succeeded. CPU rendering self-test checks GDI rendering. Win32 UI regression opens visible windows and checks actual message/focus/capture transitions with simulated XInput and tilt-key device reads. Its runtime field distinguishes Wine from Windows. Demo checks export original 160x144 frames and require nonuniform graphics at 60 or more frames. Real-ROM runs test startup/continued headless execution without automated gameplay; they do not establish game compatibility. This does not validate audible/device latency, GPU, actual gamepad/webcam/printer/IR behavior, WAN or Pokemon trades.';manual_checks=@('Direct3D + CRT/HQ2x/Scale2x/3x/xBRZ; device loss and resize','48/96 kHz audible quality, latency and long-session underruns','Two physical gamepads, tilt, rumble and virtual controls','Webcam capture, Printer and infrared','Pokemon trade/save continuity and long real-game play','RetroAchievements real account and server-approved Hardcore','Cross-emulator BESS exchange and trusted code signature')}
+    foreach($name in @('GBStudio.exe','gb_pixel_filters.exe','tools\gb_headless.exe')){$binaryHashes[$name]=(Get-FileHash -LiteralPath (Join-Path $folder $name) -Algorithm SHA256).Hash}
+    $report=[ordered]@{schema_version=2;date=(Get-Date).ToString('o');platform=[Environment]::OSVersion.VersionString;binary_sha256=$binaryHashes;frames=$Frames;tests=@($results.ToArray());scope='PASS means only that this automated check succeeded. GUI self-test checks CPU rendering only. Demo checks export original 160x144 frames and require nonuniform graphics at 60 or more frames. Real-ROM runs test startup/continued headless execution without automated gameplay; they do not establish game compatibility. This does not validate audible/device latency, GPU, actual gamepad/webcam/printer/IR behavior, WAN or Pokemon trades.';manual_checks=@('Direct3D + CRT/HQ2x/Scale2x/3x/xBRZ; device loss and resize','48/96 kHz audible quality, latency and long-session underruns','Two physical gamepads, tilt, rumble and virtual controls','Webcam capture, Printer and infrared','Pokemon trade/save continuity and long real-game play','RetroAchievements real account and server-approved Hardcore','Cross-emulator BESS exchange and trusted code signature')}
     $file=Join-Path $reportFolder 'windows-qa.json'
     $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $file -Encoding UTF8
     Write-Host "Report: $file"

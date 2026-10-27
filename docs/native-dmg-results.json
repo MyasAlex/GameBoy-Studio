@@ -1,0 +1,933 @@
+{
+  "blargg_commit": "c240dd7d700e5c0b00a7bbba52b53e4ee67b5f15",
+  "mooneye_version": "mts-20260714-0944-31510e1",
+  "boot_firmware": {
+    "source": "studio_native_post_boot",
+    "model": "DMG",
+    "sha256": null,
+    "note": "Studio initializes the hardware at the cartridge entry point without executing bundled boot firmware."
+  },
+  "commercial_games_tested": [],
+  "results": [
+    {
+      "suite": "Blargg",
+      "rom": "cpu_instrs/individual/01-special.gb",
+      "status": "PASS",
+      "seconds": 3.22,
+      "output": "01-special\n\n\nPassed\n\nframes=140 PC=$C369 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "cpu_instrs/individual/02-interrupts.gb",
+      "status": "PASS",
+      "seconds": 0.412,
+      "output": "02-interrupts\n\n\nPassed\n\nframes=26 PC=$C386 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "cpu_instrs/individual/03-op sp,hl.gb",
+      "status": "PASS",
+      "seconds": 3.169,
+      "output": "03-op sp,hl\n\n\nPassed\n\nframes=141 PC=$C6D2 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "cpu_instrs/individual/04-op r,imm.gb",
+      "status": "PASS",
+      "seconds": 3.469,
+      "output": "04-op r,imm\n\n\nPassed\n\nframes=164 PC=$C6C9 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "cpu_instrs/individual/05-op rp.gb",
+      "status": "PASS",
+      "seconds": 4.72,
+      "output": "05-op rp\n\n\nPassed\n\nframes=225 PC=$C6C8 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "cpu_instrs/individual/06-ld r,r.gb",
+      "status": "PASS",
+      "seconds": 0.819,
+      "output": "06-ld r,r\n\n\nPassed\n\nframes=35 PC=$C7EF LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "cpu_instrs/individual/07-jr,jp,call,ret,rst.gb",
+      "status": "PASS",
+      "seconds": 1.281,
+      "output": "07-jr,jp,call,ret,rst\n\n\nPassed\n\nframes=43 PC=$C73A LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "cpu_instrs/individual/08-misc instrs.gb",
+      "status": "PASS",
+      "seconds": 0.715,
+      "output": "08-misc instrs\n\n\nPassed\n\nframes=33 PC=$C724 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "cpu_instrs/individual/09-op r,r.gb",
+      "status": "PASS",
+      "seconds": 11.524,
+      "output": "09-op r,r\n\n\nPassed\n\nframes=546 PC=$C9FD LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "cpu_instrs/individual/10-bit ops.gb",
+      "status": "PASS",
+      "seconds": 20.8,
+      "output": "10-bit ops\n\n\nPassed\n\nframes=829 PC=$CAE6 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "cpu_instrs/individual/11-op a,(hl).gb",
+      "status": "PASS",
+      "seconds": 22.243,
+      "output": "11-op a,(hl)\n\n\nPassed\n\nframes=1051 PC=$C7F3 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "cpu_instrs/cpu_instrs.gb",
+      "status": "PASS",
+      "seconds": 59.896,
+      "output": "cpu_instrs\n\n01:ok  02:ok  03:ok  04:ok  05:ok  06:ok  07:ok  08:ok  09:ok  10:ok  11:ok  \n\nPassed all\nframes=3195 PC=$0215 LY=66 ROM=CPU_INSTRS MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "instr_timing/instr_timing.gb",
+      "status": "PASS",
+      "seconds": 0.88,
+      "output": "instr_timing\n\n\nPassed\n\nframes=39 PC=$C441 LY=66 ROM=INSTR_TIMIN MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "halt_bug.gb",
+      "status": "PASS",
+      "seconds": 1.917,
+      "output": "halt bug\n\nIE IF IF DE\n01 10 F1 0C04 \n01 00 E1 0C04 \n01 01 E1 0411 \n11 00 E1 0C04 \n11 10 F1 0411 \n11 11 F1 0411 \nE1 00 E1 0C04 \nE1 E0 E1 0C04 \nE1 E1 E1 0411 \n\nPassed\n\n\nframes=106 PC=$C818 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "mem_timing/individual/01-read_timing.gb",
+      "status": "PASS",
+      "seconds": 0.503,
+      "output": "01-read_timing\n\n\nPassed\n\nframes=28 PC=$C3F0 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "mem_timing/individual/02-write_timing.gb",
+      "status": "PASS",
+      "seconds": 0.496,
+      "output": "02-write_timing\n\n\nPassed\n\nframes=27 PC=$C3B1 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "mem_timing/individual/03-modify_timing.gb",
+      "status": "PASS",
+      "seconds": 0.748,
+      "output": "03-modify_timing\n\n\nPassed\n\nframes=30 PC=$C414 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "mem_timing/mem_timing.gb",
+      "status": "PASS",
+      "seconds": 1.828,
+      "output": "mem_timing\n\n01:ok  02:ok  03:ok  \n\nPassed all\nframes=90 PC=$0213 LY=66 ROM=MEM_TIMING MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "mem_timing-2/rom_singles/01-read_timing.gb",
+      "status": "PASS",
+      "seconds": 0.6,
+      "output": "01-read_timing\n\n\nPassed\n\n\nframes=29 PC=$C8BE LY=66 ROM=foo MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "mem_timing-2/rom_singles/02-write_timing.gb",
+      "status": "PASS",
+      "seconds": 0.681,
+      "output": "02-write_timing\n\n\nPassed\n\n\nframes=28 PC=$C87C LY=66 ROM=02-WRITE_TI MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "mem_timing-2/rom_singles/03-modify_timing.gb",
+      "status": "PASS",
+      "seconds": 0.643,
+      "output": "03-modify_timing\n\n\nPassed\n\n\nframes=31 PC=$C8E4 LY=66 ROM=03-MODIFY_T MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "mem_timing-2/mem_timing.gb",
+      "status": "PASS",
+      "seconds": 4.404,
+      "output": "mem_timing\n\n01:ok  02:ok  03:ok  \n\nPassed\n\n\nframes=166 PC=$2BDD LY=66 ROM=MEM_TIMING MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "dmg_sound/rom_singles/01-registers.gb",
+      "status": "PASS",
+      "seconds": 1.021,
+      "output": "01-registers\n\n\nPassed\n\n\nframes=51 PC=$CAA2 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "dmg_sound/rom_singles/02-len ctr.gb",
+      "status": "PASS",
+      "seconds": 8.58,
+      "output": "02-len ctr\n\n0 1 2 3 \nPassed\n\n\nframes=566 PC=$CEF7 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "dmg_sound/rom_singles/03-trigger.gb",
+      "status": "PASS",
+      "seconds": 18.16,
+      "output": "03-trigger\n\n0 1 2 3 \nPassed\n\n\nframes=1010 PC=$CEB8 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "dmg_sound/rom_singles/04-sweep.gb",
+      "status": "PASS",
+      "seconds": 1.66,
+      "output": "04-sweep\n\n\nPassed\n\n\nframes=75 PC=$CC63 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "dmg_sound/rom_singles/05-sweep details.gb",
+      "status": "PASS",
+      "seconds": 1.415,
+      "output": "05-sweep details\n\n\nPassed\n\n\nframes=73 PC=$CC98 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "dmg_sound/rom_singles/06-overflow on trigger.gb",
+      "status": "PASS",
+      "seconds": 0.984,
+      "output": "06-overflow on trigger\n\n0555 0666 071C 0787 07C1 07E0 07F0 \n0556 0667 071D 0788 07C2 07E1 07F1 \nPassed\n\n\nframes=56 PC=$C93E LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "dmg_sound/rom_singles/07-len sweep period sync.gb",
+      "status": "PASS",
+      "seconds": 0.709,
+      "output": "07-len sweep period sync\n\n\nPassed\n\n\nframes=36 PC=$CAB8 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "dmg_sound/rom_singles/08-len ctr during power.gb",
+      "status": "PASS",
+      "seconds": 1.299,
+      "output": "08-len ctr during power\n\n33 44 11 22 \nPassed\n\n\nframes=83 PC=$C995 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "dmg_sound/rom_singles/09-wave read while on.gb",
+      "status": "PASS",
+      "seconds": 0.524,
+      "output": "09-wave read while on\n\nFF FF 00 FF 11 FF 11 FF 22 FF 22 FF 33 FF 33 FF 44 FF 44 FF 55 FF 55 FF 66 FF 66 FF 77 FF 77 FF 88 FF 88 FF 99 FF 99 FF AA FF AA FF BB FF BB FF CC FF CC FF DD FF DD FF EE FF EE FF FF FF FF FF 00 FF 00 FF 11 \nPassed\n\n\nframes=37 PC=$C927 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "dmg_sound/rom_singles/10-wave trigger while on.gb",
+      "status": "PASS",
+      "seconds": 3.675,
+      "output": "10-wave trigger while on\n\n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n11 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n11 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n22 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n22 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n33 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n33 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n44 55 66 77 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n44 55 66 77 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n44 55 66 77 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n44 55 66 77 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n44 55 66 77 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n44 55 66 77 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n44 55 66 77 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n44 55 66 77 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n88 99 AA BB 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n88 99 AA BB 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n88 99 AA BB 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n88 99 AA BB 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n88 99 AA BB 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n88 99 AA BB 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n88 99 AA BB 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n88 99 AA BB 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \nCC DD EE FF 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \nCC DD EE FF 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \nCC DD EE FF 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \nCC DD EE FF 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \nCC DD EE FF 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \nCC DD EE FF 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \nCC DD EE FF 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \nCC DD EE FF 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n11 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n\nPassed\n\n\nframes=235 PC=$C93E LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "dmg_sound/rom_singles/11-regs after power.gb",
+      "status": "PASS",
+      "seconds": 0.68,
+      "output": "11-regs after power\n\n\nPassed\n\n\nframes=44 PC=$C9EB LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "dmg_sound/rom_singles/12-wave write while on.gb",
+      "status": "PASS",
+      "seconds": 4.092,
+      "output": "12-wave write while on\n\n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \nF7 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 F7 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 F7 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 F7 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 F7 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 F7 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 F7 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 F7 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 F7 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 F7 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 F7 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 F7 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 F7 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 F7 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 F7 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 F7 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 F7 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 F7 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 F7 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 F7 BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 F7 BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA F7 CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA F7 CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB F7 DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB F7 DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC F7 EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC F7 EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD F7 FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD F7 FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE F7 \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE F7 \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \nF7 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \nF7 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 11 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n00 F7 22 33 44 55 66 77 88 99 AA BB CC DD EE FF \n\nPassed\n\n\nframes=235 PC=$C941 LY=66 ROM= MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Blargg",
+      "rom": "dmg_sound/dmg_sound.gb",
+      "status": "PASS",
+      "seconds": 30.128,
+      "output": "dmg_sound\n\n01:ok  02:ok  03:ok  04:ok  05:ok  06:ok  07:ok  08:ok  09:ok  10:ok  11:ok  12:ok  \n\nPassed\n\n\nframes=2134 PC=$2BD4 LY=66 ROM=DMG_SOUND MODEL=DMG SPEED=1\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/add_sp_e_timing.gb",
+      "status": "PASS",
+      "seconds": 0.244,
+      "output": "\nframes=13 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=122546 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/bits/mem_oam.gb",
+      "status": "PASS",
+      "seconds": 0.336,
+      "output": "\nframes=10 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102939 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/bits/reg_f.gb",
+      "status": "PASS",
+      "seconds": 0.421,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102281 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/bits/unused_hwio-GS.gb",
+      "status": "PASS",
+      "seconds": 0.327,
+      "output": "\nframes=10 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=100048 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/boot_div-dmgABCmgb.gb",
+      "status": "PASS",
+      "seconds": 0.281,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102506 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/boot_hwio-dmgABCmgb.gb",
+      "status": "PASS",
+      "seconds": 0.294,
+      "output": "\nframes=10 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=100798 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/boot_regs-dmgABC.gb",
+      "status": "PASS",
+      "seconds": 0.505,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102414 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/call_cc_timing.gb",
+      "status": "PASS",
+      "seconds": 0.384,
+      "output": "\nframes=13 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=121084 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/call_cc_timing2.gb",
+      "status": "PASS",
+      "seconds": 0.444,
+      "output": "\nframes=14 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=129238 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/call_timing.gb",
+      "status": "PASS",
+      "seconds": 0.38,
+      "output": "\nframes=13 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=121084 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/call_timing2.gb",
+      "status": "PASS",
+      "seconds": 0.365,
+      "output": "\nframes=14 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=129239 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/di_timing-GS.gb",
+      "status": "PASS",
+      "seconds": 0.399,
+      "output": "\nframes=15 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=159939 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/div_timing.gb",
+      "status": "PASS",
+      "seconds": 0.308,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102411 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ei_sequence.gb",
+      "status": "PASS",
+      "seconds": 0.42,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102284 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ei_timing.gb",
+      "status": "PASS",
+      "seconds": 0.276,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102281 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/halt_ime0_ei.gb",
+      "status": "PASS",
+      "seconds": 0.333,
+      "output": "\nframes=10 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=108436 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/halt_ime0_nointr_timing.gb",
+      "status": "PASS",
+      "seconds": 0.501,
+      "output": "\nframes=14 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=171238 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/halt_ime1_timing.gb",
+      "status": "PASS",
+      "seconds": 0.243,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102289 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/halt_ime1_timing2-GS.gb",
+      "status": "PASS",
+      "seconds": 0.62,
+      "output": "\nframes=18 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=226442 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/if_ie_registers.gb",
+      "status": "PASS",
+      "seconds": 0.219,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102389 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/instr/daa.gb",
+      "status": "PASS",
+      "seconds": 0.613,
+      "output": "\nframes=22 PC=$6846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=195351 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/interrupts/ie_push.gb",
+      "status": "PASS",
+      "seconds": 0.328,
+      "output": "\nframes=10 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=100906 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/intr_timing.gb",
+      "status": "PASS",
+      "seconds": 0.487,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102333 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/jp_cc_timing.gb",
+      "status": "PASS",
+      "seconds": 0.308,
+      "output": "\nframes=13 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=121087 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/jp_timing.gb",
+      "status": "PASS",
+      "seconds": 0.38,
+      "output": "\nframes=13 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=121087 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ld_hl_sp_e_timing.gb",
+      "status": "PASS",
+      "seconds": 0.331,
+      "output": "\nframes=13 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=122583 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/oam_dma/basic.gb",
+      "status": "PASS",
+      "seconds": 0.313,
+      "output": "\nframes=10 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=103750 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/oam_dma/reg_read.gb",
+      "status": "PASS",
+      "seconds": 0.288,
+      "output": "\nframes=10 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=101642 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/oam_dma/sources-GS.gb",
+      "status": "PASS",
+      "seconds": 0.86,
+      "output": "\nframes=36 PC=$48E6 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=363639 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/oam_dma_restart.gb",
+      "status": "PASS",
+      "seconds": 0.475,
+      "output": "\nframes=13 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=122478 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/oam_dma_start.gb",
+      "status": "PASS",
+      "seconds": 0.54,
+      "output": "\nframes=14 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=136943 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/oam_dma_timing.gb",
+      "status": "PASS",
+      "seconds": 0.308,
+      "output": "\nframes=13 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=122472 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/pop_timing.gb",
+      "status": "PASS",
+      "seconds": 0.276,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102487 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ppu/hblank_ly_scx_timing-GS.gb",
+      "status": "PASS",
+      "seconds": 1.804,
+      "output": "\nframes=47 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=361455 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ppu/intr_1_2_timing-GS.gb",
+      "status": "PASS",
+      "seconds": 0.36,
+      "output": "\nframes=13 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=133409 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ppu/intr_2_0_timing.gb",
+      "status": "PASS",
+      "seconds": 0.353,
+      "output": "\nframes=12 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=114283 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ppu/intr_2_mode0_timing.gb",
+      "status": "PASS",
+      "seconds": 0.511,
+      "output": "\nframes=12 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=114334 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ppu/intr_2_mode0_timing_sprites.gb",
+      "status": "PASS",
+      "seconds": 6.864,
+      "output": "\nframes=238 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=1844617 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ppu/intr_2_mode3_timing.gb",
+      "status": "PASS",
+      "seconds": 0.336,
+      "output": "\nframes=12 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=114288 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ppu/intr_2_oam_ok_timing.gb",
+      "status": "PASS",
+      "seconds": 0.408,
+      "output": "\nframes=12 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=114738 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ppu/lcdon_timing-GS.gb",
+      "status": "PASS",
+      "seconds": 0.752,
+      "output": "\nframes=30 PC=$4C8E LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=294848 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ppu/lcdon_write_timing-GS.gb",
+      "status": "PASS",
+      "seconds": 1.609,
+      "output": "\nframes=55 PC=$4943 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=533275 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ppu/stat_irq_blocking.gb",
+      "status": "PASS",
+      "seconds": 0.241,
+      "output": "\nframes=11 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=105086 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ppu/stat_lyc_onoff.gb",
+      "status": "PASS",
+      "seconds": 0.458,
+      "output": "\nframes=13 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=125536 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ppu/vblank_stat_intr-GS.gb",
+      "status": "PASS",
+      "seconds": 0.414,
+      "output": "\nframes=18 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=198484 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/push_timing.gb",
+      "status": "PASS",
+      "seconds": 0.409,
+      "output": "\nframes=13 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=122594 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/rapid_di_ei.gb",
+      "status": "PASS",
+      "seconds": 0.201,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102328 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ret_cc_timing.gb",
+      "status": "PASS",
+      "seconds": 0.355,
+      "output": "\nframes=14 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=127374 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/ret_timing.gb",
+      "status": "PASS",
+      "seconds": 0.332,
+      "output": "\nframes=14 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=127376 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/reti_intr_timing.gb",
+      "status": "PASS",
+      "seconds": 0.375,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102306 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/reti_timing.gb",
+      "status": "PASS",
+      "seconds": 0.644,
+      "output": "\nframes=14 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=127376 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/rst_timing.gb",
+      "status": "PASS",
+      "seconds": 0.421,
+      "output": "\nframes=13 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=122596 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/serial/boot_sclk_align-dmgABCmgb.gb",
+      "status": "PASS",
+      "seconds": 0.374,
+      "output": "\u0000\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102860 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/timer/div_write.gb",
+      "status": "PASS",
+      "seconds": 1.859,
+      "output": "\nframes=51 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=493451 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/timer/rapid_toggle.gb",
+      "status": "PASS",
+      "seconds": 0.312,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102237 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/timer/tim00.gb",
+      "status": "PASS",
+      "seconds": 0.282,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102516 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/timer/tim00_div_trigger.gb",
+      "status": "PASS",
+      "seconds": 0.194,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102390 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/timer/tim01.gb",
+      "status": "PASS",
+      "seconds": 0.218,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102295 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/timer/tim01_div_trigger.gb",
+      "status": "PASS",
+      "seconds": 0.369,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102277 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/timer/tim10.gb",
+      "status": "PASS",
+      "seconds": 0.32,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102290 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/timer/tim10_div_trigger.gb",
+      "status": "PASS",
+      "seconds": 0.308,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102294 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/timer/tim11.gb",
+      "status": "PASS",
+      "seconds": 0.304,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102335 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/timer/tim11_div_trigger.gb",
+      "status": "PASS",
+      "seconds": 0.224,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102302 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/timer/tima_reload.gb",
+      "status": "PASS",
+      "seconds": 0.208,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102488 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/timer/tima_write_reloading.gb",
+      "status": "PASS",
+      "seconds": 0.306,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102381 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "acceptance/timer/tma_write_reloading.gb",
+      "status": "PASS",
+      "seconds": 0.244,
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=102384 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc1/bits_bank1.gb",
+      "status": "PASS",
+      "seconds": 5.595,
+      "output": "\nframes=178 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=1579315 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc1/bits_bank2.gb",
+      "status": "PASS",
+      "seconds": 5.664,
+      "output": "\nframes=175 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=1561012 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc1/bits_mode.gb",
+      "status": "PASS",
+      "seconds": 4.579,
+      "output": "\nframes=178 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=1579252 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc1/bits_ramg.gb",
+      "status": "PASS",
+      "seconds": 10.368,
+      "output": "\nframes=348 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=3071947 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc1/multicart_rom_8Mb.gb",
+      "status": "PASS",
+      "seconds": 0.42,
+      "output": "\nframes=13 PC=$4057 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=118924 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc1/ram_256kb.gb",
+      "status": "PASS",
+      "seconds": 1.713,
+      "output": "\nframes=55 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=560908 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc1/ram_64kb.gb",
+      "status": "PASS",
+      "seconds": 1.664,
+      "output": "\nframes=55 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=561153 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc1/rom_16Mb.gb",
+      "status": "PASS",
+      "seconds": 0.501,
+      "output": "\nframes=13 PC=$4847 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=118924 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc1/rom_1Mb.gb",
+      "status": "PASS",
+      "seconds": 0.408,
+      "output": "\nframes=13 PC=$4847 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=118924 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc1/rom_2Mb.gb",
+      "status": "PASS",
+      "seconds": 0.3,
+      "output": "\nframes=13 PC=$4847 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=118924 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc1/rom_4Mb.gb",
+      "status": "PASS",
+      "seconds": 0.388,
+      "output": "\nframes=13 PC=$4847 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=118924 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc1/rom_512kb.gb",
+      "status": "PASS",
+      "seconds": 0.307,
+      "output": "\nframes=13 PC=$4847 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=118924 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc1/rom_8Mb.gb",
+      "status": "PASS",
+      "seconds": 0.308,
+      "output": "\nframes=13 PC=$4847 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=118924 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc2/bits_ramg.gb",
+      "status": "PASS",
+      "seconds": 9.815,
+      "output": "\nframes=355 PC=$4956 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=3149877 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc2/bits_romb.gb",
+      "status": "PASS",
+      "seconds": 5.684,
+      "output": "\nframes=186 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=1661872 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc2/bits_unused.gb",
+      "status": "PASS",
+      "seconds": 3.888,
+      "output": "\nframes=174 PC=$4056 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=1179796 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc2/ram.gb",
+      "status": "PASS",
+      "seconds": 0.721,
+      "output": "\nframes=28 PC=$4846 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=260469 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc2/rom_1Mb.gb",
+      "status": "PASS",
+      "seconds": 0.363,
+      "output": "\nframes=10 PC=$4847 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=100498 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc2/rom_2Mb.gb",
+      "status": "PASS",
+      "seconds": 0.336,
+      "output": "\nframes=10 PC=$4847 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=100498 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc2/rom_512kb.gb",
+      "status": "PASS",
+      "seconds": 0.312,
+      "output": "\nframes=10 PC=$4847 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=100498 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc5/rom_16Mb.gb",
+      "status": "PASS",
+      "seconds": 0.388,
+      "output": "\nframes=13 PC=$4848 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=123409 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc5/rom_1Mb.gb",
+      "status": "PASS",
+      "seconds": 0.341,
+      "output": "\nframes=13 PC=$4848 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=123409 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc5/rom_2Mb.gb",
+      "status": "PASS",
+      "seconds": 0.433,
+      "output": "\nframes=13 PC=$4848 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=123409 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc5/rom_32Mb.gb",
+      "status": "PASS",
+      "seconds": 0.412,
+      "output": "\nframes=13 PC=$4848 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=123409 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc5/rom_4Mb.gb",
+      "status": "PASS",
+      "seconds": 0.367,
+      "output": "\nframes=13 PC=$4848 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=123409 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc5/rom_512kb.gb",
+      "status": "PASS",
+      "seconds": 0.246,
+      "output": "\nframes=13 PC=$4848 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=123409 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc5/rom_64Mb.gb",
+      "status": "PASS",
+      "seconds": 0.513,
+      "output": "\nframes=13 PC=$4848 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=123409 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "Mooneye DMG ABC",
+      "rom": "emulator-only/mbc5/rom_8Mb.gb",
+      "status": "PASS",
+      "seconds": 0.488,
+      "output": "\nframes=13 PC=$4848 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=123409 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "suite": "PPU image",
+      "rom": "dmg-acid2",
+      "status": "PASS",
+      "different_pixels": 0
+    }
+  ],
+  "summary": {
+    "PASS": 130
+  },
+  "emulator_sha256": "ed7ef3eb72e8ee7db48d74896e03261320a2fb4d7e999503de722368dc2db932",
+  "source_manifest_sha256": "5816377ad966b15f5e4539c059f2a75c42a584c6d37241f02a82a89353773627",
+  "source_manifest": "validation/source-sha256.json",
+  "core": "Studio native core",
+  "validation_started_utc": "2026-10-27T08:41:00.979319+00:00",
+  "validation_utc": "2026-10-27T08:42:22.228614+00:00",
+  "host": "Linux x86-64",
+  "scope": "All selected public hardware ROM cases. Native postboot initialization; no commercial games or proprietary firmware tested."
+}

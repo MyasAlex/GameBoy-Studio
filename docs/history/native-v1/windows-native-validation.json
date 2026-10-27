@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "validated_at_utc": "2026-10-23T01:55:19.022134+00:00",
+  "status": "passed_with_wine_runner_retry",
+  "build": {
+    "target": "Windows x86-64",
+    "configuration": "Release",
+    "compiler": "MinGW-w64 GCC 14-posix (Debian trixie packages; MinGW-w64 12.0.0)",
+    "cmake": "4.4.4",
+    "generator": "Ninja",
+    "source_build_success": true,
+    "build_log": "windows-validation/build-resumed-final.log"
+  },
+  "execution_environment": {
+    "host": "Linux",
+    "compatibility_layer": "Wine 10.0 (Debian 10.0~repack-6)",
+    "virtual_display": "Xvfb :91",
+    "native_windows_execution": false
+  },
+  "verified_suites": {
+    "passed": 18,
+    "total": 18,
+    "method": "17 successful suites in the final full CTest run, followed by a clean isolated CTest rerun of frame_pacing after correcting the Wine launcher."
+  },
+  "full_ctest": {
+    "tests": 18,
+    "passed": 17,
+    "failed": 1,
+    "failed_test": "frame_pacing",
+    "failure_reason": "Wine server inherited the CTest stdout pipe; the test printed PASS, but the runner waited for EOF and reached its 90-second timeout.",
+    "log": "windows-validation/windows-wine-final.log",
+    "junit": "windows-validation/windows-wine-final.xml"
+  },
+  "isolated_retry": {
+    "test": "frame_pacing",
+    "passed": 1,
+    "failed": 0,
+    "seconds": 2.9075,
+    "log": "windows-validation/windows-frame-pacing-final.log",
+    "junit": "windows-validation/windows-frame-pacing-final.xml"
+  },
+  "gui_cpu_rendering_self_test": {
+    "command": "GBStudio.exe --self-test demo.gbc",
+    "exit_code": 0,
+    "scope": "Hidden Win32 window, CPU/GDI rendering to multiple surface sizes/effects, and preservation of the raw framebuffer under Wine/Xvfb.",
+    "log": "windows-validation/wine-gui-selftest-resumed-final.log"
+  },
+  "demos": [
+    {
+      "rom": "demo.gb",
+      "frames": 120,
+      "windows_exit_code": 0,
+      "linux_exit_code": 0,
+      "exact_linux_frame_match": true,
+      "frame_sha256": "54c897dcb143fc20697a1c2a35e45b6a8fccf4c2b6456a6d9c27f6381db772b3",
+      "frame_bytes": 69135
+    },
+    {
+      "rom": "demo.gbc",
+      "frames": 120,
+      "windows_exit_code": 0,
+      "linux_exit_code": 0,
+      "exact_linux_frame_match": true,
+      "frame_sha256": "7f8890ab98833c5ef59fad9a4c47114e34cf86d30fe73a037ed42e590e74cecf",
+      "frame_bytes": 69135
+    }
+  ],
+  "binaries": {
+    "GBStudio.exe": {
+      "sha256": "0b63cca36d1c0bd86ee3463389d1ab040990a51c85449d42ece7499689051424",
+      "bytes": 4743936,
+      "imported_dlls": [
+        "AVICAP32.dll",
+        "AVRT.dll",
+        "comdlg32.dll",
+        "d3d11.dll",
+        "D3DCOMPILER_47.dll",
+        "GDI32.dll",
+        "KERNEL32.dll",
+        "msvcrt.dll",
+        "ole32.dll",
+        "SHELL32.dll",
+        "USER32.dll",
+        "WINHTTP.dll",
+        "WINMM.dll",
+        "WS2_32.dll"
+      ],
+      "stack_reserve_bytes": 8388608
+    },
+    "gb_headless.exe": {
+      "sha256": "8bfb20a3793391b01cae3b305a9f852a861d49f7821dc2d0de2b2313573ab6b3",
+      "bytes": 3107123,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll",
+        "SHELL32.dll"
+      ],
+      "stack_reserve_bytes": 8388608
+    },
+    "gb_pixel_filters.exe": {
+      "sha256": "bc9c4219589d22f6d947e23876f258a6d02391775cf9b88db479d05bec48206b",
+      "bytes": 2960264,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "stack_reserve_bytes": 8388608
+    }
+  },
+  "dependencies": {
+    "sameboy_runtime_dependency": false,
+    "imports_only_windows_system_dlls": true,
+    "mingw_runtime_dll_required": false,
+    "sameboy_distribution_files": []
+  },
+  "source_sha256": {
+    "src/gameboy.hpp": "94ea21cdb3064f0d7950f80bd1070b51e2d0cbfcab57788ad888c8b28586e790",
+    "src/network_tools.hpp": "5f0b54e14399adf9fb789dcb1d1f4d517f86f2bd04a917f3a7417fffff6b6875",
+    "src/portable_state.hpp": "99990182f9689de84155e55d8c902bdee3d17ec71d033590cf95336bee26fdce",
+    "tests/native_integration_tests.cpp": "d9966e96ac7909d38c71f6fe67d743ae55b6859fc415e8835b5306b39797d2cd"
+  },
+  "installed_to": "/workspace/windows-native-dist",
+  "not_verified": [
+    "Execution on native Windows hardware",
+    "Direct3D GPU/device-loss behavior",
+    "Audible quality or audio/device latency",
+    "Physical controllers, camera, printer, infrared, WAN sessions or commercial-game compatibility"
+  ]
+}

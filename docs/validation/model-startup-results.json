@@ -1,0 +1,45 @@
+{
+  "scope": "Pinned Mooneye register handoff assertions on explicit monochrome models; native postboot initialization, no external firmware",
+  "source": "https://github.com/Gekkio/mooneye-test-suite/tree/8d742b9d55",
+  "emulator_sha256": "ed7ef3eb72e8ee7db48d74896e03261320a2fb4d7e999503de722368dc2db932",
+  "tests": [
+    {
+      "model": "pocket",
+      "rom": "boot_regs-mgb",
+      "status": "PASS",
+      "rom_sha256": "6f2be96cb0fba205591b616fa5f413127f0e7fd1a8b8a0bf977fcbcbafe9619b",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94232 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "model": "light",
+      "rom": "boot_regs-mgb",
+      "status": "PASS",
+      "rom_sha256": "6f2be96cb0fba205591b616fa5f413127f0e7fd1a8b8a0bf977fcbcbafe9619b",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94232 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "model": "sgb",
+      "rom": "boot_regs-sgb",
+      "status": "PASS",
+      "rom_sha256": "17df8a183904a5426487924f26599378a9cf96b03f2108e9b4546c82b4a07ba5",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94228 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "model": "sgb-pal",
+      "rom": "boot_regs-sgb",
+      "status": "PASS",
+      "rom_sha256": "17df8a183904a5426487924f26599378a9cf96b03f2108e9b4546c82b4a07ba5",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94228 stop=budget\nRESULT: PASS\n"
+    },
+    {
+      "model": "sgb2",
+      "rom": "boot_regs-sgb2",
+      "status": "PASS",
+      "rom_sha256": "eb00a91f1b68805d06de27589c2ad5d339a1821abd204f51e34897221aae1fc7",
+      "output": "\nframes=10 PC=$4A81 LY=144 ROM=mooneye-gb test MODEL=DMG SPEED=1 steps=94230 stop=budget\nRESULT: PASS\n"
+    }
+  ],
+  "summary": {
+    "PASS": 5
+  }
+}

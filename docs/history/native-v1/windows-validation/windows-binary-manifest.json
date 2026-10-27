@@ -1,0 +1,42 @@
+{
+  "GBStudio.exe": {
+    "sha256": "0b63cca36d1c0bd86ee3463389d1ab040990a51c85449d42ece7499689051424",
+    "bytes": 4743936,
+    "imported_dlls": [
+      "AVICAP32.dll",
+      "AVRT.dll",
+      "comdlg32.dll",
+      "d3d11.dll",
+      "D3DCOMPILER_47.dll",
+      "GDI32.dll",
+      "KERNEL32.dll",
+      "msvcrt.dll",
+      "ole32.dll",
+      "SHELL32.dll",
+      "USER32.dll",
+      "WINHTTP.dll",
+      "WINMM.dll",
+      "WS2_32.dll"
+    ],
+    "stack_reserve_bytes": 8388608
+  },
+  "gb_headless.exe": {
+    "sha256": "8bfb20a3793391b01cae3b305a9f852a861d49f7821dc2d0de2b2313573ab6b3",
+    "bytes": 3107123,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll",
+      "SHELL32.dll"
+    ],
+    "stack_reserve_bytes": 8388608
+  },
+  "gb_pixel_filters.exe": {
+    "sha256": "bc9c4219589d22f6d947e23876f258a6d02391775cf9b88db479d05bec48206b",
+    "bytes": 2960264,
+    "imported_dlls": [
+      "KERNEL32.dll",
+      "msvcrt.dll"
+    ],
+    "stack_reserve_bytes": 8388608
+  }
+}

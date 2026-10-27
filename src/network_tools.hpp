@@ -82,7 +82,15 @@ public:
         if(a.mem.mbc==7||b.mem.mbc==7||a.mem.mbc==252||b.mem.mbc==252)return fail("Live Camera/tilt inputs are not synchronized by this network protocol.");
         retryFirst=&a;retrySecond=&b;retryLink=&cable;retryPort=port;retryLead=prediction;retryServer=true;retryEnabled=true;lastReceived=lastHeartbeat=std::chrono::steady_clock::now();
         server=true;first=&a;second=&b;link=&cable;lead=std::min(prediction,6u);listener=::socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);if(listener==invalid)return fail("Could not create server socket.");
-        int reuse=1;setsockopt(listener,SOL_SOCKET,SO_REUSEADDR,(const char*)&reuse,sizeof(reuse));sockaddr_in address{};address.sin_family=AF_INET;address.sin_addr.s_addr=htonl(INADDR_ANY);address.sin_port=htons((u16)port);
+        int enabled=1;
+#ifdef _WIN32
+        // Winsock SO_REUSEADDR allows another listener to take this endpoint.
+        // Reserve it exclusively so peers cannot connect to a different host.
+        if(setsockopt(listener,SOL_SOCKET,SO_EXCLUSIVEADDRUSE,(const char*)&enabled,sizeof(enabled)))return fail("Could not reserve the selected TCP port.");
+#else
+        setsockopt(listener,SOL_SOCKET,SO_REUSEADDR,(const char*)&enabled,sizeof(enabled));
+#endif
+        sockaddr_in address{};address.sin_family=AF_INET;address.sin_addr.s_addr=htonl(INADDR_ANY);address.sin_port=htons((u16)port);
         if(bind(listener,(sockaddr*)&address,sizeof(address))||listen(listener,1))return fail("Could not listen on the selected TCP port.");nonblock(listener);state="Waiting for peer";return true;}
     bool join(GameBoy& a,GameBoy& b,devices::LocalLink& cable,const std::string& ipv4,unsigned port=8765,unsigned prediction=3){close();if(a.mem.mbc==7||b.mem.mbc==7||a.mem.mbc==252||b.mem.mbc==252)return fail("Live Camera/tilt inputs are not synchronized by this network protocol.");retryFirst=&a;retrySecond=&b;retryLink=&cable;retryPort=port;retryLead=prediction;retryAddress=ipv4;retryServer=false;retryEnabled=true;lastReceived=lastHeartbeat=std::chrono::steady_clock::now();server=false;first=&a;second=&b;link=&cable;lead=std::min(prediction,6u);
         sockaddr_in address{};address.sin_family=AF_INET;address.sin_port=htons((u16)port);if(port<1||port>65535||inet_pton(AF_INET,ipv4.c_str(),&address.sin_addr)!=1)return fail("Enter an IPv4 address and TCP port.");
@@ -96,14 +104,19 @@ public:
         if(ready&&now-lastHeartbeat>=std::chrono::seconds(1)){std::vector<u8> heartbeat;put64(heartbeat,frame);queue(5,heartbeat);lastHeartbeat=now;}
         if(listener!=invalid&&socket==invalid){socket=accept(listener,nullptr,nullptr);if(socket==invalid){if(wouldBlock(lastError()))return true;return fail("Network accept failed.",true);}nonblock(socket);lastReceived=lastHeartbeat=now;hello();}
         if(socket==invalid)return listener!=invalid;
-        if(connecting){fd_set writes;FD_ZERO(&writes);FD_SET(socket,&writes);timeval timeout{};if(select((int)socket+1,nullptr,&writes,nullptr,&timeout)<=0)return true;
+        if(connecting){
+            // Winsock reports a refused asynchronous connect in exceptfds;
+            // POSIX also commonly marks it writable. Check both before SO_ERROR.
+            fd_set writes,exceptions;FD_ZERO(&writes);FD_ZERO(&exceptions);FD_SET(socket,&writes);FD_SET(socket,&exceptions);timeval timeout{};
+            const int selected=select((int)socket+1,nullptr,&writes,&exceptions,&timeout);
+            if(selected<0)return fail("Connection status check failed.",true);if(!selected)return true;
             int result=0;
 #ifdef _WIN32
             int length=sizeof(result);
 #else
             socklen_t length=sizeof(result);
 #endif
-            if(getsockopt(socket,SOL_SOCKET,SO_ERROR,(char*)&result,&length)||result)return fail("Peer connection failed.",true);connecting=false;hello();}
+            if(getsockopt(socket,SOL_SOCKET,SO_ERROR,(char*)&result,&length)||result||FD_ISSET(socket,&exceptions))return fail("Peer connection failed.",true);connecting=false;hello();}
         while(sent<outgoing.size()){
 #ifdef _WIN32
             const int flags=0;

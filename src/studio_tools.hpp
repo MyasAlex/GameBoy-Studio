@@ -315,7 +315,7 @@ inline const char* cartridgeName(u8 type) {
 inline bool supportedCartridge(u8 type) {
     switch(type){case 0:case 1:case 2:case 3:case 5:case 6:case 8:case 9:
         case 0x0F:case 0x10:case 0x11:case 0x12:case 0x13:
-        case 0x19:case 0x1A:case 0x1B:case 0x1C:case 0x1D:case 0x1E:case 0x20:case 0x22:case 0x0B:case 0x0C:case 0x0D:case 0xFC:case 0xFE:case 0xFF:return true;default:return false;}
+        case 0x19:case 0x1A:case 0x1B:case 0x1C:case 0x1D:case 0x1E:case 0x22:case 0xFC:case 0xFF:return true;default:return false;}
 }
 struct RomReport {
     bool headerPresent=false,headerChecksumValid=false,globalChecksumValid=false,logoValid=false,controllerSupported=false;
@@ -358,7 +358,7 @@ inline RomReport headerReport(std::span<const u8> rom) {
     if(!report.declaredRomBytes)report.warnings.push_back("Unknown ROM size code.");
     else if(report.declaredRomBytes!=rom.size())report.warnings.push_back("Actual ROM length differs from the declared ROM size.");
     if(report.ramSizeCode>=std::size(ramBytes))report.warnings.push_back("Unknown RAM size code.");
-    if(rom.size()<16384||rom.size()>8*1024*1024||rom.size()%16384||(rom.size()==16384&&report.cartridgeType!=0&&report.cartridgeType!=8&&report.cartridgeType!=9))report.warnings.push_back("Core requires complete 16 KiB banks (16 KiB unbanked, otherwise 32 KiB to 8 MiB).");
+    if(rom.size()<32768||rom.size()>8*1024*1024||rom.size()%16384)report.warnings.push_back("Core requires complete 16 KiB banks, from 32 KiB to 8 MiB.");
     if(report.sgbFlag==3)report.warnings.push_back("SGB enhancement commands and borders are not implemented.");
     return report;
 }
@@ -386,7 +386,7 @@ inline std::string romReport(const GameBoy& gb) {
     auto report=romReport(gb.mem.rom,pathUtf8(gb.mem.romPath.filename()));
     const auto end=report.rfind('}');std::ostringstream state;
     state<<",\n  \"runtime\": {\"version\": \"1.0-preview\", \"model\": \""<<(gb.mem.dmgCompatibility?"CGB-DMG":gb.mem.cgbMode?"CGB":"DMG")<<"\", \"speed\": "<<(gb.mem.doubleSpeed?2:1)
-         <<", \"core\": "<<jsonString(gb.backendOwner?"SameBoy 1.0.4 / Studio bridge":"Studio legacy core")<<", \"hardware_model_id\": "<<(unsigned)gb.model<<", \"clock_rate\": "<<gb.clockRate<<", \"base_cycles\": "<<gb.totalCycles<<", \"registers\": "<<jsonString(formatRegisters(capture(gb)))<<"}\n";
+         <<", \"core\": "<<jsonString("Studio native core")<<", \"hardware_model_id\": "<<(unsigned)gb.model<<", \"clock_rate\": "<<gb.clockRate<<", \"base_cycles\": "<<gb.totalCycles<<", \"registers\": "<<jsonString(formatRegisters(capture(gb)))<<"}\n";
     report.insert(end,state.str());return report;
 }
 } // namespace studio

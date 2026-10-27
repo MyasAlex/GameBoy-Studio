@@ -1,0 +1,401 @@
+{
+  "schema_version": 2,
+  "validated_at_utc": "2026-10-26T11:05:12.830726+00:00",
+  "status": "PASS",
+  "test_source_sha256": {
+    "tests/accuracy_state_tests.cpp": "1bc244ca4e99bdd51b00b2633aaab618ecde873a92e41791643e5dcbdfb82662",
+    "tests/achievement_tests.cpp": "cec1c1ef1146302e2c01d76e37b7cf7fdb5c559d81d509251b2bf5fe0a02fa20",
+    "tests/audio_buffer_tests.cpp": "1e2cf938a12ce2a252d1f7d97212841e6729481aa82064822f2115560aeeb263",
+    "tests/cartridge_tools_tests.cpp": "9a743422421c0195abcfe3c4a9230c91c6af9ae524a42288679de400166d5621",
+    "tests/cgb_apu_tests.cpp": "6a0d94bbc5895f1f4ff240bf193667b07788610f9a305d658f2401960d17b789",
+    "tests/cgb_integration_tests.cpp": "ce8ea2be8ac2f99914c036549ae1e0d3d7e4dc0432368e69693a319e3cf65278",
+    "tests/cgb_memory_tests.cpp": "4df51691f9875ff7de171b3c09bffc8edf06ccc202a3f6bd5246823c3f847e8a",
+    "tests/cgb_ppu_tests.cpp": "6ff579d12b427f79ce7b2bd48c09ad7888a37dcc2dcdc6d7abdc6231421a6690",
+    "tests/core_extension_tests.cpp": "9b6e0d117d10c5b5345314dab476613fdfb3a4d9f36fe4d5b1465c2d308696d8",
+    "tests/core_tests.cpp": "0ac8c6b120ed47acf47a85209a36cd712e13c853a9ecc187cdea78f2e9e09517",
+    "tests/coverage_fuzzer.cpp": "70380dd4f2315707f8f4d66628d02889975a52f071f6909bcacbe25bcd98d266",
+    "tests/cpu_dma_accuracy_tests.cpp": "7dd54eb5e58afd058f0abe34693f2c902de0f74cd5aa6bc18ea68fa8d8b73ccf",
+    "tests/feature_pack_tests.cpp": "12f3c53da306ac529c9abe8135a74ff9b3b370305db2a56570b6f56725e6ba3e",
+    "tests/frame_pacing_tests.cpp": "5dc55bea80dcb13cb3a9ed3cae6aed0b5a12a05eab0c298195e54be0b4ed5f00",
+    "tests/integration_pack_tests.cpp": "2ab95affda23cdbab56e78f96d4eaff2151241a668090cf1f400f785ab24b3e5",
+    "tests/loader_fuzz_tests.cpp": "34e355885ff84f13feb332c965649ee910f8c32add7969a238f437ceed673dbc",
+    "tests/native_apu_accuracy_tests.cpp": "4ee310126fbbdd7e66839f5d74529cb3b36665bff1a2e15f98d7ca92e84bb2e5",
+    "tests/native_core_regression_tests.cpp": "5726353891d0cebad3cd2bc3c7d119ae41849deb2845be03f9ea05059a8acac4",
+    "tests/native_integration_tests.cpp": "d9966e96ac7909d38c71f6fe67d743ae55b6859fc415e8835b5306b39797d2cd",
+    "tests/native_ppu_accuracy_tests.cpp": "234dfd6d4462d0fd2101177e866644e71c023677e488a9f547079f611e95ea50",
+    "tests/native_state_fuzz_tests.cpp": "b641a7b11a834072fe1c4e4c7dfe8ec590526faf53f3a3360c09d830b34967cb",
+    "tests/session_tests.cpp": "3c3a2450ca399efdd56f1747506d5f491640f6d7361691e438fb1233fe863159",
+    "tests/studio_tools_tests.cpp": "d005e4396bba4ca3e5550ff71b22e2423be6daefd0c4140e30b889795a668c30"
+  },
+  "source_manifest_sha256": "e700da5b7e77a5abe42ddf0f6f91aeecb55e98c5edd255f067ac7a9ead769df1",
+  "source_manifest": "windows-validation/source-sha256.json",
+  "build": {
+    "target": "Windows x86-64",
+    "configuration": "Release",
+    "compiler": "MinGW-w64 GCC14-posix",
+    "cmake": "4.4.4",
+    "generator": "Ninja",
+    "source_build_success": true,
+    "build_log": "windows-validation/build.txt",
+    "final_incremental_log": "windows-validation/build-final.txt"
+  },
+  "execution_environment": {
+    "host": "Linux",
+    "compatibility_layer": "Wine10",
+    "virtual_display": "Xvfb :91",
+    "native_windows_execution": false,
+    "runner_notes": "NLS data linked under user-owned /tmp paths; wineserver stdout/stderr detached to avoid inherited CTest pipes."
+  },
+  "verified_suites": {
+    "passed": 22,
+    "total": 22,
+    "method": "One sequential CTest run; no excluded suites."
+  },
+  "full_ctest": {
+    "command": [
+      "/home/agent/.local/bin/ctest",
+      "--test-dir",
+      "/workspace/build-windows-accuracy",
+      "--output-on-failure",
+      "--output-junit",
+      "/workspace/windows-accuracy-validation/windows-wine.xml",
+      "--timeout",
+      "90",
+      "-j",
+      "1"
+    ],
+    "exit_code": 0,
+    "seconds": 62.615,
+    "log": "windows-validation/windows-wine.txt",
+    "total": 22,
+    "passed": 22,
+    "failed": 0,
+    "failed_tests": [],
+    "junit": "windows-validation/windows-wine.xml"
+  },
+  "gui_cpu_rendering_self_test": {
+    "command": [
+      "/workspace/toolchains/wine-accuracy-run",
+      "/workspace/build-windows-accuracy/GBStudio.exe",
+      "--self-test",
+      "/workspace/GameBoy-Studio-main/demo.gbc"
+    ],
+    "exit_code": 0,
+    "seconds": 1.586,
+    "log": "windows-validation/gui-selftest.txt",
+    "scope": "Hidden Win32 window, CPU/GDI rendering at multiple sizes/effects, preserving raw framebuffer; Wine/Xvfb rather than native Windows."
+  },
+  "demos": [
+    {
+      "rom": "demo.gb",
+      "frames": 120,
+      "windows": {
+        "command": [
+          "/workspace/toolchains/wine-accuracy-run",
+          "/workspace/build-windows-accuracy/gb_headless.exe",
+          "/workspace/GameBoy-Studio-main/demo.gb",
+          "120",
+          "--output",
+          "/workspace/windows-accuracy-validation/demo-dmg-windows.ppm"
+        ],
+        "exit_code": 0,
+        "seconds": 0.315,
+        "log": "windows-validation/demo-dmg-windows.txt"
+      },
+      "linux": {
+        "command": [
+          "/workspace/accuracy-frozen/gb_headless",
+          "/workspace/GameBoy-Studio-main/demo.gb",
+          "120",
+          "--output",
+          "/workspace/windows-accuracy-validation/demo-dmg-linux.ppm"
+        ],
+        "exit_code": 0,
+        "seconds": 0.214,
+        "log": "windows-validation/demo-dmg-linux.txt"
+      },
+      "exact_linux_frame_match": true,
+      "frame_sha256": "54c897dcb143fc20697a1c2a35e45b6a8fccf4c2b6456a6d9c27f6381db772b3",
+      "frame_bytes": 69135
+    },
+    {
+      "rom": "demo.gbc",
+      "frames": 120,
+      "windows": {
+        "command": [
+          "/workspace/toolchains/wine-accuracy-run",
+          "/workspace/build-windows-accuracy/gb_headless.exe",
+          "/workspace/GameBoy-Studio-main/demo.gbc",
+          "120",
+          "--output",
+          "/workspace/windows-accuracy-validation/demo-cgb-windows.ppm"
+        ],
+        "exit_code": 0,
+        "seconds": 0.315,
+        "log": "windows-validation/demo-cgb-windows.txt"
+      },
+      "linux": {
+        "command": [
+          "/workspace/accuracy-frozen/gb_headless",
+          "/workspace/GameBoy-Studio-main/demo.gbc",
+          "120",
+          "--output",
+          "/workspace/windows-accuracy-validation/demo-cgb-linux.ppm"
+        ],
+        "exit_code": 0,
+        "seconds": 0.214,
+        "log": "windows-validation/demo-cgb-linux.txt"
+      },
+      "exact_linux_frame_match": true,
+      "frame_sha256": "7f8890ab98833c5ef59fad9a4c47114e34cf86d30fe73a037ed42e590e74cecf",
+      "frame_bytes": 69135
+    }
+  ],
+  "binaries": {
+    "GBStudio.exe": {
+      "sha256": "4895defdb4c62dc1a9b0af123e0925741253ef4c4a32de214292667adbd443e1",
+      "bytes": 4758980,
+      "imported_dlls": [
+        "AVICAP32.dll",
+        "AVRT.dll",
+        "comdlg32.dll",
+        "d3d11.dll",
+        "D3DCOMPILER_47.dll",
+        "GDI32.dll",
+        "KERNEL32.dll",
+        "msvcrt.dll",
+        "ole32.dll",
+        "SHELL32.dll",
+        "USER32.dll",
+        "WINHTTP.dll",
+        "WINMM.dll",
+        "WS2_32.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_accuracy_state_tests.exe": {
+      "sha256": "9299de0b5fb8785fb82213df48dcbbd298b1bf8f9366856bae950ebaa89dd657",
+      "bytes": 3141177,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_achievement_tests.exe": {
+      "sha256": "7945d6cf02d10984b229ac2a9e7dba70e85458f00f3f5ca982b4cb3b303919e8",
+      "bytes": 3500640,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll",
+        "WINHTTP.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_audio_buffer_tests.exe": {
+      "sha256": "7c79a59a648beff4676475cdac81978ac6baaccc6b45e4857cf85f5e96b30977",
+      "bytes": 2796959,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_cartridge_tools_tests.exe": {
+      "sha256": "c5eb69d3413ea48ad542890203ff457068a5a21a593e8306eb493942c211d24a",
+      "bytes": 2557204,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_cgb_apu_tests.exe": {
+      "sha256": "984bf55457faec70391b19e99ee025f8e28df9449c74f596eb4ad816631f4779",
+      "bytes": 2692204,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_cgb_integration_tests.exe": {
+      "sha256": "82c21723b99f6ab57c6c363795ee4eb6724081e8fa1df06171e20586fb3f4993",
+      "bytes": 3075228,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_cgb_memory_tests.exe": {
+      "sha256": "2b91e0764e97a799bc6d344236f4e9ea92ce1cec75e08d78babe0c3d4b5dd934",
+      "bytes": 3070349,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_cgb_ppu_tests.exe": {
+      "sha256": "6fbb138d50ca5063224436858d78de9870800b447d0c509eacc758af4c536031",
+      "bytes": 2634995,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_core_extension_tests.exe": {
+      "sha256": "a7527252132dff97ef97032fd0fa4601ce638548fbda24b25912f1bf66dff8ec",
+      "bytes": 3104639,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_core_tests.exe": {
+      "sha256": "570dd9168831ba4cbd2f20cca6eace3c729264d363c524c9479f372d47bf67c2",
+      "bytes": 3091669,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_cpu_dma_accuracy_tests.exe": {
+      "sha256": "4a340dc44c42525a31f11372ffbd607dadb8e8b2054730508c717c7140d147ea",
+      "bytes": 2715553,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_feature_pack_tests.exe": {
+      "sha256": "b24b43b458e5285d73f4e4f53b4db5c20bcbfc12c6012980e1b7b6f4b3353d72",
+      "bytes": 3642505,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll",
+        "WS2_32.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_frame_pacing_tests.exe": {
+      "sha256": "996329f4f759ca2f726e3b0dffb89ed297e62446766bd74cf1b4d3e633a1c559",
+      "bytes": 2535086,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_headless.exe": {
+      "sha256": "9d631b5feb80603dcbcdd1d14e945b6a53b854dda250ac551875405e6ca07923",
+      "bytes": 3115405,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll",
+        "SHELL32.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_integration_pack_tests.exe": {
+      "sha256": "a542502620c29e2cd7451a472c14ef26943879c0470a43839d152cff4efca0b1",
+      "bytes": 3441352,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_loader_fuzz_tests.exe": {
+      "sha256": "fef88050df220c43fdf10b642ba06a5841313ab98f1d0efb8184c7b4ed81dfe0",
+      "bytes": 3213929,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_native_apu_accuracy_tests.exe": {
+      "sha256": "cdb89dea13c1ad2199fb8f72ec6776479105c04510f9a07885f1da248db796db",
+      "bytes": 2625656,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_native_core_regression_tests.exe": {
+      "sha256": "79e365b36a3cfc760cd9181489a628c3b6d0523f00eb2ad896aa8639314ca907",
+      "bytes": 3082130,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_native_integration_tests.exe": {
+      "sha256": "258536d2fe8662dae82c7e1da61554de830a63812e734923803ef6741d66ddd7",
+      "bytes": 3201100,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll",
+        "WS2_32.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_native_ppu_accuracy_tests.exe": {
+      "sha256": "4c1b3a4cb893ef95171bfd1d318c9cd3d8c293ccf2373a6197f9b3f1c51d899f",
+      "bytes": 2697597,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_native_state_fuzz_tests.exe": {
+      "sha256": "7a3c8ceacb2abcc1c0f2e2d481b5877b023ea80a50ec44b67b2b21710ef779f8",
+      "bytes": 3107877,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_pixel_filters.exe": {
+      "sha256": "176adbd3ad8592a0b0a850904b673419fcb5aa65518a65fb4dea927636d22ea3",
+      "bytes": 2960264,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_session_tests.exe": {
+      "sha256": "a6452692f3302623f9107dc6eeed6e8da5e78f2613f1a5725ab790f165cf4843",
+      "bytes": 3086544,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    },
+    "gb_studio_tools_tests.exe": {
+      "sha256": "ba798458ce59303851ff20365580c662d36003aaa60f598c3524289be8f835f6",
+      "bytes": 2949282,
+      "imported_dlls": [
+        "KERNEL32.dll",
+        "msvcrt.dll"
+      ],
+      "pe_stack_reserve": "0000000000800000"
+    }
+  },
+  "linux_reference": {
+    "sha256": "03975559155349b731d2817384b81b84f30c834814e8d40d0938bef7938751aa",
+    "bytes": 213144
+  }
+}

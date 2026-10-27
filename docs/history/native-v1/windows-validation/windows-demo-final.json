@@ -1,0 +1,20 @@
+[
+  {
+    "rom": "demo.gb",
+    "frames": 120,
+    "windows_exit_code": 0,
+    "linux_exit_code": 0,
+    "exact_linux_frame_match": true,
+    "frame_sha256": "54c897dcb143fc20697a1c2a35e45b6a8fccf4c2b6456a6d9c27f6381db772b3",
+    "frame_bytes": 69135
+  },
+  {
+    "rom": "demo.gbc",
+    "frames": 120,
+    "windows_exit_code": 0,
+    "linux_exit_code": 0,
+    "exact_linux_frame_match": true,
+    "frame_sha256": "7f8890ab98833c5ef59fad9a4c47114e34cf86d30fe73a037ed42e590e74cecf",
+    "frame_bytes": 69135
+  }
+]

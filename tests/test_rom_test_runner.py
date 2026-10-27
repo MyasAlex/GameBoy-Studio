@@ -83,7 +83,7 @@ class FirmwareRunnerTests(unittest.TestCase):
                          set(BOOT_FAILURES))
         self.assertFalse(any(row['status'] == 'XFAIL' for row in report['results']))
 
-    def test_default_records_replacement_policy_without_inventing_embedded_hash(self):
+    def test_default_records_native_initialization_without_inventing_firmware_hash(self):
         commands = []
 
         def execute(command, **kwargs):
@@ -94,7 +94,7 @@ class FirmwareRunnerTests(unittest.TestCase):
         self.assertEqual(result, 0)
         self.assertEqual(len(commands), 1)
         self.assertNotIn('--boot-rom', commands[0])
-        self.assertEqual(report['boot_firmware']['source'], 'bundled_sameboy_replacement')
+        self.assertEqual(report['boot_firmware']['source'], 'studio_native_post_boot')
         self.assertIsNone(report['boot_firmware']['sha256'])
 
     def test_missing_or_non_dmg_boot_is_rejected_before_execution_or_download(self):

@@ -1,0 +1,29 @@
+{
+  "source_manifest_sha256": "e700da5b7e77a5abe42ddf0f6f91aeecb55e98c5edd255f067ac7a9ead769df1",
+  "deleted_build_objects": [
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_cgb_ppu_tests.dir/tests/cgb_ppu_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_integration_pack_tests.dir/tests/integration_pack_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/GBStudio.dir/src/windows_main.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_cpu_dma_accuracy_tests.dir/tests/cpu_dma_accuracy_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_headless.dir/src/headless.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_loader_fuzz_tests.dir/tests/loader_fuzz_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_native_core_regression_tests.dir/tests/native_core_regression_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_core_tests.dir/tests/core_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_cartridge_tools_tests.dir/tests/cartridge_tools_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_frame_pacing_tests.dir/tests/frame_pacing_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_session_tests.dir/tests/session_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_native_state_fuzz_tests.dir/tests/native_state_fuzz_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_accuracy_state_tests.dir/tests/accuracy_state_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_cgb_integration_tests.dir/tests/cgb_integration_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_studio_tools_tests.dir/tests/studio_tools_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_native_apu_accuracy_tests.dir/tests/native_apu_accuracy_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_core_extension_tests.dir/tests/core_extension_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_cgb_memory_tests.dir/tests/cgb_memory_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_achievement_tests.dir/tests/achievement_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_feature_pack_tests.dir/tests/feature_pack_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_audio_buffer_tests.dir/tests/audio_buffer_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_native_ppu_accuracy_tests.dir/tests/native_ppu_accuracy_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_native_integration_tests.dir/tests/native_integration_tests.cpp.obj",
+    "/workspace/build-windows-accuracy/CMakeFiles/gb_cgb_apu_tests.dir/tests/cgb_apu_tests.cpp.obj"
+  ]
+}

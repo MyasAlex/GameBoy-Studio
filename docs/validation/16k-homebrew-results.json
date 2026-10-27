@@ -1,0 +1,29 @@
+{
+  "title": "PlantBoy",
+  "developer": "exezin",
+  "license": "MIT",
+  "repository": "https://github.com/exezin/PlantBoy",
+  "rom_url": "https://raw.githubusercontent.com/gbdev/database/50293559a496a3e20382fbf6a2e84b70ec622f88/entries/plantboy/PlantBoy.gb",
+  "rom_sha256": "4b62569dfa8eda20912166b66306ff71885282916e78d760e2a7e3ec4ab3aa01",
+  "rom_bytes": 16384,
+  "scope": "1200-frame launch smoke check of a released16KiBhomebrew image; no full gameplay or hardware image-accuracy claim. ROM not bundled.",
+  "runs": [
+    {
+      "edition": "before",
+      "emulator_sha256": "03975559155349b731d2817384b81b84f30c834814e8d40d0938bef7938751aa",
+      "frames_requested": 1200,
+      "exit_code": 2,
+      "output": "Could not load ROM: ROM must contain complete 16 KiB banks (32 KiB to 8 MiB).\n"
+    },
+    {
+      "edition": "1.1.0",
+      "emulator_sha256": "ed7ef3eb72e8ee7db48d74896e03261320a2fb4d7e999503de722368dc2db932",
+      "frames_requested": 1200,
+      "exit_code": 0,
+      "output": "\nframes=1200 PC=$01A7 LY=29 ROM=PlantBoy        MODEL=DMG SPEED=1\n",
+      "frame_sha256": "e28e8244a638256205a9e1856ac22c26077a8003b2a6e3b904b7fc724cb71170",
+      "frame_bytes": 69135,
+      "frame_unique_rgb_colors": 4
+    }
+  ]
+}

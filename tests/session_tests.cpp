@@ -32,6 +32,17 @@ int main(int argc,char** argv) {
         rewind.configure(1,1);
         for(int i=0;i<100;++i){gb.runFrame();rewind.capture(gb);}
         require(rewind.size()<=61&&rewind.bytes()<=64*1024*1024,"Rewind bounded by time and memory");
+        // A valid auxiliary payload can make the native snapshot larger than
+        // the historical 500000-byte RLE limit; rewind must restore it exactly.
+        std::vector<u8> largeProgress(600000,0x5A);
+        gb.auxiliaryState=[&](){return largeProgress;};
+        gb.auxiliaryRestore=[&](std::span<const u8> bytes){largeProgress.assign(bytes.begin(),bytes.end());return true;};
+        const auto largeCheckpoint=gb.serializeState();require(largeCheckpoint.size()>500000,"Large auxiliary state exceeds historical rewind limit");
+        const auto largePacket=RewindBuffer::pack(largeCheckpoint);std::vector<u8> largeDecoded;
+        require(RewindBuffer::unpack(largePacket,largeCheckpoint.size(),largeDecoded)&&largeDecoded==largeCheckpoint,"Large native auxiliary RLE roundtrip");
+        rewind.configure(1,1);rewind.capture(gb);largeProgress[0]=0x33;gb.runFrame();rewind.capture(gb);
+        require(rewind.rewind(gb)&&gb.serializeState()==largeCheckpoint&&largeProgress[0]==0x5A,"Rewind restores large native state and auxiliary progress");
+        gb.auxiliaryState={};gb.auxiliaryRestore={};rewind.configure(0);
         gb.apu.setChannelMuted(1,true);
         InputMovie movie;require(movie.startRecording(gb),"start input recording");
         for(int i=0;i<45;++i) {
@@ -39,7 +50,7 @@ int main(int argc,char** argv) {
             require(movie.beforeFrame(gb),"record input");gb.runFrame();
         }
         const auto result=gb.serializeState();movie.stop();
-        const auto folder=std::filesystem::temp_directory_path()/"gbstudio-session-tests";
+        const auto folder=std::filesystem::temp_directory_path()/("gbstudio-session-tests-"+std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
         std::filesystem::create_directories(folder);const auto path=folder/"input.gbmovie";
         require(movie.save(path),"movie save");
         gb.apu.setChannelMuted(1,false);

@@ -82,6 +82,7 @@ static void testReports() {
     auto json=studio::romReport(rom,"unicode-\xD0\x98.gb");CHECK(json.find("STUDIO\\\"TEST")!=std::string::npos);
     rom[0x134]^=1;r=studio::headerReport(rom);CHECK(!r.headerChecksumValid&&!r.globalChecksumValid);
     rom[0x147]=0x22;fixChecksums(rom);r=studio::headerReport(rom);CHECK(r.controllerSupported&&r.controllerRamBytes==256);
+    for(u8 type:{u8{0x0B},u8{0x0C},u8{0x0D},u8{0x20},u8{0xFE}})CHECK(!studio::supportedCartridge(type));
     CHECK(studio::romReport(rom).find("MBC7+SENSOR")!=std::string::npos);
     rom[0x147]=5;rom[0x149]=0;r=studio::headerReport(rom);CHECK(r.declaredRamBytes==0&&r.controllerRamBytes==512);
     rom[0x148]=0x08;CHECK(studio::headerReport(rom).declaredRomBytes==8388608);

@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "baseline_report_sha256": "7f4f764f8e03e7c5bd4845cf9b706ddb6ff7cbb25da1210ade04713884ad135e",
+  "final_report_sha256": "9c3ce40b7bbab7bd7ee246d488e84e1c3f6fe854f5a0000de4651f9f7300b5ae",
+  "protocol_audit_sha256": "9c208eff53dd24fbbd69483e88606de37c193208171e20ccaf1487860461fa64",
+  "same_jobs_and_rom_hashes": true,
+  "total_jobs": 602,
+  "baseline_summary": {
+    "gbmicrotest": {
+      "PASS": 337,
+      "FAIL": 145,
+      "INCOMPLETE": 31,
+      "TIMEOUT": 0,
+      "ERROR": 0
+    },
+    "mooneye-cgb": {
+      "PASS": 81,
+      "FAIL": 8,
+      "INCOMPLETE": 0,
+      "TIMEOUT": 0,
+      "ERROR": 0
+    }
+  },
+  "final_summary": {
+    "gbmicrotest": {
+      "PASS": 337,
+      "FAIL": 145,
+      "INCOMPLETE": 31,
+      "TIMEOUT": 0,
+      "ERROR": 0
+    },
+    "mooneye-cgb": {
+      "PASS": 88,
+      "FAIL": 1,
+      "INCOMPLETE": 0,
+      "TIMEOUT": 0,
+      "ERROR": 0
+    }
+  },
+  "pass_change": 7,
+  "changes": [
+    {
+      "suite": "mooneye-cgb",
+      "rom": "mooneye-test-suite/misc/bits/unused_hwio-C.gb",
+      "model": "cgbe",
+      "before": "FAIL",
+      "after": "PASS"
+    },
+    {
+      "suite": "mooneye-cgb",
+      "rom": "mooneye-test-suite/misc/boot_div-A.gb",
+      "model": "agb",
+      "before": "FAIL",
+      "after": "PASS"
+    },
+    {
+      "suite": "mooneye-cgb",
+      "rom": "mooneye-test-suite/misc/boot_div-cgb0.gb",
+      "model": "cgb0",
+      "before": "FAIL",
+      "after": "PASS"
+    },
+    {
+      "suite": "mooneye-cgb",
+      "rom": "mooneye-test-suite/misc/boot_div-cgbABCDE.gb",
+      "model": "cgbe",
+      "before": "FAIL",
+      "after": "PASS"
+    },
+    {
+      "suite": "mooneye-cgb",
+      "rom": "mooneye-test-suite/misc/boot_regs-A.gb",
+      "model": "agb",
+      "before": "FAIL",
+      "after": "PASS"
+    },
+    {
+      "suite": "mooneye-cgb",
+      "rom": "mooneye-test-suite/misc/boot_regs-cgb.gb",
+      "model": "cgbe",
+      "before": "FAIL",
+      "after": "PASS"
+    },
+    {
+      "suite": "mooneye-cgb",
+      "rom": "mooneye-test-suite/misc/ppu/vblank_stat_intr-C.gb",
+      "model": "cgbe",
+      "before": "FAIL",
+      "after": "PASS"
+    }
+  ],
+  "pass_regressions": [],
+  "manual_probe_scope": "31 GBMicrotest cases lack active terminal assertions and remain INCOMPLETE.",
+  "raw_final_report_sha256": "8aa771a39877dc0c77d572f12209589b359b2c963e2da284aafa163cf95e52e4",
+  "final_report": "../native-hardware-matrix.json",
+  "baseline_report": "hardware-matrix-baseline.json"
+}

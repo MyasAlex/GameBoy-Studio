@@ -8,7 +8,11 @@
 releases/ export-ignore
 dist/ export-ignore
 preview.png export-ignore
-# Preserve the exact raw Windows logs used by the package checksums.
-docs/stage4-wine-qa/*.stdout.txt -text
-# This manifest covers a full checkout, including export-ignored history.
+
+# Keep authenticated validation evidence byte-exact on Windows checkouts.
+docs/validation/** -text
+docs/windows-validation/** -text
+docs/history/** -text
+# Complete-package checksums are delivered in release assets.
 SHA256SUMS.txt export-ignore
+dist/ export-ignore

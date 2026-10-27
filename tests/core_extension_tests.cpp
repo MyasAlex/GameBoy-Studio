@@ -85,7 +85,7 @@ static void testSnapshots(Fixtures& f){
     GameBoy g;CHECK(g.load(cart));g.runFrame();
     g.mem.right=g.mem.b=true;g.mem.wram[42]=0x87;g.mem.hram[12]=0x9A;
     const auto initial=g.serializeState();CHECK(!initial.empty());
-    CHECK(std::string((const char*)initial.data(),8)=="GBSTATE6");
+    CHECK(std::string((const char*)initial.data(),8)=="GBSTATE8");
     for(int i=0;i<6;++i)g.runFrame();const auto expected=g.serializeState();
     CHECK(g.deserializeState(initial));CHECK(g.mem.right&&g.mem.b&&!g.mem.a);
     for(int i=0;i<6;++i)g.runFrame();CHECK(g.serializeState()==expected);

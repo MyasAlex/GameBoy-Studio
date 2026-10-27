@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure 1x speed through the actual Windows timer loop and accuracy core.
+"""Measure 1x speed through the actual Windows timer loop and native Studio core.
 
 Three original ROM probes exercise DMG, CGB and KEY1/STOP CGB double speed.
 Each probe runs separately so simultaneous emulators cannot distort pacing.
@@ -142,8 +142,7 @@ def main(argv=None):
     if not args.emulator.is_file():
         parser.error('Emulator executable is missing.')
     args.output, args.report = args.output.resolve(), args.report.resolve()
-    dll = args.emulator.with_name('gb_accuracy.dll')
-    protected = [('emulator executable', args.emulator), ('accuracy DLL', dll)]
+    protected = [('emulator executable', args.emulator)]
     for probe in PROBES:
         protected.extend((probe[0] + ' ' + kind, path)
                          for kind, path in probe_paths(args.output, probe).items())
@@ -156,8 +155,7 @@ def main(argv=None):
     except OSError as error:
         parser.error('Could not validate report paths: ' + str(error))
     args.output.mkdir(parents=True, exist_ok=True)
-    identities = {'executable_sha256': sha256(args.emulator),
-                  'accuracy_dll_sha256': sha256(dll) if dll.is_file() else None}
+    identities = {'executable_sha256': sha256(args.emulator), 'core': 'Studio native'}
     tests = [run_probe(probe, args) for probe in PROBES]
     summary = {status: sum(row['status'] == status for row in tests)
                for status in ('PASS', 'FAIL', 'ERROR')}
@@ -165,7 +163,7 @@ def main(argv=None):
               'audio_requested': args.audio, 'seconds_per_probe': args.seconds,
               'expected_clock_hz': CLOCK_HZ, 'expected_dots_per_frame': DOTS_PER_FRAME,
               'expected_ppu_fps': EXPECTED_FPS, 'speed_ratio_tolerance': [0.97, 1.03],
-              'scope': 'Actual hidden Win32 timer loop and accuracy core. Original probes; no commercial ROMs. GPU rendering and audible quality are outside this check.',
+              'scope': 'Actual hidden Win32 timer loop and native Studio core. Original probes; no commercial ROMs. GPU rendering and audible quality are outside this check.',
               'summary': summary, 'tests': tests}
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

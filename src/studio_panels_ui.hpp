@@ -23,7 +23,7 @@ static LRESULT CALLBACK comparisonProc(HWND w,UINT msg,WPARAM wp,LPARAM lp){
 static void showComparison(){if(gb.mem.rom.empty())return;setPaused(true);if(comparisonWindow){SetForegroundWindow(comparisonWindow);return;}
     const auto models=gb.mem.cgbROM?std::array{HardwareModel::CGB0,HardwareModel::CGBC,HardwareModel::CGBD,HardwareModel::CGBE}:std::array{HardwareModel::DMG,HardwareModel::Pocket,HardwareModel::Light,HardwareModel::CGBE};
     comparisonNames=gb.mem.cgbROM?std::array<std::wstring,4>{L"CGB 0",L"CGB C",L"CGB D",L"CGB E"}:std::array<std::wstring,4>{L"DMG B",L"Pocket",L"Light",L"CGB E compatibility"};
-    for(unsigned i=0;i<4;++i){comparisonMachines[i]=std::make_unique<GameBoy>();if(!accurate::enable(*comparisonMachines[i])||!comparisonMachines[i]->load(gb.mem.romPath,models[i])){for(auto& g:comparisonMachines)g.reset();alert(L"Comparison ROM could not load");return;}comparisonMachines[i]->setPalette(1);}
+    for(unsigned i=0;i<4;++i){comparisonMachines[i]=std::make_unique<GameBoy>();if(!comparisonMachines[i]->load(gb.mem.romPath,models[i])){for(auto& g:comparisonMachines)g.reset();alert(L"Comparison ROM could not load");return;}comparisonMachines[i]->setPalette(1);}
     WNDCLASSW cls{};cls.lpfnWndProc=comparisonProc;cls.hInstance=appInstance;cls.lpszClassName=L"GBSHardwareComparison10";cls.hCursor=LoadCursorW(nullptr,IDC_ARROW);RegisterClassW(&cls);
     comparisonWindow=CreateWindowExW(0,cls.lpszClassName,tr(L"Hardware comparison — keyboard input goes to all panels",L"Сравнение моделей — клавиши управляют всеми экранами"),WS_OVERLAPPEDWINDOW|WS_VISIBLE,CW_USEDEFAULT,CW_USEDEFAULT,1000,880,hwnd,nullptr,appInstance,nullptr);SetTimer(comparisonWindow,1,16,nullptr);
 }

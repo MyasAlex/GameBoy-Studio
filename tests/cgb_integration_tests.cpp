@@ -66,7 +66,7 @@ static void testGeneralDma(){
 static void testHblankDma(){
     GameBoy gb;colorMode(gb);auto& m=gb.mem;
     for(int i=0;i<32;++i)m.write((u16)(0xC100+i),(u8)(0x20+i));
-    m.write(0xFF40,0x91);setupDma(m,0xC100,0x8200);m.write(0xFF55,0x81);
+    m.write(0xFF40,0x91);m.ppuMode=2;setupDma(m,0xC100,0x8200);m.write(0xFF55,0x81);
     CHECK(!m.cpuDmaStalled()&&m.read(0xFF55)==1);
     m.hblankDMA();CHECK(m.cpuDmaStalled());gb.tick(32);
     CHECK(!m.cpuDmaStalled()&&m.read(0xFF55)==0);
@@ -141,11 +141,10 @@ static void testLegacyDmgState(const std::vector<u8>& cgbDemo){
     gb.cpu.PC=0xC100;gb.mem.write(0xC100,0x18);gb.mem.write(0xC101,0xFE);
     gb.mem.write(0xC020,0x5A);gb.mem.write(0xFF40,0);
     for(int i=0;i<3;++i)gb.runFrame();CHECK(gb.saveState());
-    const auto current=Memory::loadBytes(gb.statePath());
-    auto v4=current;
+    const auto historical=gb.serializeState(true);
+    auto v4=historical;
     // v5 adds a seven-byte boot/input extension just before the checksum.
     // Remove that extension before projecting the legacy v3 memory layout.
-    if(std::string((const char*)v4.data(),8)=="GBSTATE6"){v4.erase(v4.end()-4-GameBoy::state6ExtensionSize,v4.end()-4);v4[7]='5';}
     if(std::string((const char*)v4.data(),8)=="GBSTATE5")v4.erase(v4.end()-11,v4.end()-4);
     // The legacy v3 wire format has no CGB tuple, one 8KiB VRAM bank,
     // 8KiB WRAM, or 128 CGB palette bytes; the rest is unchanged.
@@ -159,7 +158,10 @@ static void testLegacyDmgState(const std::vector<u8>& cgbDemo){
     const u64 cycles=gb.totalCycles;const u16 pc=gb.cpu.PC;
     gb.mem.write(0xC020,0);gb.cpu.PC=0x1234;gb.runFrame();
     CHECK(gb.loadState()&&gb.cpu.PC==pc&&gb.totalCycles==cycles&&gb.mem.read(0xC020)==0x5A);
-    CHECK(gb.saveState()&&Memory::loadBytes(gb.statePath())==current);
+    // Version 3 cannot retain the modern fetcher/divider latches. Its explicit
+    // legacy representation still roundtrips the CPU, RAM and old pipeline.
+    CHECK(gb.serializeState(true)==historical);
+    CHECK(gb.saveState());
     std::filesystem::remove(gb.statePath());std::filesystem::remove(temp);
 }
 

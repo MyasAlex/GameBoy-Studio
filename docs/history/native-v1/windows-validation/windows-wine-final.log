@@ -1,0 +1,47 @@
+Test project /workspace/build-windows-native
+      Start  1: frame_pacing
+ 1/18 Test  #1: frame_pacing .....................***Timeout  90.01 sec
+PASS: 10-second refresh-independent pacing at 60/144/240 Hz, explicit rates, catchup bounds, transitions and invalid clocks
+
+      Start  2: native_core_regressions
+ 2/18 Test  #2: native_core_regressions ..........   Passed    0.04 sec
+      Start  3: native_state_fuzz
+ 3/18 Test  #3: native_state_fuzz ................   Passed    0.33 sec
+      Start  4: native_integration
+ 4/18 Test  #4: native_integration ...............   Passed    4.47 sec
+      Start  5: integration_pack
+ 5/18 Test  #5: integration_pack .................   Passed    2.51 sec
+      Start  6: achievements
+ 6/18 Test  #6: achievements .....................   Passed    2.55 sec
+      Start  7: core
+ 7/18 Test  #7: core .............................   Passed    2.46 sec
+      Start  8: cgb_memory
+ 8/18 Test  #8: cgb_memory .......................   Passed    2.49 sec
+      Start  9: cgb_ppu
+ 9/18 Test  #9: cgb_ppu ..........................   Passed    2.41 sec
+      Start 10: cgb_apu
+10/18 Test #10: cgb_apu ..........................   Passed    2.46 sec
+      Start 11: cgb_integration
+11/18 Test #11: cgb_integration ..................   Passed    2.43 sec
+      Start 12: core_extension
+12/18 Test #12: core_extension ...................   Passed    2.43 sec
+      Start 13: session
+13/18 Test #13: session ..........................   Passed    2.39 sec
+      Start 14: studio_tools
+14/18 Test #14: studio_tools .....................   Passed    2.43 sec
+      Start 15: audio_buffer
+15/18 Test #15: audio_buffer .....................   Passed    2.42 sec
+      Start 16: cartridge_tools
+16/18 Test #16: cartridge_tools ..................   Passed    2.44 sec
+      Start 17: feature_pack
+17/18 Test #17: feature_pack .....................   Passed    2.42 sec
+      Start 18: loader_fuzz
+18/18 Test #18: loader_fuzz ......................   Passed    2.43 sec
+
+94% tests passed, 1 tests failed out of 18
+
+Total Test time (real) = 129.14 sec
+
+The following tests FAILED:
+	  1 - frame_pacing (Timeout)
+Errors while running CTest

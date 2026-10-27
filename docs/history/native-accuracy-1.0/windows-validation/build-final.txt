@@ -1,0 +1,90 @@
+[0/2] Re-checking globbed directories...
+[1/49] Building CXX object CMakeFiles/gb_native_apu_accuracy_tests.dir/tests/native_apu_accuracy_tests.cpp.obj
+[2/49] Building CXX object CMakeFiles/gb_cpu_dma_accuracy_tests.dir/tests/cpu_dma_accuracy_tests.cpp.obj
+[3/49] Building CXX object CMakeFiles/gb_native_ppu_accuracy_tests.dir/tests/native_ppu_accuracy_tests.cpp.obj
+[4/49] Building CXX object CMakeFiles/gb_headless.dir/src/headless.cpp.obj
+[5/49] Building CXX object CMakeFiles/gb_frame_pacing_tests.dir/tests/frame_pacing_tests.cpp.obj
+[6/49] Building CXX object CMakeFiles/gb_accuracy_state_tests.dir/tests/accuracy_state_tests.cpp.obj
+[7/49] Building CXX object CMakeFiles/gb_native_core_regression_tests.dir/tests/native_core_regression_tests.cpp.obj
+[8/49] Building CXX object CMakeFiles/gb_native_state_fuzz_tests.dir/tests/native_state_fuzz_tests.cpp.obj
+[9/49] Building CXX object CMakeFiles/gb_integration_pack_tests.dir/tests/integration_pack_tests.cpp.obj
+[10/49] Building CXX object CMakeFiles/gb_native_integration_tests.dir/tests/native_integration_tests.cpp.obj
+In file included from /workspace/GameBoy-Studio-main/tests/native_integration_tests.cpp:1:
+/workspace/GameBoy-Studio-main/tests/../src/network_tools.hpp:5: warning: ignoring ‘#pragma comment ’ [-Wunknown-pragmas]
+    5 | #pragma comment(lib,"ws2_32.lib")
+[11/49] Building CXX object CMakeFiles/gb_achievement_tests.dir/tests/achievement_tests.cpp.obj
+[12/49] Building CXX object CMakeFiles/gb_cgb_ppu_tests.dir/tests/cgb_ppu_tests.cpp.obj
+[13/49] Building CXX object CMakeFiles/gb_core_tests.dir/tests/core_tests.cpp.obj
+[14/49] Building CXX object CMakeFiles/gb_cgb_memory_tests.dir/tests/cgb_memory_tests.cpp.obj
+[15/49] Building CXX object CMakeFiles/gb_cgb_apu_tests.dir/tests/cgb_apu_tests.cpp.obj
+[16/49] Building CXX object CMakeFiles/gb_cgb_integration_tests.dir/tests/cgb_integration_tests.cpp.obj
+/workspace/GameBoy-Studio-main/tests/cgb_integration_tests.cpp: In function ‘void testMalformedState(GameBoy&, const std::vector<unsigned char>&)’:
+/workspace/GameBoy-Studio-main/tests/cgb_integration_tests.cpp:124:20: warning: loop variable ‘<structured bindings>’ creates a copy from type ‘const std::pair<long long unsigned int, unsigned char>’ [-Wrange-loop-construct]
+  124 |     for(const auto [offset,value]:std::array<std::pair<std::size_t,u8>,5>{{
+      |                    ^~~~~~~~~~~~~~
+/workspace/GameBoy-Studio-main/tests/cgb_integration_tests.cpp:124:20: note: use reference type to prevent copying
+  124 |     for(const auto [offset,value]:std::array<std::pair<std::size_t,u8>,5>{{
+      |                    ^~~~~~~~~~~~~~
+      |                    &
+[17/49] Building CXX object CMakeFiles/gb_core_extension_tests.dir/tests/core_extension_tests.cpp.obj
+[18/49] Building CXX object CMakeFiles/gb_session_tests.dir/tests/session_tests.cpp.obj
+[19/49] Building CXX object CMakeFiles/gb_audio_buffer_tests.dir/tests/audio_buffer_tests.cpp.obj
+[20/49] Building CXX object CMakeFiles/gb_cartridge_tools_tests.dir/tests/cartridge_tools_tests.cpp.obj
+[21/49] Building CXX object CMakeFiles/gb_studio_tools_tests.dir/tests/studio_tools_tests.cpp.obj
+[22/49] Building CXX object CMakeFiles/gb_loader_fuzz_tests.dir/tests/loader_fuzz_tests.cpp.obj
+[23/49] Linking CXX executable gb_headless.exe
+[24/49] Linking CXX executable gb_cpu_dma_accuracy_tests.exe
+[25/49] Linking CXX executable gb_native_apu_accuracy_tests.exe
+[26/49] Linking CXX executable gb_native_ppu_accuracy_tests.exe
+[27/49] Linking CXX executable gb_accuracy_state_tests.exe
+[28/49] Linking CXX executable gb_frame_pacing_tests.exe
+[29/49] Linking CXX executable gb_native_core_regression_tests.exe
+[30/49] Linking CXX executable gb_native_state_fuzz_tests.exe
+[31/49] Linking CXX executable gb_native_integration_tests.exe
+[32/49] Linking CXX executable gb_integration_pack_tests.exe
+[33/49] Linking CXX executable gb_achievement_tests.exe
+[34/49] Linking CXX executable gb_core_tests.exe
+[35/49] Linking CXX executable gb_cgb_memory_tests.exe
+[36/49] Linking CXX executable gb_cgb_ppu_tests.exe
+[37/49] Linking CXX executable gb_cgb_apu_tests.exe
+[38/49] Linking CXX executable gb_cgb_integration_tests.exe
+[39/49] Linking CXX executable gb_core_extension_tests.exe
+[40/49] Linking CXX executable gb_session_tests.exe
+[41/49] Linking CXX executable gb_studio_tools_tests.exe
+[42/49] Linking CXX executable gb_audio_buffer_tests.exe
+[43/49] Linking CXX executable gb_cartridge_tools_tests.exe
+[44/49] Linking CXX executable gb_loader_fuzz_tests.exe
+[45/49] Building CXX object CMakeFiles/gb_feature_pack_tests.dir/tests/feature_pack_tests.cpp.obj
+In file included from /workspace/GameBoy-Studio-main/tests/feature_pack_tests.cpp:1:
+/workspace/GameBoy-Studio-main/tests/../src/network_tools.hpp:5: warning: ignoring ‘#pragma comment ’ [-Wunknown-pragmas]
+    5 | #pragma comment(lib,"ws2_32.lib")
+[46/49] Linking CXX executable gb_feature_pack_tests.exe
+[47/49] Building CXX object CMakeFiles/GBStudio.dir/src/windows_main.cpp.obj
+In file included from /workspace/GameBoy-Studio-main/src/windows_main.cpp:453:
+/workspace/GameBoy-Studio-main/src/studio_features_ui.hpp: In function ‘bool extraCommand(UINT)’:
+/workspace/GameBoy-Studio-main/src/studio_features_ui.hpp:207:328: warning: ‘std::filesystem::__cxx11::path std::filesystem::__cxx11::u8path(const _Source&) [with _Source = std::__cxx11::basic_string<char>; _Require = path; _CharT = char]’ is deprecated: use 'path((const char8_t*)&*source)' instead [-Wdeprecated-declarations]
+  207 |     else if(id==EX_LIBRARY){std::vector<std::wstring> rows;std::vector<std::filesystem::path> covers;for(const auto& game:library.games){rows.push_back((game.favorite?L"★ ":L"")+wide(game.title)+L" | "+std::to_wstring(game.cycles/GB_CLOCK/60)+L" min | "+wide(game.note+" | "+game.path));covers.push_back(std::filesystem::u8path(game.cover));}
+      |                                                                                                                                                                                                                                                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+In file included from /workspace/toolchains/mingw/usr/lib/gcc/x86_64-w64-mingw32/14-posix/include/c++/filesystem:52,
+                 from /workspace/GameBoy-Studio-main/src/gameboy.hpp:13,
+                 from /workspace/GameBoy-Studio-main/src/portable_state.hpp:2,
+                 from /workspace/GameBoy-Studio-main/src/link_devices.hpp:2,
+                 from /workspace/GameBoy-Studio-main/src/network_tools.hpp:15,
+                 from /workspace/GameBoy-Studio-main/src/windows_main.cpp:7:
+/workspace/toolchains/mingw/usr/lib/gcc/x86_64-w64-mingw32/14-posix/include/c++/bits/fs_path.h:843:5: note: declared here
+  843 |     u8path(const _Source& __source)
+      |     ^~~~~~
+/workspace/GameBoy-Studio-main/src/studio_features_ui.hpp:208:123: warning: ‘std::filesystem::__cxx11::path std::filesystem::__cxx11::u8path(const _Source&) [with _Source = std::__cxx11::basic_string<char>; _Require = path; _CharT = char]’ is deprecated: use 'path((const char8_t*)&*source)' instead [-Wdeprecated-declarations]
+  208 |         const auto row=chooseRow(tr(L"Game library",L"Библиотека игр"),rows,covers);if(row)openROM(std::filesystem::u8path(library.games[*row].path));}
+      |                                                                                                    ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/toolchains/mingw/usr/lib/gcc/x86_64-w64-mingw32/14-posix/include/c++/bits/fs_path.h:843:5: note: declared here
+  843 |     u8path(const _Source& __source)
+      |     ^~~~~~
+/workspace/GameBoy-Studio-main/src/windows_main.cpp: In function ‘int wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)’:
+/workspace/GameBoy-Studio-main/src/windows_main.cpp:726:36: warning: cast between incompatible function types from ‘FARPROC’ {aka ‘long long int (*)()’} to ‘XInputGetStateFn’ {aka ‘long unsigned int (*)(long unsigned int, XINPUT_STATE*)’} [-Wcast-function-type]
+  726 |     if(gamepadLibrary){readGamepad=reinterpret_cast<XInputGetStateFn>(GetProcAddress(gamepadLibrary,"XInputGetState"));sendRumble=reinterpret_cast<XInputSetStateFn>(GetProcAddress(gamepadLibrary,"XInputSetState"));}
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/GameBoy-Studio-main/src/windows_main.cpp:726:131: warning: cast between incompatible function types from ‘FARPROC’ {aka ‘long long int (*)()’} to ‘XInputSetStateFn’ {aka ‘long unsigned int (*)(long unsigned int, XINPUT_VIBRATION*)’} [-Wcast-function-type]
+  726 |     if(gamepadLibrary){readGamepad=reinterpret_cast<XInputGetStateFn>(GetProcAddress(gamepadLibrary,"XInputGetState"));sendRumble=reinterpret_cast<XInputSetStateFn>(GetProcAddress(gamepadLibrary,"XInputSetState"));}
+      |                                                                                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[48/49] Linking CXX executable GBStudio.exe

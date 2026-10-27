@@ -1,0 +1,41 @@
+Test project /workspace/build-native
+      Start  4: native_integration
+      Start 18: loader_fuzz
+ 1/18 Test #18: loader_fuzz ......................   Passed    1.23 sec
+      Start 15: audio_buffer
+ 2/18 Test #15: audio_buffer .....................   Passed    0.00 sec
+      Start 17: feature_pack
+ 3/18 Test #17: feature_pack .....................   Passed    0.69 sec
+      Start  7: core
+ 4/18 Test  #7: core .............................   Passed    0.30 sec
+      Start  3: native_state_fuzz
+ 5/18 Test  #4: native_integration ...............   Passed    2.63 sec
+      Start  5: integration_pack
+ 6/18 Test  #5: integration_pack .................   Passed    0.13 sec
+      Start 13: session
+ 7/18 Test  #3: native_state_fuzz ................   Passed    0.88 sec
+      Start 11: cgb_integration
+ 8/18 Test #13: session ..........................   Passed    0.37 sec
+      Start 12: core_extension
+ 9/18 Test #12: core_extension ...................   Passed    0.04 sec
+      Start  8: cgb_memory
+10/18 Test  #8: cgb_memory .......................   Passed    0.02 sec
+      Start  2: native_core_regressions
+11/18 Test  #2: native_core_regressions ..........   Passed    0.02 sec
+      Start  6: achievements
+12/18 Test  #6: achievements .....................   Passed    0.01 sec
+      Start  9: cgb_ppu
+13/18 Test  #9: cgb_ppu ..........................   Passed    0.00 sec
+      Start 16: cartridge_tools
+14/18 Test #11: cgb_integration ..................   Passed    0.11 sec
+      Start 10: cgb_apu
+15/18 Test #10: cgb_apu ..........................   Passed    0.00 sec
+      Start  1: frame_pacing
+16/18 Test #16: cartridge_tools ..................   Passed    0.01 sec
+      Start 14: studio_tools
+17/18 Test  #1: frame_pacing .....................   Passed    0.00 sec
+18/18 Test #14: studio_tools .....................   Passed    0.00 sec
+
+100% tests passed out of 18
+
+Total Test time (real) =   3.23 sec
